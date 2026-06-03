@@ -28,11 +28,20 @@
 | **C 트랙** | small-shell (+format-printer·signal-message-bus·thread-dining·stack-sort) | C·프로세스/메모리·시그널/IPC·pthread 동시성·알고리즘 (+Python) | M0 권장 | 저수준/시스템 프로그래밍이 목표에 불필요 | ✗ |
 | **C++ 트랙** | stl-container (+ray-scene-tracer) | C++98·템플릿·allocator·iterator·예외안전 (+그래픽스 연습) | C 트랙(언어 기초) | C++가 불필요 | ✗ |
 | **시스템 서버** | game-server-reliability-training (+irc-relay-server·game-server-foundations-training) | C++17/20·Boost.Asio·소켓(epoll/kqueue)·C#/.NET·ASP.NET Core | C++ 트랙 | 고성능 C++ 서버·.NET이 불필요 | ✗* |
-| **Node/TS 백엔드** | grounded-travel (+chatbot-evaluation·pong-pong) | TypeScript·Fastify·SQLite·PostgreSQL·WebSocket(풀스택) | M0 | JVM이 1차 → 생략 가능 (단 **TS는 프론트의 선행**) | △ |
-| **프론트엔드** | frontend-reliability-training (+frontend-foundations-training·portfolio-site) | React·RSC·Router·Query·테스트·Next.js·Tailwind v4 | TS(grounded-travel) | 백엔드 전용 목표 | ✗ |
+| **Node/TS 백엔드** | **pong-pong**(공개·입문 대장) (+grounded-travel·chatbot-evaluation) | TypeScript·Node·Fastify·WebSocket·PostgreSQL(풀스택) | M0 | JVM이 1차 → 생략 가능 (단 grounded의 **TS는 프론트의 선행**) | △ |
+| **프론트엔드** | **portfolio-site**(공개·자족 입문 대장) (+frontend-reliability-training·frontend-foundations-training) | Next.js·React·Tailwind v4 (+React 심화: RSC·Router·Query·테스트) | TS | 백엔드 전용 목표(단 portfolio는 공개 필수) | ✗ |
 | **캡스톤** | sportsbook | 코어=종합 적용(기존 139개 재사용) + **분산/운영 스택 신규**(Tier-1 노트 8개 → `sportsbook/orchestration/notes/`) | **JVM 백엔드 + 인프라** | — | — |
 
 \* 시스템 서버의 **동시성 개념**은 캡스톤에 유용하나, 캡스톤의 동시성은 JVM 백엔드(backend-reliability)가 직접 커버하므로 critical path는 아니다.
+
+**대장 정의와 입문 진입점**: `대장`은 그 스택의 **공개 대표 산출물 + 가장 두꺼운 통합**이다(반드시 가장 먼저 하는 프로젝트는 아니다). 신입 입문은 각 대장의 `docs/notes/systems/<x>.md`로 들어간다. 대장이 입문을 자족하지 못하는 스택은 **경유지**를 따른다:
+
+| 스택 | 입문 진입점 | 비고 |
+|---|---|---|
+| C++ 트랙 | `stl-container/docs/notes/systems/cpp.md` | 자족(OOP·참조·RAII 온램프) → `notes/cpp98.md` 심화 |
+| Node/TS | `pong-pong/docs/notes/systems/node-typescript.md` | 자족. grounded는 TS언어·프론트 선행 곁가지 |
+| 프론트 | `portfolio-site/docs/notes/systems/react.md` | 자족(front-* 미이수 기준). React 심화는 frontend-reliability 곁가지 |
+| 시스템 서버 | **경유지: irc-relay-server** `docs/notes/systems/cpp.md` | 대장 game-server-reliability는 C++20 심화. game-server 입문 진입은 보류 |
 
 ---
 
