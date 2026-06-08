@@ -131,9 +131,11 @@ Step 2에서 어휘가 막히면 그때만 `docs/notes/`의 해당 개념 노트
 | **시스템 서버** | game-server-reliability | 순차(2B) | — | **소켓(epoll/kqueue)·동시성**; C++ 98→17→20 점프는 SEQUENCE 로컬 경사 대안 따름 |
 | **Node/TS 백엔드** | grounded-travel | 순차(2B) | 표준 | TS 타입 경계·WebSocket·트랜잭션 |
 | **프론트엔드** | frontend-reliability | **triplet(2A)** 경향 | 표준 | RSC 경계·데이터 패칭·상태 소유권 |
+| **모바일** | mobile-reliability(→곁가지 foundations) | foundations=순차(2B)/reliability=**triplet(2A)** 경향 | 표준(docs/notes 보유) | **구조적 동시성·StateFlow 상태소유권·오프라인 캐시 정합성·토큰 refresh 레이스·WebSocket 재연결+멱등** |
 
 > **docs/notes 없는 프로젝트**: format-printer · signal-message-bus · stack-sort · stl-container · game-server-foundations-training → §3 Step 3에서 루트 notes Part 1로 대체.
 > **reference-impl 없는(핸즈온) 프로젝트**: network-routing-notes · ray-scene-tracer (SEQUENCE가 "노트 없음/얕음"으로 표기) → §3 Step 1을 개념 학습 + 직접 구현으로.
+> **모바일 모듈 상세**: 스택·notes 목록·트랙·캡스톤 API 계약은 [mobile-track.md](mobile-track.md)에 정본으로 있다. foundations=앱빌드 기본기(순차 2B), reliability=신뢰성 대장(triplet 경향), 캡스톤(sportsbook/mobile-client)=§3 루프 + 종합 적용(페어 notes 재사용) + 신규 클라이언트 통합 노트 2~3개. (경로 E = SEQUENCE §3.)
 
 ### 경로 A 관통 예시 (각 단계에 §3 루프 적용)
 
