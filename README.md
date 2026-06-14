@@ -22,6 +22,7 @@
 | [`LEARNING.md`](LEARNING.md) | 각 레포를 어떻게 도는가 — 보편 루프(§3)·아티팩트 역할 정의(§2) | 레포 하나를 돌 때마다 |
 | [`INTERVIEW.md`](INTERVIEW.md) | 전 레포 L3를 모은 백지 설명 세트(주제 12축 + 레포별 색인) | 면접 준비·복기 |
 | [`mobile-track.md`](mobile-track.md) | 모바일 트랙 설계 정본(스택·API 계약·출구 기준) | 모바일 트랙 진입 |
+| [`parallel-track.md`](parallel-track.md) | 42 주도 + 백/프론트 병렬 실행 캘린더(SEQUENCE 경로 F의 짝) | 세 트랙 동시 진행 |
 
 ### 작업·검수 (작업 세션/검수 세션용)
 
