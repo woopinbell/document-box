@@ -96,6 +96,7 @@ seungwoo/
 | **레포를 만들거나 문서를 보강한다** (작업 세션) | 루트 `CLAUDE.md`(AI 라우터) → [docs-commit-note.md](docs-commit-note.md)(빌드·파생 룰) + [commit-policy.md](commit-policy.md)(커밋 규율) |
 | **검수한다** | 읽기전용 탐지·보고 = [AUDIT.md](AUDIT.md) / 탐지→수정→커밋 = [QUALITY.md](QUALITY.md). 진행 원장은 `plan-box/quality-ledger.md` |
 | **모바일 트랙 설계를 본다** | [mobile-track.md](mobile-track.md) |
+| **42 주도 + 백/프론트 병렬 진행 계획을 본다** | [SEQUENCE.md](SEQUENCE.md) 경로 F → 캘린더 [parallel-track.md](parallel-track.md) |
 | **AI 트랙 기획을 본다** | `plan-box/`(TARGET.md · SEQUENCE-ai.md 등 — 비-git 허브) |
 
 ## 4. 불변 규칙 (요약 — 본문은 각 정본에)
