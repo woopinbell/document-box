@@ -183,7 +183,8 @@ document-box/QUALITY.md 를 읽고 그대로 따른다(그것이 가리키는 do
 ### 8.1 전 레포(40개) 런 — 하나의 오케스트레이션으로
 
 **"전 레포" = AUDIT §1 열거 = 현재 40개**(`find . -maxdepth 3 -name .git`의 부모 중 `document-box`·
-`portfolio-public` 제외, `plan-box`는 비-git이라 자동 제외; `sportsbook/`·`ai-capstone/`은 하위 각 레포).
+`launch-box`(private git 출하 허브 — git이지만 명시 제외)·`portfolio-public` 제외, `plan-box`는 비-git이라
+자동 제외; `sportsbook/`·`ai-capstone/`은 하위 각 레포).
 
 한 오케스트레이션 세션으로 **가능하다** — 단 *끊김 없는 단일 실행*에 기대지 말고 **체크포인트식**으로 돈다:
 

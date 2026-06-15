@@ -26,6 +26,6 @@
 - 커밋: 영어 명령형 제목 + 한국어 `[근거]/[변경]/[검증]`, **AI 트레일러 없음**, 근무시간 09:00–21:59 KST
   (상세 `document-box/commit-policy.md`).
 - **새 코퍼스 학습 콘텐츠는 만들지 않는다** — 출하·취업은 *기존 자산을 활용*한다.
-- 허브: `document-box`(거버넌스·git) · `plan-box`(기획·비-git) · `launch-box`(출하·취업·비-git).
+- 허브: `document-box`(거버넌스·git) · `plan-box`(기획·비-git) · `launch-box`(출하·취업·**private git**).
 
 > 라우터는 의도적으로 얇다. 세부 룰·기준·절차는 위 정본에 있다 — 여기에 새 룰을 적지 말 것.
