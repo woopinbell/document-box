@@ -16,8 +16,9 @@ AI가 코드를 싸게 찍을수록 값이 오르는 건 **판단력**이다 —
 바로 그 결함). 노트는 재구성의 **산출물**이지 대체물이 아니다 — 벽에 부딪힌 *뒤에* 당신 언어로 고쳐
 써야 빌려온 산문이 아니라 얻은 판단이 남는다.
 
-문서 계층(선수지식): 루트 `notes/`(선행 교과서) → `docs/practice/`(빈칸 문제) →
-`docs/notes/`(막힐 때 용어집) → `docs/commits/`(답+이유. **마지막에 펼친다**).
+문서 계층(레포 들어갈 때 순서): `docs/DESIGN.md`(**먼저 1회** — 왜 이 레포·무엇을 만들기로·구현
+경로 개관) → 루트 `notes/`(선행 교과서) → `docs/practice/`(빈칸 문제) → `docs/notes/`(막힐 때
+용어집) → `docs/commits/`(답+이유. **마지막에 펼친다**).
 
 ## 커밋을 셋으로 나눠라 — 전부 같은 깊이로 돌지 마라
 
@@ -41,6 +42,24 @@ AI가 코드를 싸게 찍을수록 값이 오르는 건 **판단력**이다 —
    *왜* 다른지 따진다. **여기가 학습의 본체다.**
 5. 답지 끝 **L3를 백지에서 말로 설명.** 안 되면 그 커밋은 안 끝난 거다.
 6. 레포 닫을 때 [INTERVIEW.md](INTERVIEW.md)에서 그 레포 L3 줄을 한 번 더 훑는다.
+
+**예시 · `backend-foundations` 한 세션 (순차가 핵심):**
+
+1. **`docs/DESIGN.md` 먼저(1회)** — JVM 대장인 이유·만들기로 한 것(spine/branches/bridge)·구현
+   경로를 잡는다. "이 레포의 L3가 어디냐"가 여기서 보인다.
+2. **`notes/` 정독**(디스크 알파벳순 아님 — SEQUENCE §4 읽기 순서): 언어 `java-21` → 빌드
+   `gradle` → 코어 `spring-boot`·`spring-web-mvc` → 기능 `validation`·`security`·`pagination` →
+   테스트 `junit5`·`testcontainers`. 처음 보는 스택만 1부(개념)부터, 아는 건 2부만. `reference-impl/` 한 번 빌드.
+3. **`docs/commits/README`의 읽는 순서로 번호를 따라간다.** 번호 0–100 중 merge·메타는 파일 없이
+   건너뛰고, **문제지 `docs/practice/NNN.md`는 실체 있는 구현 커밋에만 있다**(예: 005·006·009… —
+   마커/순수문서엔 없음). 각 번호: 분류(답지 끝 L3/L2/L1) → 문제지 있으면 덮고 구현 → 문제지
+   `## 검증` 명령 그대로(`make test-spring-exercise EX=<과제>`) green → `docs/commits/NNN.md`와 **diff**.
+4. **다음 번호로 넘어가는 기준 = 그 급의 완료 바:**
+   - **L3**(bridge `idempotent-create-lite`·`transaction-boundary-lite` — 멱등·트랜잭션 경계):
+     **백지에서 모든 결정 방어 + 실패 모드 설명**되면 다음. 안 되면 안 끝난 것.
+   - **L2**(spine CRUD·`06-testing-slices`): 답지 펼쳐 흐름·책임 설명되면 다음.
+   - **L1**(`01-http-json-basics` 보일러플레이트, 문제지 없는 번호): 읽고 이해하면 **즉시** 다음 — 재구성하지 마라.
+5. 레포 닫으면 INTERVIEW.md의 bf L3 줄 복기 → 다음 레포(SEQUENCE).
 
 **모드 B · 리뷰 드릴** (변주 — 살아남는 직무를 직접 훈련):
 
