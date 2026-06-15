@@ -12,6 +12,7 @@
   앞으로 더 생길 수 있으니 폴더명을 박지 말고, `find`로 잡힌 하위 `.git`을 단위로 본다.
 - **제외**: `document-box/`는 dual-form 대상이 아니다(프로그램 허브 — `SEQUENCE.md`·`LEARNING.md` 등).
   `plan-box/`도 비-git **기획 허브**라 대상이 아니다(`find`가 .git을 안 잡으므로 자동 제외).
+  `launch-box/`는 **private git 레포**라 `find`에 잡히지만 출하·취업 실행 허브이므로 **명시적으로 제외**한다(document-box처럼 git이되 작업 단위 아님).
 
 ## 불변 규칙
 

@@ -42,5 +42,5 @@
 3. **교차 레포 문서만** 여기 둔다. 한 레포에 속한 결정은 그 레포 `docs/`(ADR·commits)에.
 4. 작업 진행 **원장·기획은 `plan-box/`** (비-git 허브) — 품질 런 원장 `quality-ledger.md`, 커리어 타겟
    `TARGET.md`, AI 트랙 기획(`SEQUENCE-ai.md` 등)이 거기 있다.
-5. **출하·취업 실행은 `launch-box/`** (비-git 허브) — 라이브 배포·OSS·취업 파이프라인(`SHIP.md`·
+5. **출하·취업 실행은 `launch-box/`** (private git 허브) — 라이브 배포·OSS·취업 파이프라인(`SHIP.md`·
    `HIRE.md`·`ledger.md`). 현재 국면 라우팅은 루트 `CLAUDE.md`.
