@@ -4,8 +4,8 @@
 > **L3만 손으로 다시 만들고**, AI에게 시켜 **틀린 곳을 잡는다**(리뷰). 코드 *재현*이 아니라 *판단력*.
 >
 > **읽는 법(5초)**: 위에서 아래로 한 번에 읽힌다 — *왜 배우나 → 커밋 3분류 → 공통 루프 → 레포 장르
-> 6종(유형별 한 바퀴) → 묶음별 차이 → 첫 걸음*. 규칙 정본은 [LEARNING.md](LEARNING.md), 경로 선택은
-> [SEQUENCE.md](SEQUENCE.md)이고 **충돌하면 그쪽이 이긴다**.
+> 6종(유형별 한 바퀴) → 묶음별 차이 → 전체 경로·완주 기준 → 첫 걸음*. 규칙 정본은 [LEARNING.md](LEARNING.md),
+> **다른 경로·전체 카탈로그는** [SEQUENCE.md](SEQUENCE.md)(충돌 시 그쪽이 이긴다).
 
 ## 왜 이렇게 배우나 (AI 시대의 전제)
 
@@ -150,6 +150,23 @@ AI가 코드를 싸게 찍을수록 값이 오르는 건 **판단력**이다 —
 | **Java/Spring** (bf·br → sportsbook 9) | bf/br=과제, sportsbook=기능 커밋 | 테스트 채점기 / `mvn test`(또는 `./mvnw`) | **돈·멱등·트랜잭션·outbox** — 이 코퍼스의 심장. 답지의 "왜" 절을 빼먹지 말 것 | sportsbook은 **순서 고정**: shared-protocol → betting → wallet → risk·odds-feed → settlement → gateway·admin → orchestration. 노트는 orchestration/notes에 중앙화 — 서비스 들어가기 전 해당 노트 1편 선행. 통합 검증은 Docker 필요(없으면 단위까지만 하고 e2e는 답지로) |
 | **모바일** (mf·mr·mobile-client) | 과제/기능 커밋 | JVM 단위 테스트(코덱 등)만 SDK 없이 가능 | 상태 소유(ViewModel·StateFlow), single-flight refresh, 오프라인 우선 | SDK 없는 머신에선 빌드 불가 — 코드 리딩+JVM 테스트로 돌고, 빌드 검증은 SDK 환경에서 |
 | **AI** (af·ar → ai-capstone 5) | 과제/기능 커밋 | 전부 **오프라인·결정적**(포트 주입) — 어디서든 실행됨 | grounding 게이트, step-cap, 평가 3층(결정·judge·회귀), 멱등 키=의도의 함수 | capstone 순서: shared-contracts → rag-agent → reliability-gateway → eval-gate → orchestration |
+
+## 전체 경로와 완주 기준 (기본 = 경로 A)
+
+순서까지 이 한 장으로 끝내려면 — **최소 완주 척추(경로 A · JVM 취업 최단):**
+
+```
+linux-admin ─→ backend-foundations ─→ backend-reliability ─→ container-stack ─→ sportsbook
+  (M0·⑤)            (①)                    (①)                  (②)         (캡스톤·① 순서고정)
+```
+
+(괄호 = 위 〈장르 6종〉.) C/C++/시스템/Node/프론트는 **전부 생략**, `network-routing-notes`(③)는 선택.
+**다른 경로(B 정통CS완주·F 42 병렬 등)·전체 모듈 카탈로그·의존 사슬은 [SEQUENCE.md](SEQUENCE.md) 정본.**
+
+**전 과정 "완주" = 이 둘이 서면 끝** (정본 [LEARNING.md](LEARNING.md) §5·§6):
+- **캡스톤 `sportsbook` 통과** — 9개 레포(서비스 7 + gateway + orchestration)를 순서 고정으로 돌고,
+  Tier-1 노트 8편 선행 + 9레포 통합·push. L3(돈·멱등·트랜잭션·outbox)를 백지 방어.
+- **[INTERVIEW.md](INTERVIEW.md) Part 1(주제 12축)을 백지로 설명** — 전 레포 L3가 한 입으로 나온다.
 
 ## 지금 시작 — 첫 한 걸음
 
