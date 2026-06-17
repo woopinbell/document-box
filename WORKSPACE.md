@@ -3,9 +3,9 @@
 > **한 줄**: `~/Desktop/seungwoo`는 스택(Spring·React·Android·RAG…)을 **직접 재구성하며** 익힌
 > ~40개 독립 레포의 학습 포트폴리오다. 각 레포는 그 과정을 정해진 형태의 문서로 남긴다.
 >
-> **처음이라면**: ① 이 문서로 *전체 지도*를 잡고 → ② 학습은 [STUDY.md](STUDY.md)(실전 압축),
-> 경로 선택은 [SEQUENCE.md](SEQUENCE.md), 레포 도는 법은 [LEARNING.md](LEARNING.md). 전체 문서 색인은
-> [README](README.md). (이 문서는 *지도와 동선*만 다룬다 — 룰 본문은 각 거버넌스 문서가 정본이다.)
+> **처음이라면**: ① 이 문서로 *전체 지도*를 잡고 → ② 학습은 [STUDY.md](STUDY.md) **하나로 끝**(전
+> 분야·순서·완주). 전체 문서 색인은 [README](README.md). (이 문서는 *지도와 동선*만 다룬다 — 룰 본문은
+> 각 거버넌스 문서가 정본이다.)
 
 ## 0. 한눈에 — 무엇이 어디에 있나
 
@@ -93,12 +93,12 @@ seungwoo/
 
 | 시나리오 | 동선 |
 |---|---|
-| **학습을 시작한다** | 실전 압축판 [STUDY.md](STUDY.md) 하나면 충분(공통 루프 + 묶음별 차이표). 경로 선택은 [SEQUENCE.md](SEQUENCE.md), 루프 정본은 [LEARNING.md](LEARNING.md) §3 |
+| **학습을 시작한다** | [STUDY.md](STUDY.md) **하나로 끝** — 왜·한 레포 도는 법·분야별·전체 순서(경로 A~F)·캡스톤·완주가 다 있다(구 SEQUENCE·LEARNING은 흡수된 동결 레거시) |
 | **면접을 준비한다** | [INTERVIEW.md](INTERVIEW.md) Part 1(주제별 코어)을 백지 설명 연습 → 막히면 포인터의 답지 복기 |
 | **레포를 만들거나 문서를 보강한다** (작업 세션) | 루트 `CLAUDE.md`(AI 라우터) → [docs-commit-note.md](docs-commit-note.md)(빌드·파생 룰) + [commit-policy.md](commit-policy.md)(커밋 규율) |
 | **검수한다** | 읽기전용 탐지·보고 = [AUDIT.md](AUDIT.md) / 탐지→수정→커밋 = [QUALITY.md](QUALITY.md). 진행 원장 `plan-box/quality-ledger.md` |
-| **모바일 트랙 설계를 본다** | [mobile-track.md](mobile-track.md) |
-| **42 주도 + 백/프론트 병렬 진행 계획을 본다** | [SEQUENCE.md](SEQUENCE.md) 경로 F → 캘린더 [parallel-track.md](parallel-track.md) |
+| **모바일 트랙 설계를 본다** | [STUDY.md](STUDY.md) Part 4(모바일)·Part 6(캡스톤 API). 구 [mobile-track.md](mobile-track.md)는 동결 레거시 |
+| **42 주도 + 백/프론트 병렬 진행 계획을 본다** | [STUDY.md](STUDY.md) Part 5 경로 F → 캘린더 [parallel-track.md](parallel-track.md) |
 | **AI 트랙 기획을 본다** | `plan-box/`(TARGET.md · SEQUENCE-ai.md 등 — 비-git 허브) |
 
 ## 4. 불변 규칙 (요약 — 본문은 각 정본에)

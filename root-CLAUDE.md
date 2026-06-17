@@ -11,7 +11,8 @@
 ## 먼저 읽어라 (거버넌스 정본)
 
 - **`document-box/CLAUDE.md`** — 워크스페이스 라우터(의도별 정본 색인). 작업 전 이걸 먼저 읽어라.
-- 전체 지도 `document-box/WORKSPACE.md` · 학습 경로 `document-box/SEQUENCE.md`
+- 전체 지도 `document-box/WORKSPACE.md` · **학습 정본 `document-box/STUDY.md`**(전 분야·순서·완주 단일
+  문서 — 구 `SEQUENCE`·`LEARNING`·`mobile-track`은 흡수된 동결 레거시).
   (병렬 진행 = 경로 F → `document-box/parallel-track.md`).
 
 ## 허브 3개

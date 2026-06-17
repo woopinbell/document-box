@@ -15,7 +15,7 @@
 
 | 하려는 일 | 읽을 문서 |
 |---|---|
-| 레포 **학습/복기** | `document-box/STUDY.md`(실전 압축) · `LEARNING.md`(정본) · `INTERVIEW.md`(L3 백지 세트) |
+| 레포 **학습/복기** | `document-box/STUDY.md`(**학습 정본** — 전 분야·순서·완주 단일 문서) · `INTERVIEW.md`(L3 백지 부록). 구 `SEQUENCE`·`LEARNING`·`mobile-track`은 STUDY에 흡수된 **동결 레거시** |
 | **출하·취업**(갭 메우기) | `launch-box/README.md` → `SHIP.md` · `HIRE.md` · `ledger.md` |
 | 워크스페이스 **전체 파악** | `document-box/WORKSPACE.md` |
 | **코퍼스 작업**(빌드/품질/검수/커밋 규율) | `document-box/corpus-router.md`(작업 종류별 정본 색인 — 구 루트 라우터) |

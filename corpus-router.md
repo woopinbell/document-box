@@ -15,14 +15,13 @@
 | 하려는 일 | 읽을 문서 |
 |---|---|
 | 공통/빌드 룰 (dual-form 작성·실체성·파생·금지) | `docs-commit-note.md` (= 공통 룰 본체) |
-| 무엇을 / 어떤 순서로 (모듈·경로) | `SEQUENCE.md` |
-| 각 프로젝트를 어떻게 도나 (학습 루프·역할 정의) | `LEARNING.md` |
+| 무엇을 / 어떤 순서로 · 각 프로젝트를 어떻게 도나 (분야·순서·루프) | `STUDY.md`(학습 정본). 구 `SEQUENCE`·`LEARNING`은 STUDY에 흡수된 **동결 레거시**(외부 §참조 호환용) |
 | 확장(완결 레포 후속 작업) — phase 모델 | `docs-commit-note.md` §확장 작업 모델 + `commit-policy.md` §날짜·배치 |
 | 커밋·날짜 규율 | `commit-policy.md` |
 | **재검수** — 일반 dual-form (읽기전용 탐지·보고) | `AUDIT.md` |
 | **품질 개선 런** (읽기-쓰기: 탐지→수정→커밋·푸시) | `QUALITY.md` §1–§8 |
 | **품질 런 인수 검토** (read-only: 클레임·원장·표본 검증, 안 고침) | `QUALITY.md` §9 |
-| 모바일 트랙 설계 | `mobile-track.md` |
+| 모바일 트랙 설계 | `STUDY.md` Part 4(모바일)·Part 6(캡스톤 API). 구 `mobile-track.md`는 **동결 레거시**(빌드 세션 절차는 그 §6) |
 
 ## 공통 불변
 
