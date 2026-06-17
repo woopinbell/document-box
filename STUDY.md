@@ -193,8 +193,8 @@ Part 2의 루프는 모든 레포에 같다. 하지만 **"무엇을 재구성하
 | 시스템 서버 | game-server-reliability | 2B | ⑥ | 소켓(epoll/kqueue)·동시성·경계/불변식 |
 | 인프라/운영 | container-stack | 2B | ② (nrn=③) | 왜 이 정책(헬스체크·secret·Compose·DB 초기화) |
 | **JVM 백엔드 ★** | backend-foundations | **2A** | ① | **트랜잭션·동시성·security·멱등·outbox** |
-| Node/TS 백엔드 | grounded-travel | 2B | ① | TS 타입 경계·WebSocket·트랜잭션·서버 권위 |
-| 프론트엔드 | frontend-reliability | 2A 경향 | ① | RSC 경계·데이터 패칭·상태 소유권·실패 모드 |
+| Node/TS 백엔드 | pong-pong | 2B | ① | TS 타입 경계·WebSocket·트랜잭션·서버 권위 |
+| 프론트엔드 | portfolio-site | 2B/2A | ① | RSC 경계·데이터 패칭·상태 소유권·실패 모드 |
 | 모바일 | mobile-reliability | mf=2B / mr=2A | ① | 구조적 동시성·StateFlow·오프라인 정합·refresh 레이스·재연결 |
 | AI | (af·ar → ai-capstone) | 기능 커밋 | ① | grounding·step-cap·평가 3층·멱등 키 |
 | 캡스톤 | sportsbook | §3 루프 | ① | 돈·멱등·트랜잭션·outbox·분산 (Part 6) |
@@ -247,21 +247,21 @@ Part 2의 루프는 모든 레포에 같다. 하지만 **"무엇을 재구성하
 - **검증**: 테스트 채점기 / `mvn test`(또는 `./mvnw`·Gradle)
 - **함정**: PostgreSQL은 JPA로 충당(경로 A). bf는 트랜잭션·security, br은 동시성·롤백에 집중
 
-### Node/TS 백엔드 — 대장 `grounded-travel` (곁가지 chatbot-evaluation · pong-pong)
-- **스택**: TypeScript · Node · Fastify · WebSocket · PostgreSQL(풀스택)
-- **notes 순서**: grounded `typescript`→`zod` · `vite`→`vitejs-plugin-react` · `leaflet`→`react-leaflet` · chatbot `pnpm` · `fastify`→`fastify-multipart` · `better-sqlite3` · pong `nodejs`→`tsx` · `fastify-websocket`→`ws` · `postgresql`→`pg`→`kysely` · `playwright`
+### Node/TS 백엔드 — 대장 `pong-pong` (공개·입문 대장 · 풀스택; 곁가지 grounded-travel · chatbot-evaluation)
+- **스택**: TypeScript · Node · Fastify · WebSocket · PostgreSQL(풀스택). pong이 **새로 가르치는 핵심 = PostgreSQL·WebSocket**
+- **notes 순서**: 입문 `pong/docs/notes/systems/node-typescript.md`(자족) → 루트 `nodejs`→`tsx` · `fastify-cors`→`fastify-cookie`→`fastify-websocket`→`ws` · `postgresql`→`pg`→`kysely` · `caddy` · `playwright`. **깊은 곁가지**: TS 언어 = grounded `typescript`→`zod`(프론트의 선행이기도), Fastify/SQLite = chatbot
 - **리듬/장르**: 순차(2B) · 장르 ①
 - **L3**: TS 타입 경계 · WebSocket · 트랜잭션 · **서버 권위 모델**(pong: 입력 신뢰·tick 루프·인증 전 buffer)
-- **검증**: `pnpm dev`/`npm run dev` **실행하며** + 테스트
-- **함정**: 공유 계약(schemas)이 중심 — 화면↔코드 왕복. pong 85커밋 전부 재구성은 과투자 — L3만 깊게
+- **검증**: `pnpm dev`/`npm run dev` **실행하며** + 테스트(Vitest·smoke·Playwright)
+- **함정**: 공유 계약(schemas)이 중심 — 화면↔코드 왕복. pong 85커밋 전부 재구성은 과투자 — L3만 깊게. **선행은 M0뿐**(front/back foundations 불필요)
 
-### 프론트엔드 — 대장 `frontend-reliability` (React) (곁가지 frontend-foundations · portfolio-site Next.js)
-- **스택**: Next.js · React · Tailwind v4 (+ RSC · Router · Query · Test)
-- **notes 순서**: frt `javascript-esm` · `react`→`react-server-components`→`react-router-dom` · `tanstack-react-query`→`msw` · `react-hook-form` · `vitest`→`testing-library`→`jest-axe` · `storybook` · ff `zustand` · portfolio `nextjs` · `tailwindcss-v4`
-- **리듬/장르**: triplet(2A) 경향 · 장르 ①
-- **L3**: **frt가 본대** — 실패 모드(스테일 응답, 낙관적 업데이트 롤백, 에러 경계, RSC 경계) · 데이터 패칭 · 상태 소유권
+### 프론트엔드 — 대장 `portfolio-site` (공개·자족 입문 대장 · Next.js; 곁가지 frontend-reliability · frontend-foundations)
+- **스택**: Next.js · React · Tailwind v4 (+ React 심화: RSC · Router · Query · Test)
+- **notes 순서**: 입문 `portfolio/docs/notes/systems/react.md`(자족) → `nextjs` · `tailwindcss-v4`. **깊은 곁가지**: React 심화 = frontend-reliability `react`→`react-server-components`→`react-router-dom` · `tanstack-react-query`→`msw` · 테스트 `vitest`→`testing-library`→`jest-axe`·`storybook`; Zustand 워밍업 = frontend-foundations `zustand`
+- **리듬/장르**: portfolio=순차(2B) / frontend-reliability=triplet(2A) 경향 · 장르 ①
+- **L3**: **심화 신뢰성은 frontend-reliability가 본대** — 실패 모드(스테일 응답·낙관적 업데이트 롤백·에러 경계·RSC 경계)·데이터 패칭·상태 소유권. (입문 자족은 portfolio)
 - **검증**: 테스트 채점기 + `check:repo`
-- **함정**: ffd의 카탈로그-범프류 반복 커밋은 묶어서 빠르게 — 전부 같은 무게로 돌지 말 것
+- **함정**: frontend-foundations의 카탈로그-범프류 반복 커밋은 묶어서 빠르게 — 전부 같은 무게로 돌지 말 것
 
 ### 모바일 — 대장 `mobile-reliability` (곁가지 mobile-foundations · 캡스톤 sportsbook/mobile-client)
 - **플랫폼 = Android(Kotlin + Jetpack Compose).** Kotlin은 JVM이라 Java 21·Spring·Gradle Kotlin DSL과 **최대 전이**, 캡스톤은 같은 도메인 모델 재기술. "해외 베팅: 백엔드+게이트웨이+Android" 단일 서사가 같은 고용주 카테고리. (Flutter=발산·콜드스타트, iOS=시너지 0 → 탈락)
