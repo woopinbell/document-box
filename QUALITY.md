@@ -8,7 +8,7 @@
 > → 재검증 → 커밋**(read-write). QUALITY 세션은 탐지 단계에서 AUDIT.md §3 체크리스트를 그대로 재사용하고,
 > 거기에 §1의 추가 게이트를 더한 뒤, 미달 항목만 §3 절차로 개선한다.
 >
-> 시작 전 참조: 루트 `CLAUDE.md`(라우터) → `document-box/docs-commit-note.md`(빌드/파생 정본) ·
+> 시작 전 참조: document-box `CLAUDE.md`(라우터) → `document-box/docs-commit-note.md`(빌드/파생 정본) ·
 > `LEARNING.md`(역할 정의 §2) · `commit-policy.md`(커밋·날짜) · `AUDIT.md`(탐지 체크리스트).
 
 ## 0. 원칙

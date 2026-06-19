@@ -1,8 +1,9 @@
-<!-- 이 파일은 워크스페이스 루트 `~/Desktop/seungwoo/CLAUDE.md`(비-git 위치의 auto-load 진입
-     라우터)의 **버전관리 사본**이다. document-box 고유 라우터는 별도 파일 `CLAUDE.md`다 — 혼동 금지.
-     루트 원본(비-git)을 수정하면 이 사본도 함께 갱신한다. (원본이 정본, 이건 백업/이력용.) -->
+<!-- 이관·보존 스냅샷 (2026-06-19). 구 워크스페이스 루트 라우터 `~/Desktop/seungwoo/CLAUDE.md`를
+     document-box로 이관한 것이다. 루트의 비-git auto-load 라우터는 **제거**됨 — 워크스페이스 루트에는
+     더 이상 auto-load 라우터가 없다. 활성 라우팅은 document-box 고유 라우터 `CLAUDE.md`가 맡고,
+     이 파일은 구 루트 라우터의 보존본(현 국면·ops-lab 포인터 포함)이다. -->
 
-# CLAUDE.md — seungwoo 워크스페이스 루트 라우터 (얇게 유지)
+# (이관·보존) seungwoo 워크스페이스 루트 라우터 — 구 `~/Desktop/seungwoo/CLAUDE.md`
 
 `~/Desktop/seungwoo`는 학습-through-구현 독립 git 레포 코퍼스(~40+) + 허브 3개다. 워크스페이스
 루트 자체는 git이 아니다. 이 파일은 **얇은 진입 라우터** — 룰 본문은 두지 않고 정본을 가리킨다.

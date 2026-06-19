@@ -95,7 +95,7 @@ seungwoo/
 |---|---|
 | **학습을 시작한다** | [STUDY.md](STUDY.md) **하나로 끝** — 왜·한 레포 도는 법·분야별·전체 순서(경로 A~F)·캡스톤·완주가 다 있다(구 SEQUENCE·LEARNING은 흡수된 동결 레거시) |
 | **면접을 준비한다** | [INTERVIEW.md](INTERVIEW.md) Part 1(주제별 코어)을 백지 설명 연습 → 막히면 포인터의 답지 복기 |
-| **레포를 만들거나 문서를 보강한다** (작업 세션) | 루트 `CLAUDE.md`(AI 라우터) → [docs-commit-note.md](docs-commit-note.md)(빌드·파생 룰) + [commit-policy.md](commit-policy.md)(커밋 규율) |
+| **레포를 만들거나 문서를 보강한다** (작업 세션) | document-box `CLAUDE.md`(AI 라우터) → [docs-commit-note.md](docs-commit-note.md)(빌드·파생 룰) + [commit-policy.md](commit-policy.md)(커밋 규율) |
 | **검수한다** | 읽기전용 탐지·보고 = [AUDIT.md](AUDIT.md) / 탐지→수정→커밋 = [QUALITY.md](QUALITY.md). 진행 원장 `plan-box/quality-ledger.md` |
 | **모바일 트랙 설계를 본다** | [STUDY.md](STUDY.md) Part 4(모바일)·Part 6(캡스톤 API). 구 [mobile-track.md](mobile-track.md)는 동결 레거시 |
 | **42 주도 + 백/프론트 병렬 진행 계획을 본다** | [STUDY.md](STUDY.md) Part 5 경로 F → 캘린더 [parallel-track.md](parallel-track.md) |

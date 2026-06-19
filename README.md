@@ -35,7 +35,7 @@
 
 | 문서 | 무엇 | 언제 |
 |---|---|---|
-| [`docs-commit-note.md`](docs-commit-note.md) | 공통 빌드·파생 룰(dual-form 작성·실체성 게이트·파생 규칙·금지) — 루트 `CLAUDE.md` 라우터의 본체 | 레포를 만들거나 문서를 보강할 때 |
+| [`docs-commit-note.md`](docs-commit-note.md) | 공통 빌드·파생 룰(dual-form 작성·실체성 게이트·파생 규칙·금지) — 코퍼스 빌드 룰 본체(정본) | 레포를 만들거나 문서를 보강할 때 |
 | [`commit-policy.md`](commit-policy.md) | 커밋 메시지·날짜 규율 정본 | 커밋·푸시 전 |
 | [`AUDIT.md`](AUDIT.md) | 읽기전용 재검수 절차(탐지·보고만) | 전수 검수 세션 |
 | [`QUALITY.md`](QUALITY.md) | 품질 검토·개선 절차(탐지→수정→커밋, §9 인수 검토 포함) | 품질 개선 런·그 인수 검토 |
@@ -43,11 +43,11 @@
 
 ## 이 허브의 운영 원칙
 
-1. **정본은 한 곳.** 룰 본문은 여기 해당 문서에만 둔다. 루트 `CLAUDE.md`는 AI 세션용 **얇은 라우터**라
-   본문을 갖지 않고 여기를 가리킨다. 다른 레포·문서에는 포인터만.
+1. **정본은 한 곳.** 룰 본문은 여기 해당 문서에만 둔다. document-box `CLAUDE.md`가 AI 세션용 **얇은 라우터**(본문 없이 여기 정본들을 가리킴)다.
+   워크스페이스 루트에는 더 이상 auto-load 라우터를 두지 않는다 — 구 루트 라우터 스냅샷은 [`operating-context.md`](operating-context.md). 다른 레포·문서에는 포인터만.
 2. **새 룰은 해당 정본에 추가**한다 — README나 라우터에 늘어놓지 않는다.
 3. **교차 레포 문서만** 여기 둔다. 한 레포에 속한 결정은 그 레포 `docs/`(ADR·commits)에.
 4. 작업 진행 **원장·기획은 `plan-box/`** (비-git 허브) — 품질 런 원장 `quality-ledger.md`, 커리어 타겟
    `TARGET.md`, AI 트랙 기획(`SEQUENCE-ai.md` 등)이 거기 있다.
 5. **출하·취업 실행은 `launch-box/`** (private git 허브) — 라이브 배포·OSS·취업 파이프라인(`SHIP.md`·
-   `HIRE.md`·`ledger.md`). 현재 국면 라우팅은 루트 `CLAUDE.md`.
+   `HIRE.md`·`ledger.md`). 현재 국면 라우팅은 document-box `CLAUDE.md`.
