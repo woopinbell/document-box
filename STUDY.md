@@ -5,7 +5,7 @@
 > 코드 *재현*이 아니라 *판단력*. **무엇을·어떤 순서로·어떻게 도는지 전부 여기 있다.**
 >
 > **읽는 법**: 처음이면 Part 1→2를 읽고(왜·한 레포 도는 법), 네가 들어갈 분야를 Part 4에서 펴고,
-> 순서는 Part 5, 끝은 Part 6~7. 시간이 없으면 **Part 5의 경로 A 척추**만 따라가도 완주된다.
+> 순서는 Part 5(두 순서의 빠른 대조는 **Part 0**), 끝은 Part 6~7. 시간이 없으면 **Part 5의 경로 A 척추**만 따라가도 완주된다.
 
 > ℹ️ 이 문서는 구 `SEQUENCE.md`·`LEARNING.md`·`mobile-track.md`를 **흡수한 정본**이다. 그 셋은
 > 외부 §참조 호환을 위해 동결 보존된 레거시다 — **여기만 읽으면 된다.** 전 레포 L3 색인(면접용)만
@@ -13,6 +13,7 @@
 
 ## 목차
 
+- **Part 0 · 노트-의존 vs 학습곡선 순서** — 두 순서의 정의 · 트랙별 대조표 · 갈리는 지점
 - **Part 1 · 왜 이렇게 배우나** — AI 시대의 전제, 두 근육, 3원칙
 - **Part 2 · 한 레포 도는 법** — 아티팩트 지도 · 커밋 3분류 · 보편 루프 Step 0~5 · dual-form
 - **Part 3 · 레포 장르 6종** — "재구성"의 대상이 다르다 + 6개 워크드 예시
@@ -21,6 +22,39 @@
 - **Part 6 · 캡스톤** — sportsbook 9레포 · Tier-1 8노트 · 모바일 클라이언트 · API 계약
 - **Part 7 · 완주 & 면접** — 완료 기준 · 경로 A 체크리스트 · 12 주제축 · 첫 걸음
 - **부록 · 스택 → 대장 참조표**
+
+---
+
+## Part 0 · 노트-의존 순서 vs 학습곡선 순서 (빠른 참조)
+
+이 코퍼스에는 **두 순서**가 있다 — 보통 겹치지만 갈리는 지점이 있으니, 트랙에 들어가기 전 어느 쪽을
+따를지 정하라.
+
+- **① 노트-의존 = "대장-first"** — 스택을 처음 보면 그 스택의 **대장(가장 깊은 선행 노트)**부터 깊게
+  정독(부록 참조표·Part 4). *노트가 서로를 전제하는 깊이* 순서.
+- **② 학습곡선 = "경로/경사 동선"** — 목표·난이도에 맞춘 **프로젝트 순회**(Part 5 경로 A~F).
+  *난이도가 부드럽게 오르도록* 배치.
+
+**강한 의존 사슬 3개**(C→C++→시스템 · TS→프론트 · 모바일 foundations→reliability)**에서는 둘이 일치**한다.
+갈리는 건 두 경우뿐: **(가)** 대장이 어려운 `*-reliability`라서 곡선이 그 앞에 부드러운 `*-foundations`를
+**워밍업으로 끼울 때**, **(나)** **자족 입문 노트**(`portfolio`)·**독립 섬**(`stack-sort`=Python)을 의존이
+아니라 *교육 논리로* 배치할 때.
+
+| 트랙 | ① 노트-의존 (대장-first) | ② 학습곡선 (권장 순회) | 갈림? |
+|---|---|---|---|
+| **C** | `small-shell`(c-language) → 곁가지 노트(서로 독립) | `small-shell`→`format-printer`→`signal-message-bus`→`thread-dining`→`stack-sort` | 거의 일치 (곁가지 상대순서·Python은 ②가 배치) |
+| **C++** (트랙=C++98) | `stl-container`(cpp98) → ray(노트 없음) | `stl-container`→`ray-scene-tracer` | 일치 |
+| **C++** (방언 전부) | 대장-first: `game-server-reliability`·`irc` 먼저 | 경사: stl(98)→ray→`irc`(17)→`gsf`→`gsr`(20) | **갈림** (Part 4 시스템서버 카드 명시) |
+| **백엔드** (JVM) | `backend-foundations`(대장) → `backend-reliability` | `linux-admin`→`backend-foundations`→`backend-reliability`(→`container-stack`→`sportsbook`) | 일치 (단 *Go만*은 대장이 reliability) |
+| **백엔드** (Node/TS) | `grounded-travel`(TS 대장) → `chatbot`·`pong` | `grounded-travel`→`chatbot-evaluation`→`pong-pong` | 일치 |
+| **프론트엔드** ★ | `grounded`(TS)→`frontend-reliability`(React 대장)→`portfolio`(Next 대장) | `grounded`→`frontend-foundations`(zustand)→`frontend-reliability`→`portfolio-site` | **갈림** — ②가 `foundations`를 워밍업으로 먼저, `portfolio`는 자족 입문 |
+| **모바일** | `mobile-reliability`(Kotlin/Flow 대장) | `mobile-foundations`→`mobile-reliability` (사슬 3) | **갈림** — 프론트와 같은 패턴 |
+| **시스템 서버** | `game-server-reliability`(C++20 대장)·`irc`(17) | `gsf`→`gsr` (또는 C++98→17→20 경사) | **갈림** — C++ 방언 행과 동일 |
+| **인프라 · AI** | container-stack · af→ar→capstone | 동일 | 일치 (선형) |
+
+> **한 패턴으로 외워라:** `*-foundations`/`*-reliability` 쌍에서 **reliability가 그 스택의 대장**이면
+> (React·모바일·Go·시스템서버) 노트-의존은 **reliability로 직행**, 곡선은 **foundations를 워밍업으로 먼저**
+> 넣는다. **JVM만 예외**(`backend-foundations`가 곧 대장이라 일치). 트랙별 상세는 Part 4, 전체 경로는 Part 5.
 
 ---
 
