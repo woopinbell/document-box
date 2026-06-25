@@ -4,12 +4,11 @@
 > 이라는 백엔드의 심장을 손으로 쌓고, 그것을 **분산 시스템 캡스톤 `sportsbook`**(해외 스포츠북 백엔드)으로
 > 통합한다. 코드 *재현*이 아니라 *판단력* — L3만 백지에서 다시 만들고 나머지는 빠르게 통과한다.
 >
-> **언제 시작하나.** 42 트랙(`42.md`)에서 **M0(linux-admin) 작업·커밋 규율을 이미 끝낸 뒤** 분기해 들어온다.
-> 그래서 여기서는 규율 게이트를 다시 다루지 않는다(커밋 정본은 `../commit-policy.md`).
+> **언제 시작하나.** 42 트랙에서 **M0(linux-admin) 작업·커밋 규율을 이미 끝낸 뒤** 분기해 들어온다(이
+> 트랙은 그 규율 게이트를 다시 다루지 않는다 — 필요한 커밋 규율은 아래 〈공통 어휘〉에 정리해 둔다).
 >
 > **읽는 법.** 위에서 아래로 한 프로젝트씩 헤쳐나가면 완주된다. 각 블록은 **자족적**이다 — 그 프로젝트의
-> 노트 순서·재구성 방법·L3·검증·함정·완료 바가 블록 안에 다 있다. (전체 지도 `../STUDY.md` Part 4·6,
-> 면접 L3 색인 `../INTERVIEW.md`.)
+> 노트 순서·재구성 방법·L3·검증·함정·완료 바가 블록 안에 다 있다. 이 문서 하나로 트랙을 완주하도록 썼다.
 >
 > **딱 한 번만 외우는 공통 어휘** (이후 각 블록은 이 말만 쓴다):
 > - **L3** = 돈·멱등·트랜잭션·동시성·보안·outbox 등 *폭발 반경 큰 결정*. **답지 덮고 백지에서 코드+이유를
@@ -18,6 +17,11 @@
 > - **핵심 동작** = 이 트랙의 리듬은 대부분 **triplet(2A)**다 — ① `docs: frame`(문제 계약 문서)을 읽고 →
 >   ② **거기서 멈춰 답지 덮고, 계약만 보고 직접 구현** → ③ `feat` 답지 펼쳐 diff → ④ `test` 문서로 검증
 >   모델 익히기. 답지 끝 `## 기억/설명 Level`에 L3/L2/L1이 적혀 있으니 **들어가기 전에 본다.**
+> - **커밋 규율** (학습 산출물을 커밋할 때 — 이 트랙 전 레포 공통): 제목은 **영어 명령형**
+>   `<type>(<scope>): …`(type ∈ feat·fix·docs·test·refactor·chore·build·ci·perf), 본문은 한국어
+>   `[근거] 왜 / [변경] 무엇 / [검증] 어떻게`(잡일·merge는 면제), **AI 공동저자 트레일러 없음**. 날짜는
+>   KST·author==committer·근무시간 09:00–21:59·분초 랜덤·중복 금지. dual-form 문서는 답지 `docs(commits)` /
+>   문제지 `docs(practice)` 스코프로 나눠 **바뀐 파일만** add(`-A` 금지). 후속 작업은 새 phase로 답지 append.
 
 전체 경로:
 
@@ -73,8 +77,8 @@ reliability로 가는 다리이니 여기 L3는 빼먹지 마라.
 off·`jar` on(메인 클래스 없는 초기 슬롯도 테스트로 진행). Go sub-track은 *비교 학습*이라 같은 레포에 둔다 —
 건너뛰면 가치 반감. **frame 커밋이 문제 계약을 먼저 세우는 설계** — 구현부터 보지 마라.
 
-**완료 바 → 다음으로.** transaction boundary·idempotent create를 **백지로 방어**(`../INTERVIEW.md`의
-bf 줄 복기)되면 reliability로. bf는 *트랜잭션·보안* 중심, br은 *동시성·롤백* 중심으로 역할이 갈린다.
+**완료 바 → 다음으로.** transaction boundary·idempotent create를 **백지로 방어**되면 reliability로.
+bf는 *트랜잭션·보안* 중심, br은 *동시성·롤백* 중심으로 역할이 갈린다.
 
 **커밋 메모.** dual-form 스코프: 답지 `docs(commits)` / 문제지 `docs(practice)` 분리. triplet의 frame은
 순수 계약 문서라 답지만(문제지 없음) — 실체 있는 `feat` 커밋만 문제지를 가진다.
@@ -195,22 +199,24 @@ maven → spring-kafka → avro → flyway → resilience4j(bucket4j 포함)
    Kafka consumer + **Saga + DLQ + outbox**. (L3 밀집)
 7. **`gateway`** — 유일한 공개 진입점: RS256 JWT, rate limit(Bucket4j+Redis), `/api/v1/*` 라우팅, STOMP.
 8. **`admin-api`** — 운영자 표면(void/refund/limit/market-close + audit). 사용자 gateway와 **분리**해
-   blast-radius 격리(ADR-0011).
+   blast-radius(사고 폭발 반경) 격리.
 9. **`orchestration`** — 통합 hub: full-stack compose + e2e + chaos + observability overlay.
 
 > 빠른 신호로 규모를 본다 — wallet 22·betting 28·settlement 25 커밋이 가장 무겁고 L3가 몰린다.
 > shared-protocol 19, risk 13, odds-feed 14, gateway 8, admin 8, orchestration 10.
 
-**재구성·커밋 활용법.** 각 서비스를 **Part 2 루프 그대로** 돌되, **코어(A)는 기존 노트 재사용이라 빠르게**,
-**신규(B) Tier-1 + 돈/정산 L3는 깊게**. 서비스 전환 시 해당 Tier-1 노트 선행 → `docs/commits/` 덮고
-재구성 → 답지 diff. orchestration의 ADR(`docs/architecture/decisions`)을 읽어 *왜 이 설계*를 잡는다.
+**재구성·커밋 활용법.** 각 서비스를 **상단 〈공통 어휘〉의 루프 그대로**(덮고 만들기 → diff) 돌되, **코어(A)는
+기존 노트 재사용이라 빠르게**, **신규(B) Tier-1 + 돈/정산 L3는 깊게**. 서비스 전환 시 해당 Tier-1 노트 선행
+→ `docs/commits/` 덮고 재구성 → 답지 diff. 각 서비스 `docs/architecture/decisions`의 ADR(설계 결정 기록)을
+읽어 *왜 이 설계*를 잡는다.
 
 **L3 — 손으로 백지 재구성할 것.**
 - **돈** — double-entry ledger 불변식(차변=대변), Money minor-units·BigDecimal 함정.
 - **멱등** — Idempotency-Key로 debit/credit 중복 차단.
 - **트랜잭션 + outbox** — 상태 변경과 이벤트 발행의 원자성(betting·settlement).
 - **분산** — Saga(접수↔정산), partition key, DLQ, Kafka 단일 브로커 **RF=1 함정**(`__consumer_offsets`
-  생성 불가 → coordinator 부재 → 전 consumer 마비)·호스트 패키징(ADR-0018)·통합 그린 ≠ 단독 그린.
+  생성 불가 → coordinator 부재 → 전 consumer 마비)·호스트 패키징(mavenLocal shared-protocol을 Docker
+  컴파일러가 못 봐 fat jar 스테이징)·통합 그린 ≠ 단독 그린.
 - **신뢰성 패턴** — resilience4j(circuit breaker)·Bucket4j(token bucket)·fail-open/closed.
 
 **검증.** 서비스별 단위/테스트 + 통합:
@@ -222,24 +228,25 @@ bash e2e/run-e2e.sh                            # 통합 e2e (WON payout + LOST f
 ```
 통합 검증은 Docker 필요(없으면 단위까지, e2e는 답지로).
 
-**함정.** multi-repo인 이유는 커밋-문서 1:1 무결성(ADR-0001) — 상위 폴더를 한 덩어리로 다루지 마라. 스택은
-**Java 17 + Spring Boot 3.2**(Kotlin보다 채용 시장 점유율 우선, ADR-0015). **접수는 동기·정산은 비동기**
-(odds 변동성 vs 시간 여유). V1 비범위(ADR-0012): cash out·in-play·KYC/AML 등은 의도적으로 뺐다 — 늘리지 마라.
+**함정.** multi-repo인 이유는 커밋-문서 1:1 무결성 — 상위 폴더를 한 덩어리로 다루지 마라. 스택은
+**Java 17 + Spring Boot 3.2**(Kotlin보다 채용 시장 점유율 우선). **접수는 동기·정산은 비동기**
+(odds 변동성 vs 시간 여유). V1 비범위: cash out·in-play·KYC/AML 등은 의도적으로 뺐다 — 늘리지 마라.
 각 서비스가 단독으로 green이어도 **통합 시 인프라·설정·계약 결함이 드러난다** — 그 9개 결함이 학습의 핵심.
 
 **완료 바 → 트랙 완주.** 9레포 통합 동작 확인 + Tier-1 8노트 + **돈·멱등·트랜잭션·outbox를 백지로 방어** →
-GitHub push(커리어 산출물). 마지막으로 `../INTERVIEW.md` 12 주제축(특히 A 동시성·B 트랜잭션·C 멱등·D 돈·
-E 분산·I 신뢰성 패턴)을 백지 설명 세트로 닫는다.
+GitHub push(커리어 산출물). 마지막으로 면접 대비로 아래 축을 백지 설명 세트로 연습한다 — **동시성 ·
+트랜잭션·정합성 · 멱등성·중복 제거 · 돈 계산(minor units·BigDecimal 함정) · 분산·이벤트(outbox·partition
+key·Saga) · 신뢰성 패턴(circuit breaker·token bucket·fail-open/closed)**.
 
-**커밋 메모.** 레포 단위로 커밋·푸시한다(서브에이전트로 나눠도 **레포 세션이 마지막에 한 번**). 변경 파일만
-add, dual-form 스코프 분리, phase 경계(구현 블록 → 메타·문서 블록) 유지.
+**커밋 메모.** 레포 단위로 커밋·푸시한다(서브에이전트로 나눠도 **레포 세션이 마지막에 한 번**). 상단 〈커밋
+규율〉대로 변경 파일만 add, dual-form 스코프 분리, phase 경계(구현 블록 → 메타·문서 블록) 유지.
 
 ---
 
 ## 병렬성 — 이 트랙의 순서 규칙
 
 - **트랙 내부는 순차(병렬 불가).** `sportsbook` 캡스톤은 **foundations + reliability + container-stack이
-  전부 완료된 뒤** 진입한다(Part 6 진입 체크). 즉 **신뢰성을 먼저 끝내야 캡스톤**이다 — 신뢰성과 캡스톤을
+  전부 완료된 뒤** 진입한다. 즉 **신뢰성을 먼저 끝내야 캡스톤**이다 — 신뢰성과 캡스톤을
   병행할 수 없다. 신뢰성의 멱등·트랜잭션·outbox가 곧 sportsbook 서비스들의 재료이기 때문이다.
 - **트랙 간(42 / 백 / 프론트):** 서로 하드 의존이 없어(공통 게이트 M0뿐) 원리상 병렬도 되지만, 이 계획은
   42를 먼저 완주하고 백/프론트로 분기하는 단선이다.
