@@ -27,6 +27,7 @@
 |---|---|---|
 | [`WORKSPACE.md`](WORKSPACE.md) | 워크스페이스 전체 사용법(지도·레포 구조·목적별 동선) | **첫 진입** · 길을 잃었을 때 |
 | [`STUDY.md`](STUDY.md) ★정본 | **학습 단일 완본** — 왜·한 레포 도는 법(루프 Step 0~5)·레포 장르 6종·**분야별 가이드**·전체 순서(경로 A~F)·캡스톤·완주·12 주제축 | **학습은 이것만** |
+| [`tracks/`](tracks/) | **트랙별 일방통행 가이드**(42 · 백엔드 · 프론트) — STUDY를 *선형 실행본*으로 푼 것. 프로젝트마다 노트 순서·재구성·L3·검증·함정·완료 바를 **인라인**으로 안내 | 한 트랙을 처음부터 끝까지 따라갈 때 |
 | [`INTERVIEW.md`](INTERVIEW.md) | 전 레포 L3를 모은 백지 설명 세트(주제 12축 + 레포별 370항 색인) — STUDY의 면접 부록 | 면접 준비·복기 |
 | [`SEQUENCE.md`](SEQUENCE.md) · [`LEARNING.md`](LEARNING.md) · [`mobile-track.md`](mobile-track.md) | 🔒 **동결 레거시** — STUDY에 흡수됨. 외부 §참조(8개 레포) 호환용 스냅샷이라 보존만 | (직접 읽지 말 것 — STUDY로) |
 | [`parallel-track.md`](parallel-track.md) | 42 주도 + 백/프론트 병렬 실행 캘린더(SEQUENCE 경로 F의 짝) | 세 트랙 동시 진행 |
