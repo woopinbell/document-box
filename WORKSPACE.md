@@ -90,7 +90,7 @@ seungwoo/
 
 | 시나리오 | 동선 |
 |---|---|
-| **학습을 시작한다** | [SEQUENCE.md](SEQUENCE.md)에서 경로 선택(기본 = 경로 A: JVM 최단) → 각 레포를 [LEARNING.md](LEARNING.md) §3 루프로 돈다(노트 정독 → reference-impl → **답지 덮고 재구성** → L3 복기) |
+| **학습을 시작한다** | 실전 압축판 [STUDY.md](STUDY.md) 하나로 충분(공통 6단계 + 묶음별 차이표). 경로 선택은 [SEQUENCE.md](SEQUENCE.md), 루프 정본은 [LEARNING.md](LEARNING.md) §3 |
 | **면접을 준비한다** | [INTERVIEW.md](INTERVIEW.md) Part 1(주제별 코어)을 백지 설명 연습 → 막히면 포인터의 답지 복기 |
 | **레포를 만들거나 문서를 보강한다** (작업 세션) | 루트 `CLAUDE.md`(AI 라우터) → [docs-commit-note.md](docs-commit-note.md)(빌드·파생 룰) + [commit-policy.md](commit-policy.md)(커밋 규율) |
 | **검수한다** | 읽기전용 탐지·보고 = [AUDIT.md](AUDIT.md) / 탐지→수정→커밋 = [QUALITY.md](QUALITY.md). 진행 원장은 `plan-box/quality-ledger.md` |
