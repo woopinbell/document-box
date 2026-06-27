@@ -31,6 +31,7 @@
 | [`commit-policy.md`](commit-policy.md) | 커밋 메시지·날짜 규율 정본 | 커밋·푸시 전 |
 | [`AUDIT.md`](AUDIT.md) | 읽기전용 재검수 절차(탐지·보고만) | 전수 검수 세션 |
 | [`QUALITY.md`](QUALITY.md) | 품질 검토·개선 절차(탐지→수정→커밋, §9 인수 검토 포함) | 품질 개선 런·그 인수 검토 |
+| [`corpus-router.md`](corpus-router.md) | 코퍼스 작업 라우터 — 작업 종류별 정본 색인(구 루트 `CLAUDE.md`) | 빌드/품질/검수 세션의 진입 |
 
 ## 이 허브의 운영 원칙
 
@@ -40,3 +41,5 @@
 3. **교차 레포 문서만** 여기 둔다. 한 레포에 속한 결정은 그 레포 `docs/`(ADR·commits)에.
 4. 작업 진행 **원장·기획은 `plan-box/`** (비-git 허브) — 품질 런 원장 `quality-ledger.md`, 커리어 타겟
    `TARGET.md`, AI 트랙 기획(`SEQUENCE-ai.md` 등)이 거기 있다.
+5. **출하·취업 실행은 `launch-box/`** (비-git 허브) — 라이브 배포·OSS·취업 파이프라인(`SHIP.md`·
+   `HIRE.md`·`ledger.md`). 현재 국면 라우팅은 루트 `CLAUDE.md`.

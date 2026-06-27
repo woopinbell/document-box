@@ -13,7 +13,8 @@ seungwoo/
 ├─ sportsbook/   × 10 레포     캡스톤 폴더 — 하위 각각이 독립 레포 (분산 베팅 백엔드 + 모바일)
 ├─ ai-capstone/  × 5 레포      캡스톤 폴더 — RAG 에이전트 제품 (코어·게이트웨이·평가·계약)
 ├─ document-box/               허브: 거버넌스·교차 문서 (이 문서가 있는 곳, dual-form 대상 아님)
-└─ plan-box/                   허브: 비-git 기획·원장 (TARGET, SEQUENCE-ai, quality-ledger 등)
+├─ plan-box/                   허브: 비-git 기획·원장 (TARGET, SEQUENCE-ai, quality-ledger 등)
+└─ launch-box/                 허브: 비-git 출하·취업 실행 (SHIP, HIRE, ledger — 현재 국면)
 ```
 
 - **작업·학습 단위 = 독립 git 레포 하나.** 정본 열거는 `find . -maxdepth 3 -name .git -type d`의
