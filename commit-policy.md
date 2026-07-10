@@ -22,19 +22,27 @@
   trivial 커밋(`chore` 잡일·merge·lockfile 갱신)은 **면제**.
 - **AI 공동저자 트레일러 금지** — 본인 단독 저작 history 유지.
 
-## 날짜
+## identity와 날짜
 
 이 repo들은 학습 여정을 시간순으로 보여주는 **의도된 synthetic 타임라인**이다(history는
 `git filter-repo`로 구성됨). 커밋 날짜는 그 타임라인이 자연스럽게 보이도록 **설정·교정한다.**
 
 규율(모든 커밋 공통):
 
-- **author date == committer date.**
+- **단독 contributor의 raw identity를 고정한다.** author name과 committer name은 모두
+  `seungwoo7050`, author email과 committer email은 모두 `seungwoo7050@naver.com`이다.
+  `Co-authored-by`를 비롯해 다른 사람·이메일을 contributor로 기록하는 trailer는 금지한다.
+- **author timestamp == committer timestamp.** 날짜만 같은 것으로는 부족하다. 시·분·초와
+  UTC offset까지 완전히 같아야 하며, ISO 출력 기준으로 반드시 `%aI == %cI`여야 한다.
 - 타임존 **Asia/Seoul (KST, UTC+9).**
 - **근무시간대(09:00–21:59 KST)** 에 둔다 — 21시대 포함, 22~08시대가 위반(2026-06-11 잔여 정비
   런에서 코퍼스 선례 기준으로 확정한 해석의 명문화).
 - **분·초 랜덤** — 기계적인 `HH:00:00`(정각) 타임스탬프를 피해 분·초를 랜덤하게 정한다.
 - **타임스탬프 중복 금지.**
+- `.mailmap`처럼 표시 결과만 합치는 방법은 준수로 인정하지 않는다. commit object의 author와
+  committer header가 위 identity·timestamp 규칙을 직접 만족해야 한다.
+- annotated tag의 tagger도 `seungwoo7050 <seungwoo7050@naver.com>`과 KST 근무시간대의
+  고유 timestamp를 사용한다.
 
 배치:
 
@@ -59,6 +67,8 @@
 - **바뀐 파일만** 담는다(예: dual-form은 `git -C <repo> add docs/commits docs/practice`).
   전체 `-A` 금지 — 무관한 변경을 싸잡지 않는다.
 - 변경 종류가 다르면 커밋 분리(답지 `docs(commits)` / 문제지 `docs(practice)` 따로).
+- push 직전 `git log -1 --format='%an|%ae|%aI%n%cn|%ce|%cI'`를 직접 읽어 두 줄의
+  이름·이메일·ISO timestamp가 완전히 같은지 확인한다. 다르면 amend한 뒤 다시 검증한다.
 - `git -C <repo> push`(upstream 설정됨). 실패하면(원격 없음·인증 등) 멈추고 보고한다.
 - 서브에이전트로 분할해도 **커밋·푸시는 레포 세션이 마지막에 한 번**.
 
