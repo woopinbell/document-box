@@ -4,7 +4,7 @@
 > 레포를 가로지르는 *지도·커리큘럼·룰·검수 절차*가 **한 곳에, 각 한 부씩** 있다. (이 레포 자체는 학습
 > 레포가 아니므로 dual-form(답지/문제지) 대상이 아니다.)
 >
-> **처음이면**: 아래 〈처음이면 이 순서로〉 3걸음을 따라가면 된다. 면접 준비면 곧장
+> **처음이면**: 아래 〈처음이면 이 순서로〉 2걸음을 따라가면 된다. 면접 준비면 곧장
 > [INTERVIEW.md](INTERVIEW.md), AI로 코퍼스를 **만들거나 검수**하면 〈작업·검수〉 표로.
 
 ## 처음이면 이 순서로 (2걸음)
@@ -36,11 +36,14 @@
 
 | 문서 | 무엇 | 언제 |
 |---|---|---|
-| [`docs-commit-note.md`](docs-commit-note.md) | 공통 빌드·파생 룰(dual-form 작성·실체성 게이트·파생 규칙·금지) — 코퍼스 빌드 룰 본체(정본) | 레포를 만들거나 문서를 보강할 때 |
-| [`commit-policy.md`](commit-policy.md) | 커밋 메시지·날짜 규율 정본 | 커밋·푸시 전 |
+| [`docs-commit-note.md`](docs-commit-note.md) | 문서가 없는 저장소에서도 commit 원장 동결부터 답지 집필·문제지 수작업 파생·전수 검증까지 수행하는 dual-form 정본 | dual-form을 새로 만들거나 복구·보강할 때 |
+| [`commit-policy.md`](commit-policy.md) | commit object·날짜·phase와 재사용형 main/template/release/learning topology·push 정본 | 커밋·이력 재작성·release 공개 전 |
 | [`AUDIT.md`](AUDIT.md) | 읽기전용 재검수 절차(탐지·보고만) | 전수 검수 세션 |
 | [`QUALITY.md`](QUALITY.md) | 품질 검토·개선 절차(탐지→수정→커밋, §9 인수 검토 포함) | 품질 개선 런·그 인수 검토 |
 | [`corpus-router.md`](corpus-router.md) | 코퍼스 작업 라우터 — 작업 종류별 정본 색인(구 루트 `CLAUDE.md`) | 빌드/품질/검수 세션의 진입 |
+
+이력 재작성과 from-zero dual-form을 함께 수행할 때는 규칙을 여기서 조합하지 말고
+[`corpus-router.md`](corpus-router.md)의 **이력 재작성 + from-zero dual-form** 복합 경로를 그대로 따른다.
 
 ## 이 허브의 운영 원칙
 

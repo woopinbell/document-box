@@ -1,7 +1,8 @@
 # WORKSPACE.md — 코퍼스 사용 설명서 (처음 들어온 사람용 정본)
 
 > **한 줄**: `~/Desktop/seungwoo`는 스택(Spring·React·Android·RAG…)을 **직접 재구성하며** 익힌
-> ~40개 독립 레포의 학습 포트폴리오다. 각 레포는 그 과정을 정해진 형태의 문서로 남긴다.
+> 독립 레포들의 학습 포트폴리오다. 현행 대상 inventory는 [AUDIT.md](AUDIT.md) §1이 정본이며,
+> 각 레포는 그 과정을 정해진 형태의 문서로 남긴다.
 >
 > **처음이라면**: ① 이 문서로 *전체 지도*를 잡고 → ② 학습은 [STUDY.md](STUDY.md) **하나로 끝**(전
 > 분야·순서·완주). 전체 문서 색인은 [README](README.md). (이 문서는 *지도와 동선*만 다룬다 — 룰 본문은
@@ -13,9 +14,9 @@
 
 ```
 seungwoo/
-├─ <독립 레포> × ~25           각각이 작업·학습 단위 (자기 git 히스토리 + docs/)
-├─ sportsbook/   × 10 레포      캡스톤 폴더 — 분산 베팅 백엔드 + 모바일 (하위 각각 독립 레포)
-├─ ai-capstone/  × 5 레포       캡스톤 폴더 — RAG 에이전트 제품 (코어·게이트웨이·평가·계약)
+├─ <독립 레포>                  각각이 작업·학습 단위 (자기 git 히스토리 + docs/)
+├─ sportsbook/                  캡스톤 폴더 — 분산 베팅 백엔드 + 모바일 (하위 각각 독립 레포)
+├─ ai-capstone/                 캡스톤 폴더 — RAG 에이전트 제품 (코어·게이트웨이·평가·계약)
 ├─ document-box/                허브: 거버넌스·학습 가이드 (이 문서가 사는 곳)
 ├─ plan-box/                    허브: 비-git 기획·원장 (TARGET·SEQUENCE-ai·quality-ledger)
 └─ launch-box/                  허브: private git 출하·취업·운영 (SHIP·HIRE·ledger·ops-lab — 현 국면)
@@ -69,7 +70,7 @@ seungwoo/
 | **`docs/DESIGN.md`** | 이 레포가 **왜 존재하고 어떤 설계를 거쳤나** (목적·핵심 결정·의도적 비범위·구현 경로) | 레포 들어갈 때 **먼저 1회** — 무엇을·왜를 잡고 들어간다 |
 | **`notes/<stack>.md`** | 스택 **교과서** (4부 포맷: 개념 → 본 코드 분석 → 미니프로젝트 → 심화. 짝 `reference-impl/`는 빌드 가능) | 그 스택을 **처음 배운다면 여기부터** 깊게 |
 | **`docs/commits/NNN.md`** (답지) | 커밋별 **완성 코드 + 왜** (실제 git 커밋 근거, 끝에 L3/L2/L1 색인) | 구현이 *어떤 순서로* 쌓였나 — 직접 풀고 **마지막에** 펼친다 |
-| **`docs/practice/NNN.md`** (문제지) | 답지에서 **코드 본문을 비운** 연습 (계약은 노출, 본문은 `// TODO: 책임`) | **답지를 덮고** 직접 채운 뒤 답지와 대조(재유도) |
+| **`docs/practice/NNN.md`** (문제지) | 답지에서 **구현·제어 흐름을 비운** 연습 (공개 계약은 노출, 핵심은 책임 TODO) | **답지를 덮고** 직접 채운 뒤 답지와 대조(재유도) |
 | **`docs/notes/<cat>/`** | **얕은 개념 어휘** (온디맨드, 일부 레포만) | 커밋 따라가다 **막힐 때만** 펴는 용어 사전 |
 
 **`notes/`와 `docs/notes/`를 혼동하지 마라 (가장 헷갈리는 지점).** 같은 주제(예: `docker`)가 양쪽에
@@ -84,10 +85,10 @@ seungwoo/
 
 전 레포의 L3만 모은 면접용 색인이 [INTERVIEW.md](INTERVIEW.md)다.
 
-**dual-form 한눈에.** **답지(`docs/commits/`)가 정본**, **문제지(`docs/practice/`)는 파생**이다. 문제지를
-덮고 직접 푼 뒤 답지로 채점한다 — *"다시 읽기"보다 "다시 만들기"*. (실체 있는 코드 커밋만 문제지를
-가진다 — 마커·순수 문서·순수 타입 정의 커밋은 답지만 둔다.) 일부 답지의 `## 알려진 소스 결함` 절은
-원본의 미수정 결함·수정 방향을 적은 것이니 재구현 때 그 지침을 따른다.
+**dual-form 한눈에.** **답지(`docs/commits/`)가 정본**, **문제지(`docs/practice/`)는 답지에서 수작업
+파생한 연습본**이다. 문제지를 덮고 직접 푼 뒤 답지로 채점한다 — *"다시 읽기"보다 "다시 만들기"*.
+어떤 commit이 답지·문제지·제외 대상인지는 [docs-commit-note.md](docs-commit-note.md) §실체성 분류가
+정본이며 이 지도에서 별도 규칙을 복제하지 않는다.
 
 ## 3. 사용 시나리오별 동선 (당신이 누구냐에 따라)
 
@@ -95,15 +96,17 @@ seungwoo/
 |---|---|
 | **학습을 시작한다** | [STUDY.md](STUDY.md) **하나로 끝** — 왜·한 레포 도는 법·분야별·전체 순서(경로 A~F)·캡스톤·완주가 다 있다(구 SEQUENCE·LEARNING은 흡수된 동결 레거시) |
 | **면접을 준비한다** | [INTERVIEW.md](INTERVIEW.md) Part 1(주제별 코어)을 백지 설명 연습 → 막히면 포인터의 답지 복기 |
-| **레포를 만들거나 문서를 보강한다** (작업 세션) | document-box `CLAUDE.md`(AI 라우터) → [docs-commit-note.md](docs-commit-note.md)(빌드·파생 룰) + [commit-policy.md](commit-policy.md)(커밋 규율) |
+| **레포를 만들거나 문서를 보강한다** (작업 세션) | document-box `CLAUDE.md` → [corpus-router.md](corpus-router.md). 이력 재작성/from-zero 복합 작업은 [commit-policy.md](commit-policy.md)로 topology·metadata 확정 → hash/tag 고정 → [docs-commit-note.md](docs-commit-note.md)로 집필 → commit-policy push gate |
 | **검수한다** | 읽기전용 탐지·보고 = [AUDIT.md](AUDIT.md) / 탐지→수정→커밋 = [QUALITY.md](QUALITY.md). 진행 원장 `plan-box/quality-ledger.md` |
 | **모바일 트랙 설계를 본다** | [STUDY.md](STUDY.md) Part 4(모바일)·Part 6(캡스톤 API). 구 [mobile-track.md](mobile-track.md)는 동결 레거시 |
 | **42 주도 + 백/프론트 병렬 진행 계획을 본다** | [STUDY.md](STUDY.md) Part 5 경로 F → 캘린더 [parallel-track.md](parallel-track.md) |
 | **AI 트랙 기획을 본다** | `plan-box/`(TARGET.md · SEQUENCE-ai.md 등 — 비-git 허브) |
 
-## 4. 불변 규칙 (요약 — 본문은 각 정본에)
+## 4. 작업 규칙 정본
 
-- 독립 레포는 **자기 커밋 히스토리와 연동된 `docs/commits/`** 를 가져야 한다(없으면 위반).
-- **추측·환각 금지** — 모든 문서 주장은 `git show`/실소스 근거. 근거가 없으면 멈추고 보고한다.
-- 커밋: 영어 명령형 제목 + 한국어 `[근거]/[변경]/[검증]`, AI 트레일러 없음 (정본: commit-policy.md).
-- 정본은 **한 곳**: 룰 본문은 document-box의 해당 문서에만 두고, 다른 곳에는 포인터만 둔다.
+이 문서는 학습자용 지도이므로 작업 규칙을 복제하지 않는다.
+
+- 작업 종류와 복합 경로: [corpus-router.md](corpus-router.md)
+- commit별 답지·문제지 분류·집필·검증: [docs-commit-note.md](docs-commit-note.md)
+- commit object·날짜·phase·release ref·push: [commit-policy.md](commit-policy.md)
+- read-only 전수 감사와 현행 inventory: [AUDIT.md](AUDIT.md)
