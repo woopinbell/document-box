@@ -63,7 +63,9 @@
 ## 커밋·푸시 워크플로
 
 - **검증을 통과한 뒤에만** 커밋한다(빌드/테스트 실제 실행 + 의미 리뷰). 부분 실패면 커밋 안 함.
-- 현재 브랜치(`main`)에 **직접 커밋**. 별도 브랜치/PR 없음.
+- 현재 브랜치(`main`)에 **직접 커밋**. 별도 브랜치/PR 없음. 단, 공개 템플릿의 `main` HEAD가
+  reset 가능한 content-only 경계여야 해서 dual-form 문서 커밋이 그 계약을 깨는 경우에만,
+  고정된 공개 release tag에서 `learning/<release>` 브랜치를 만들어 답지·문제지를 둔다.
 - **바뀐 파일만** 담는다(예: dual-form은 `git -C <repo> add docs/commits docs/practice`).
   전체 `-A` 금지 — 무관한 변경을 싸잡지 않는다.
 - 변경 종류가 다르면 커밋 분리(답지 `docs(commits)` / 문제지 `docs(practice)` 따로).
