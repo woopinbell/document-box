@@ -1,57 +1,61 @@
-# document-box — 워크스페이스 거버넌스·학습 가이드 허브 (정본이 모이는 곳)
+# document-box
 
-> **한 줄**: `~/Desktop/seungwoo` 학습 포트폴리오의 **정본 문서 허브**다. 여기엔 코드가 없다 — 여러
-> 레포를 가로지르는 *지도·커리큘럼·룰·검수 절차*가 **한 곳에, 각 한 부씩** 있다. (이 레포 자체는 학습
-> 레포가 아니므로 dual-form(답지/문제지) 대상이 아니다.)
->
-> **처음이면**: 아래 〈처음이면 이 순서로〉 2걸음을 따라가면 된다. 면접 준비면 곧장
-> [INTERVIEW.md](INTERVIEW.md), AI로 코퍼스를 **만들거나 검수**하면 〈작업·검수〉 표로.
+여러 저장소에 공통으로 적용하는 **트랙 순서, 개발 작업 방식, Git/ref 규칙, commit 기반 학습
+문서 규칙**의 정본입니다. 저장소별 source·API·검증 명령의 사실은 각 저장소의 현재 tree와 release
+문서가 우선하고, document-box는 그 사실을 가로지르는 운영 규칙만 소유합니다.
 
-## 처음이면 이 순서로 (2걸음)
+document-box 자체와 `central-notes` 같은 거버넌스 저장소는 dual-form 대상이 아니며 `main`만
+사용합니다.
 
+## 정본 카탈로그
+
+| 문서 | 단일 책임 |
+| --- | --- |
+| [`WORKFLOW.md`](WORKFLOW.md) | preflight부터 격리 작업, A/B/C 판정, 구현, 검증, 공개와 로컬 정리까지 |
+| [`commit-policy.md`](commit-policy.md) | commit object, `main`/immutable learning, tag, history rewrite와 push |
+| [`docs-commit-note.md`](docs-commit-note.md) | 답지 선집필, 문제지 수작업 파생, stable ID, mapping과 수량 reconciliation |
+| [`tracks/42.md`](tracks/42.md) | 42 트랙 10개 프로젝트의 공식 순서와 완료 gate |
+| [`tracks/backend.md`](tracks/backend.md) | Backend 3개 훈련 저장소와 Sportsbook 9개 하위 저장소의 공식 순서 |
+| [`tracks/frontend.md`](tracks/frontend.md) | Frontend 3개 훈련 저장소와 5-design Portfolio의 공식 순서 |
+
+이 README는 권한 지도와 색인만 담당합니다. 세부 규칙을 복제하지 않습니다.
+
+## 작업 시작점
+
+- 학습 순서가 필요하면 해당 `tracks/*.md`를 읽습니다.
+- source refactor, history rewrite, 검증 또는 정리 작업이면 `WORKFLOW.md`를 읽습니다.
+- commit, tag, branch, push를 만들거나 바꾸면 `commit-policy.md`를 함께 읽습니다.
+- `docs/commits/**` 또는 `docs/practice/**`를 만들거나 갱신하면 `docs-commit-note.md`도 반드시
+  함께 읽습니다.
+
+복합 작업 순서는 다음과 같습니다.
+
+```text
+WORKFLOW로 범위·baseline·A/B/C 확정
+→ commit-policy로 topology·metadata·backup 확정
+→ source 구현과 검증
+→ source hash/release tag 고정
+→ docs-commit-note로 answers 전부 집필
+→ practices 수작업 파생
+→ commit-policy의 lease·atomic push gate
+→ fresh clone 검증 후 로컬 정리
 ```
-① WORKSPACE.md   여기가 뭐고 어디서 시작 — 워크스페이스 전체 지도(허브 3·레포 구조·목적별 동선)
-       ▼
-② STUDY.md       학습은 이 한 문서로 끝 — 왜 → 한 레포 도는 법 → 분야별 → 전체 순서 → 캡스톤 → 완주·면접
-```
 
-**학습 정본은 [STUDY.md](STUDY.md) 하나다.** 전 분야의 학습법·순서·완주가 거기 다 있다(구
-`SEQUENCE`·`LEARNING`·`mobile-track`은 STUDY에 흡수된 **동결 레거시** — 외부 §참조 호환용). 면접용
-전 레포 L3 색인만 [INTERVIEW.md](INTERVIEW.md)를 부록으로 둔다.
+## 권한과 충돌 처리
 
-## 문서 카탈로그 — 무엇을, 언제 읽나
+1. 실제 동작은 대상 저장소의 기준 commit tree와 테스트가 정본입니다.
+2. 트랙 포함 여부와 순서는 `tracks/*.md`가 정본입니다.
+3. 작업 단계와 중단 기준은 `WORKFLOW.md`가 정본입니다.
+4. commit/ref/push는 `commit-policy.md`, dual-form 내용은 `docs-commit-note.md`가 각각 정본입니다.
+5. 규칙끼리 충돌하면 더 구체적인 책임 문서를 따르고, source 사실과 충돌하면 문서를 고칩니다.
 
-### 학습·복기 (독자/학습자용)
+## 공통 저장소 모델
 
-| 문서 | 무엇 | 언제 |
-|---|---|---|
-| [`WORKSPACE.md`](WORKSPACE.md) | 워크스페이스 전체 사용법(지도·레포 구조·목적별 동선) | **첫 진입** · 길을 잃었을 때 |
-| [`STUDY.md`](STUDY.md) ★정본 | **학습 단일 완본** — 왜·한 레포 도는 법(루프 Step 0~5)·레포 장르 6종·**분야별 가이드**·전체 순서(경로 A~F)·캡스톤·완주·12 주제축 | **학습은 이것만** |
-| [`tracks/`](tracks/) | **트랙별 일방통행 가이드**(42 · 백엔드 · 프론트 · 모바일) — STUDY를 *선형 실행본*으로 푼 것. 프로젝트마다 노트 순서·재구성·L3·검증·함정·완료 바를 **인라인**으로 안내 | 한 트랙을 처음부터 끝까지 따라갈 때 |
-| [`INTERVIEW.md`](INTERVIEW.md) | 전 레포 L3를 모은 백지 설명 세트(주제 12축 + 레포별 370항 색인) — STUDY의 면접 부록 | 면접 준비·복기 |
-| [`SEQUENCE.md`](SEQUENCE.md) · [`LEARNING.md`](LEARNING.md) · [`mobile-track.md`](mobile-track.md) | 🔒 **동결 레거시** — STUDY에 흡수됨. 외부 §참조(8개 레포) 호환용 스냅샷이라 보존만 | (직접 읽지 말 것 — STUDY로) |
-| [`parallel-track.md`](parallel-track.md) | 42 주도 + 백/프론트 병렬 실행 캘린더(SEQUENCE 경로 F의 짝) | 세 트랙 동시 진행 |
+- 개발 저장소: deployable `main` + release별 immutable `learning/<release>`
+- learning branch: 선택적 notes → answers → practices, `main`에 merge하지 않음
+- 공개 재사용 제품: template tag → content publication → release tag/main → learning branch
+- 거버넌스 허브: `main` only
+- 임시 `feature/*`, `fix/*`, `chore/*`: 작업 중에만 존재하고 공개 검증 뒤 제거
 
-### 작업·검수 (작업 세션/검수 세션용)
-
-| 문서 | 무엇 | 언제 |
-|---|---|---|
-| [`docs-commit-note.md`](docs-commit-note.md) | 문서가 없는 저장소에서도 commit 원장 동결부터 답지 집필·문제지 수작업 파생·전수 검증까지 수행하는 dual-form 정본 | dual-form을 새로 만들거나 복구·보강할 때 |
-| [`commit-policy.md`](commit-policy.md) | commit object·날짜·phase와 재사용형 main/template/release/learning topology·push 정본 | 커밋·이력 재작성·release 공개 전 |
-| [`AUDIT.md`](AUDIT.md) | 읽기전용 재검수 절차(탐지·보고만) | 전수 검수 세션 |
-| [`QUALITY.md`](QUALITY.md) | 품질 검토·개선 절차(탐지→수정→커밋, §9 인수 검토 포함) | 품질 개선 런·그 인수 검토 |
-| [`corpus-router.md`](corpus-router.md) | 코퍼스 작업 라우터 — 작업 종류별 정본 색인(구 루트 `CLAUDE.md`) | 빌드/품질/검수 세션의 진입 |
-
-이력 재작성과 from-zero dual-form을 함께 수행할 때는 규칙을 여기서 조합하지 말고
-[`corpus-router.md`](corpus-router.md)의 **이력 재작성 + from-zero dual-form** 복합 경로를 그대로 따른다.
-
-## 이 허브의 운영 원칙
-
-1. **정본은 한 곳.** 룰 본문은 여기 해당 문서에만 둔다. document-box `CLAUDE.md`가 AI 세션용 **얇은 라우터**(본문 없이 여기 정본들을 가리킴)다.
-   워크스페이스 루트에는 더 이상 auto-load 라우터를 두지 않는다 — 구 루트 라우터 스냅샷은 [`operating-context.md`](operating-context.md). 다른 레포·문서에는 포인터만.
-2. **새 룰은 해당 정본에 추가**한다 — README나 라우터에 늘어놓지 않는다.
-3. **교차 레포 문서만** 여기 둔다. 한 레포에 속한 결정은 그 레포 `docs/`(ADR·commits)에.
-4. 작업 진행 **원장·기획은 `plan-box/`** (비-git 허브) — 품질 런 원장 `quality-ledger.md`, 커리어 타겟
-   `TARGET.md`, AI 트랙 기획(`SEQUENCE-ai.md` 등)이 거기 있다.
-5. **출하·취업 실행은 `launch-box/`** (private git 허브) — 라이브 배포·OSS·취업 파이프라인(`SHIP.md`·
-   `HIRE.md`·`ledger.md`). 현재 국면 라우팅은 document-box `CLAUDE.md`.
+현재 ref와 수량은 각 원격에서 직접 확인합니다. 이 허브에 변하기 쉬운 SHA·commit 수를 복제하지
+않습니다.
