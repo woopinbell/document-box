@@ -174,12 +174,26 @@ final learning reachable = source/release history + learning publication commits
 2. answers commit: `docs/commits/**`와 해당 answer ledger만
 3. practices commit: `docs/practice/**`와 해당 practice ledger만
 
+이 순서는 Git publication 순서입니다. 학습자는 같은 자료를 다음 소비 순서로 사용합니다.
+
+```text
+publication: notes → answers → practices
+learning: notes → practice → 실행/실패 → answer → 재구현
+```
+
+문제지는 답지를 모두 집필·검토한 뒤에만 공개하지만, 학습자는 답지를 열기 전에 문제지를 구현하고
+실패 근거를 남깁니다. 답지를 확인한 뒤에는 원본을 복사하지 않고 결정과 경계를 다시 구현합니다.
+
 기존 corpus를 byte 보존하면서 rewrite된 source를 별도로 설명해야 하면
 `docs/commits-<revision>/**`, `docs/practice-<revision>/**` 같은 독립 corpus를 둘 수 있습니다. 이때
 각 corpus는 자체 README, 전체 mapping, 제외·생략 사유와 수량 reconciliation을 가져야 합니다.
 
 Portfolio release처럼 notes가 없으면 answers → practices 두 commit만 둡니다. Learning branch를
 `main`에 merge하지 않습니다.
+
+동일 release의 supplemental/fixup learning branch는 만들지 않습니다. Source release에 종속되지 않는
+공통 개념, bridge와 독립 평가는 central-notes에 두며 프로젝트 corpus에 중복 발행하지 않습니다.
+기존 공개 learning ref의 migration·삭제·재작성은 이 규칙의 범위가 아닙니다.
 
 ## 9. Rewrite와 carry-forward
 

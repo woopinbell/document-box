@@ -57,6 +57,13 @@ implementation / refactor / fix / test
 - learning branch는 `main`에 merge하지 않습니다.
 - 공개된 release tag와 learning branch는 이동·재작성·삭제하지 않습니다. 후속 release는 새 tag와
   새 `learning/<release>`를 만듭니다.
+- 같은 release의 누락·교정·보충 자료를 이유로 `learning/<release>-supplement`,
+  `learning/<release>-fixup` 또는 날짜·도구 이름을 붙인 추가 learning branch를 만들지 않습니다.
+  한 source release의 재구현 자료는 그 release의 단일 immutable learning branch가 소유합니다.
+- 특정 source release와 무관하게 여러 프로젝트가 함께 쓰는 개념 bridge, 전이 실습과 독립 평가는
+  central-notes의 `main`이 소유합니다. 이를 프로젝트 learning branch에 중복 게시하지 않습니다.
+- 위 규칙은 기존 공개 learning ref의 이동·삭제·재작성이나 전역 이름 변경을 승인하지 않습니다.
+  이미 공개된 ref는 그대로 보존하고, 별도 migration은 독립 승인 범위에서만 수행합니다.
 - 거버넌스 허브인 document-box와 central-notes는 `main` only이며 learning branch를 만들지 않습니다.
 
 답지·문제지 path, stable ID와 수량 규칙은 `docs-commit-note.md`를 따릅니다.
