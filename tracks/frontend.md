@@ -32,13 +32,16 @@ IP/route/DNS, request lifecycle, HTML, CSS/rendering, browser runtime/security b
 프로젝트 순서는 유지하면서 다음 평가를 삽입합니다.
 
 - Frontend Reliability 완료 후:
-  [unfamiliar-API transfer assessment](https://github.com/woopinbell/central-notes/blob/main/assessments/README.md)
-- Portfolio 완료 직후: 무자료 회상과 transfer 재검증
-- Portfolio 완료 7일·30일 후: 같은 rubric으로 지연 회상 checkpoint
+  [unfamiliar-API transfer assessment](https://github.com/woopinbell/central-notes/blob/main/assessments/frontend-transfer/README.md)
+- Portfolio 완료 후:
+  [Web production regression assessment](https://github.com/woopinbell/central-notes/blob/main/assessments/web-production-regression/README.md)
+- 각 평가 완료 직후와 7일·30일 후: 같은 rubric으로 무자료 전이와 지연 회상 checkpoint
 
 이 gate는 이미 게시된 project release의 완료 판정을 바꾸지 않습니다. 이후 학습 실행에서 source를
-처음 보는 조건에서도 URL state, async cancellation, rollback, 접근성과 browser 차이를 재구성할 수
-있는지를 판정합니다.
+처음 보는 조건에서도 URL state, async cancellation, rollback, 접근성과 browser 차이를 재구성하고,
+성능·DNS/TLS/proxy·browser security evidence를 측정 → 원인 격리 → 최소 변경 → 검증 → rollback
+폐루프로 닫을 수 있는지를 판정합니다. 실제 변경·staged deployment와 외부 review evidence가 없는
+자동 checker 통과만으로는 Web production regression을 완료하지 않습니다.
 
 ## 1. `frontend-foundations-training`
 
@@ -130,5 +133,7 @@ content publication을 분리하며 다음 5개 presentation system을 같은 va
 세 훈련 저장소를 순서대로 완료하고 `portfolio-site`의 template, deployable main, release tags와
 learning branch를 검증합니다. RSC/state/data failure boundary와 content/template 경계를 백지에서
 설명하고 5개 design을 실제 공개 가능한 상태로 검증하면 project release 과정이 완료됩니다. 중앙
-unfamiliar-API assessment와 완료 직후·7일·30일 회상 checkpoint까지 통과하면 curriculum mastery가
-완료됩니다.
+unfamiliar-API assessment, Web production regression의 실제 운영·외부 review gate와 각 평가의
+완료 직후·7일·30일 회상 checkpoint까지 통과하면 42·Frontend 범위의 curriculum mastery가
+완료됩니다. Backend의 transaction, cache, queue와 distributed failure 평가는 Backend 트랙이
+완성된 뒤 별도로 통합합니다.
