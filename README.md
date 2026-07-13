@@ -14,15 +14,17 @@ document-box 자체와 `central-notes` 같은 거버넌스 저장소는 dual-for
 | [`WORKFLOW.md`](WORKFLOW.md) | preflight부터 격리 작업, A/B/C 판정, 구현, 검증, 공개와 로컬 정리까지 |
 | [`commit-policy.md`](commit-policy.md) | commit object, `main`/immutable learning, tag, history rewrite와 push |
 | [`docs-commit-note.md`](docs-commit-note.md) | 답지 선집필, 문제지 수작업 파생, stable ID, mapping과 수량 reconciliation |
-| [`tracks/42.md`](tracks/42.md) | 42 트랙 10개 프로젝트의 공식 순서와 완료 gate |
+| [`tracks/README.md`](tracks/README.md) | 공통 기반에서 Frontend/Backend로 갈라지는 전체 과정 지도와 현재 상태 |
+| [`tracks/42.md`](tracks/42.md) | 42 트랙 11개 프로젝트의 공식 순서와 완료 gate |
 | [`tracks/backend.md`](tracks/backend.md) | Backend 3개 훈련 저장소와 Sportsbook 9개 하위 저장소의 공식 순서 |
 | [`tracks/frontend.md`](tracks/frontend.md) | Frontend 3개 훈련 저장소와 5-design Portfolio의 공식 순서 |
 
 이 README는 권한 지도와 색인만 담당합니다. 세부 규칙을 복제하지 않습니다.
 
-## 작업 시작점
+## 시작점
 
-- 학습 순서가 필요하면 해당 `tracks/*.md`를 읽습니다.
+- 전체 학습 가닥과 현재 완료 상태를 먼저 보려면 [`tracks/README.md`](tracks/README.md)를 읽습니다.
+- 실제 학습을 시작할 때는 전체 지도에서 해당 `tracks/*.md`로 들어갑니다.
 - source refactor, history rewrite, 검증 또는 정리 작업이면 `WORKFLOW.md`를 읽습니다.
 - commit, tag, branch, push를 만들거나 바꾸면 `commit-policy.md`를 함께 읽습니다.
 - `docs/commits/**` 또는 `docs/practice/**`를 만들거나 갱신하면 `docs-commit-note.md`도 반드시

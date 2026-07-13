@@ -15,8 +15,8 @@ frontend-foundations-training
 ## 공통 진행 방식
 
 - `main`에서 실행 가능한 source/config/test, exercise 계약과 release 문서를 읽습니다.
-- 해당 release의 immutable `learning/<release>`는 notes → answers → practices 순서로 게시합니다.
-- 학습할 때는 notes → practice → 실행/실패 → answer → 재구현 순서로 소비합니다.
+- 해당 release의 immutable `learning/<release>`는 선택적 notes → answers → practices 순서로 게시합니다.
+- 학습할 때는 공통 개념 또는 notes → practice → 실행/실패 → answer → 재구현 순서로 소비합니다.
 - 문제지가 있으면 답지를 보기 전에 구현하고 실패 근거를 남긴 뒤 basis commit과 diff를 비교합니다.
 - route, DOM, copy, CSS, asset, accessibility, RSC/hydration과 visual 결과를 공개 계약으로 봅니다.
 - Ref와 corpus 규칙은 [`../commit-policy.md`](../commit-policy.md)와
@@ -25,7 +25,10 @@ frontend-foundations-training
 ## 중앙 선수 학습과 mastery gate
 
 Frontend에 진입하기 전에 [Web Foundations](https://github.com/woopinbell/central-notes/blob/main/web-foundations/README.md)의
-IP/route/DNS, request lifecycle, HTML, CSS/rendering, browser runtime/security bridge를 완료합니다.
+IP/route/DNS, request lifecycle, HTML, CSS/rendering, browser runtime/security bridge를 완료하고,
+[web-boundary-inspector](https://github.com/woopinbell/web-boundary-inspector)의 request/proxy 검사와
+Chromium·Firefox·WebKit browser gate를 통과합니다. 공통 개념은 Central Notes에서 읽고 실행 가능한
+release source와 재구현 corpus는 프로젝트의 `main`·`learning/codex-5.6`에서 사용합니다.
 [42·Frontend capability matrix](https://github.com/woopinbell/central-notes/blob/main/CAPABILITY_MATRIX.md)에서
 각 주제의 최초 노출과 직접 구현, 재사용, 독립 평가 연결을 확인합니다.
 
