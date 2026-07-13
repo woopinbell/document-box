@@ -15,11 +15,30 @@ frontend-foundations-training
 ## 공통 진행 방식
 
 - `main`에서 실행 가능한 source/config/test, exercise 계약과 release 문서를 읽습니다.
-- 해당 release의 immutable `learning/<release>`에서 notes → answers → practices 순서로 학습합니다.
-- 문제지가 있으면 답지를 보기 전에 구현하고 basis commit과 diff를 비교합니다.
+- 해당 release의 immutable `learning/<release>`는 notes → answers → practices 순서로 게시합니다.
+- 학습할 때는 notes → practice → 실행/실패 → answer → 재구현 순서로 소비합니다.
+- 문제지가 있으면 답지를 보기 전에 구현하고 실패 근거를 남긴 뒤 basis commit과 diff를 비교합니다.
 - route, DOM, copy, CSS, asset, accessibility, RSC/hydration과 visual 결과를 공개 계약으로 봅니다.
 - Ref와 corpus 규칙은 [`../commit-policy.md`](../commit-policy.md)와
   [`../docs-commit-note.md`](../docs-commit-note.md)를 따릅니다.
+
+## 중앙 선수 학습과 mastery gate
+
+Frontend에 진입하기 전에 [Web Foundations](https://github.com/woopinbell/central-notes/blob/main/web-foundations/README.md)의
+IP/route/DNS, request lifecycle, HTML, CSS/rendering, browser runtime/security bridge를 완료합니다.
+[42·Frontend capability matrix](https://github.com/woopinbell/central-notes/blob/main/CAPABILITY_MATRIX.md)에서
+각 주제의 최초 노출과 직접 구현, 재사용, 독립 평가 연결을 확인합니다.
+
+프로젝트 순서는 유지하면서 다음 평가를 삽입합니다.
+
+- Frontend Reliability 완료 후:
+  [unfamiliar-API transfer assessment](https://github.com/woopinbell/central-notes/blob/main/assessments/README.md)
+- Portfolio 완료 직후: 무자료 회상과 transfer 재검증
+- Portfolio 완료 7일·30일 후: 같은 rubric으로 지연 회상 checkpoint
+
+이 gate는 이미 게시된 project release의 완료 판정을 바꾸지 않습니다. 이후 학습 실행에서 source를
+처음 보는 조건에서도 URL state, async cancellation, rollback, 접근성과 browser 차이를 재구성할 수
+있는지를 판정합니다.
 
 ## 1. `frontend-foundations-training`
 
@@ -110,4 +129,6 @@ content publication을 분리하며 다음 5개 presentation system을 같은 va
 
 세 훈련 저장소를 순서대로 완료하고 `portfolio-site`의 template, deployable main, release tags와
 learning branch를 검증합니다. RSC/state/data failure boundary와 content/template 경계를 백지에서
-설명하고 5개 design을 실제 공개 가능한 상태로 검증하면 Frontend 트랙 완료입니다.
+설명하고 5개 design을 실제 공개 가능한 상태로 검증하면 project release 과정이 완료됩니다. 중앙
+unfamiliar-API assessment와 완료 직후·7일·30일 회상 checkpoint까지 통과하면 curriculum mastery가
+완료됩니다.
