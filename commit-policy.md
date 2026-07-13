@@ -60,8 +60,15 @@ implementation / refactor / fix / test
 - 같은 release의 누락·교정·보충 자료를 이유로 `learning/<release>-supplement`,
   `learning/<release>-fixup` 또는 날짜·도구 이름을 붙인 추가 learning branch를 만들지 않습니다.
   한 source release의 재구현 자료는 그 release의 단일 immutable learning branch가 소유합니다.
-- 특정 source release와 무관하게 여러 프로젝트가 함께 쓰는 개념 bridge, 전이 실습과 독립 평가는
-  central-notes의 `main`이 소유합니다. 이를 프로젝트 learning branch에 중복 게시하지 않습니다.
+- 특정 source release와 무관하게 여러 프로젝트가 함께 쓰는 개념 bridge와 독립 평가는
+  central-notes의 `main`이 소유합니다. 평가용 starter·contract·checker는 실행 가능하더라도 독립
+  source release로 간주하지 않으며 프로젝트 learning branch에 중복 게시하지 않습니다.
+- 공식 트랙 순서에서 자체 build/test 계약과 완료 gate를 가진 실행형 과제는 독립 개발 저장소가
+  소유합니다. 그 저장소는 deployable `main`, annotated release tag와 정확히 하나의
+  `learning/<release>`를 공개하고, central-notes에는 공통 개념과 해당 프로젝트로 가는 링크만 둡니다.
+- 같은 주제를 다루더라도 central-notes의 공통 설명·독립 평가와 프로젝트의 release source·재구현
+  corpus는 서로 다른 책임입니다. 프로젝트 source를 중앙 reference implementation으로 복제하거나
+  중앙 개념을 프로젝트 learning branch에 복제하지 않습니다.
 - 위 규칙은 기존 공개 learning ref의 이동·삭제·재작성이나 전역 이름 변경을 승인하지 않습니다.
   이미 공개된 ref는 그대로 보존하고, 별도 migration은 독립 승인 범위에서만 수행합니다.
 - 거버넌스 허브인 document-box와 central-notes는 `main` only이며 learning branch를 만들지 않습니다.
