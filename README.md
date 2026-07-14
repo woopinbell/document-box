@@ -18,6 +18,7 @@ document-box 자체와 `central-notes` 같은 거버넌스 저장소는 dual-for
 | [`tracks/42.md`](tracks/42.md) | 42 트랙 11개 프로젝트의 공식 순서와 완료 gate |
 | [`tracks/backend.md`](tracks/backend.md) | Backend 3개 훈련 저장소와 Sportsbook 9개 하위 저장소의 공식 순서 |
 | [`tracks/frontend.md`](tracks/frontend.md) | Frontend 3개 훈련 저장소와 5-design Portfolio의 공식 순서 |
+| [`data/README.md`](data/README.md) | 날짜가 붙는 공고·시장 관측과 지원 증거처럼 변동하는 운영 데이터의 색인·갱신 규칙 |
 
 이 README는 권한 지도와 색인만 담당합니다. 세부 규칙을 복제하지 않습니다.
 
@@ -29,6 +30,8 @@ document-box 자체와 `central-notes` 같은 거버넌스 저장소는 dual-for
 - commit, tag, branch, push를 만들거나 바꾸면 `commit-policy.md`를 함께 읽습니다.
 - `docs/commits/**` 또는 `docs/practice/**`를 만들거나 갱신하면 `docs-commit-note.md`도 반드시
   함께 읽습니다.
+- 트랙 완주 후 현재 채용 표적과 제출 근거를 고르면 [`data/jobs/`](data/jobs/)에서 최신 날짜
+  스냅샷을 읽고 원문을 다시 확인합니다.
 
 복합 작업 순서는 다음과 같습니다.
 

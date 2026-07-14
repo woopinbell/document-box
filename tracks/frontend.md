@@ -140,3 +140,10 @@ unfamiliar-API assessment, Web production regression의 실제 운영·외부 re
 완료 직후·7일·30일 회상 checkpoint까지 통과하면 42·Frontend 범위의 curriculum mastery가
 완료됩니다. Backend의 transaction, cache, queue와 distributed failure 평가는 Backend 트랙이
 완성된 뒤 별도로 통합합니다.
+
+## 완주 후 지원 데이터
+
+트랙 완료 판정과 채용 공고의 활성 상태를 섞지 않습니다. 완주 후 정규직 여부와 보상 하한 또는
+검증 가능한 보상 proxy를 통과한 현재 공고, 제출용 증거 조합은
+[`../data/jobs/frontend/`](../data/jobs/frontend/)에서 확인하고, 실제 제출 직전에 회사 공식 페이지
+또는 ATS를 다시 엽니다. 이 데이터는 Frontend 트랙의 학습 순서나 release 완료 판정을 변경하지 않습니다.
