@@ -165,5 +165,5 @@ RED이며 production SLO 근거로 사용할 수 없습니다.
 
 트랙 완료와 채용 공고의 활성 상태를 섞지 않습니다. 정규직, 보상 하한 또는 검증 가능한 proxy를
 통과한 현재 공고와 제출 근거는 [`../data/jobs/backend/`](../data/jobs/backend/)에서 확인하고 실제
-제출 직전에 원문과 지원 버튼을 다시 엽니다. 공식 27개 프로젝트의 private 전환과 원격 전수 audit는
+제출 직전에 원문과 지원 버튼을 다시 엽니다. 공식 28개 프로젝트의 private 전환과 원격 전수 audit는
 green이며, repository는 필요한 reviewer에게만 선택적으로 초대합니다.

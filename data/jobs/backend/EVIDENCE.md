@@ -2,7 +2,7 @@
 
 공고의 요구사항을 42·Backend release에서 재현 가능한 근거로 연결합니다. Foundations V2,
 Reliability V2, Risk correctness와 Orchestration은 고정된 release ref를 사용합니다. 공개 URL을
-영구 증거처럼 적지 않습니다. 공식 27개 프로젝트의 private 상태를 전수 확인했으며, 필요할 때만
+영구 증거처럼 적지 않습니다. 공식 28개 프로젝트의 private 상태를 전수 확인했으며, 필요할 때만
 release tag가 고정된 저장소를 선택적으로 초대하고 learning branch보다 `main`의 source·test·운영
 문서를 먼저 보여 줍니다.
 

@@ -25,12 +25,12 @@
 6. VoyagerX는 검색 결과와 관계없이 제외합니다.
 7. 회사 평균과 백분위는 개인 offer가 아닙니다. proxy 공고는 전형 전에 기본연봉 하한을 확인합니다.
 8. Training V2, Risk correctness와 Orchestration release는 고정된 ref만 지원 근거로 사용합니다.
-   공식 27개 프로젝트의 private 전환과 원격 전수 audit는 완료됐으며, 필요한 경우에만 채용
+   공식 28개 프로젝트의 private 전환과 원격 전수 audit는 완료됐으며, 필요한 경우에만 채용
    담당자에게 선택적으로 repository invitation을 제공합니다. 공개 코드를 영구 증거로 약속하지 않습니다.
 
 ## 현재 판정
 
 이 snapshot은 지원 후보를 고른 상태일 뿐 실제 제출을 뜻하지 않습니다. Foundations V2,
 Reliability V2, Risk correctness와 Orchestration의 release ref는 확정됐습니다. 지원 버튼,
-고용형태와 보상은 제출 직전에 다시 확인합니다. 27개 공식 프로젝트는 private audit를 통과했으며,
+고용형태와 보상은 제출 직전에 다시 확인합니다. 28개 공식 프로젝트는 private audit를 통과했으며,
 repository 초대 범위와 기간을 최소화합니다.
