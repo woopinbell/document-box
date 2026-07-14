@@ -108,8 +108,10 @@ content publication을 분리하며 다음 5개 presentation system을 같은 va
 - `template-vN`: profile/project/media를 제거한 중립 template
 - `portfolio-vN == main`: content allowlist를 한 publication commit으로 적용한 deployable release
 - `learning/portfolio-vN`: release별 전체 answers와 practices 두 commit
-- 기존 `template-v1`, `portfolio-v1`, `learning/portfolio-v1`은 immutable
-- 현행 v2 학습 ref: `learning/portfolio-v2`
+- 기존 `template-v1`·`portfolio-v1`·`learning/portfolio-v1`과 V2 ref는 immutable
+- 현행 release: `template-v3` → `82df0f245e55120d87e45b3fe648ea6eee240f0e`,
+  `portfolio-v3 == main` → `3f90d20cdc7a43b8af9e27414f3a58a2a70cf80e`
+- 현행 학습 ref: `learning/portfolio-v3` → `7cfaae14b960cf5b89138660a2ebe8bf094db4af`
 
 정확한 graph와 다음 release reset 방식은 `commit-policy.md`의 Portfolio topology를 따릅니다.
 
@@ -128,6 +130,8 @@ content publication을 분리하며 다음 5개 presentation system을 같은 va
 - 검증: `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`, `npm run test:e2e`
 - 다섯 design의 desktop/mobile visual snapshot, DOM·href·query·status, reduced-motion,
   hydration console/pageerror와 ARIA 결과를 함께 확인
+- V3 fresh clone에서 neutral·personalized lint/typecheck, unit 38개, 두 build와 browser E2E
+  27개 통과·의도된 1개 skip을 확인했으며 저장소는 private입니다.
 - 완료: neutral template와 publication release 양쪽이 green이고 5개 design이 같은 content contract를
   보존하며 learning branch가 release에서 분리됨
 
@@ -138,8 +142,8 @@ learning branch를 검증합니다. RSC/state/data failure boundary와 content/t
 설명하고 5개 design을 실제 공개 가능한 상태로 검증하면 project release 과정이 완료됩니다. 중앙
 unfamiliar-API assessment, Web production regression의 실제 운영·외부 review gate와 각 평가의
 완료 직후·7일·30일 회상 checkpoint까지 통과하면 42·Frontend 범위의 curriculum mastery가
-완료됩니다. Backend의 transaction, cache, queue와 distributed failure 평가는 Backend 트랙이
-완성된 뒤 별도로 통합합니다.
+완료됩니다. Backend의 transaction, cache, queue와 distributed failure 평가는 완성된 Backend
+트랙이 별도로 소유하며 Frontend mastery에 합산하지 않습니다.
 
 ## 완주 후 지원 데이터
 
