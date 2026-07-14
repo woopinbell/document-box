@@ -174,6 +174,17 @@ final learning reachable = source/release history + learning publication commits
 2. answers commit: `docs/commits/**`와 해당 answer ledger만
 3. practices commit: `docs/practice/**`와 해당 practice ledger만
 
+선택적 `docs(notes)` publication은 learning branch 안의 자료를 찾기 위한 `docs/README.md` 한 개를
+함께 가질 수 있습니다. 이 파일은 notes·answers·practices의 소비 순서와 링크만 색인하며, 답지 본문이나
+source/release 운영 문서를 복제하지 않습니다. `main`의 `docs/README.md`와 책임을 섞지 않고 answers나
+practices commit에서 뒤늦게 추가하지 않습니다.
+
+`docs(notes)` 중간 commit에서는 이 색인이 뒤의 publication에서 생길 `docs/commits/**`와
+`docs/practice/**`를 미리 링크할 수 있습니다. 중간 tree의 link 검사는 `docs/README.md`에 명시된 이 두
+후속 corpus root만 `prospective`로 분류하고, 다른 깨진 내부 링크는 그대로 실패시킵니다. 최종
+`learning/<release>` tip에서는 prospective 예외가 0개이고 모든 링크가 실제 path로 해소돼야 합니다.
+Answers와 practices commit은 이 링크를 고치기 위해 `docs/README.md`를 다시 변경하지 않습니다.
+
 이 순서는 Git publication 순서입니다. 학습자는 같은 자료를 다음 소비 순서로 사용합니다.
 
 ```text

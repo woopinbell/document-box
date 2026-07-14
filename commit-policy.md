@@ -75,6 +75,22 @@ implementation / refactor / fix / test
 
 답지·문제지 path, stable ID와 수량 규칙은 `docs-commit-note.md`를 따릅니다.
 
+### 공개된 legacy release
+
+현행 정책 적용 전에 이미 공개된 release object는 규칙을 맞추려고 이동·재작성하지 않습니다.
+
+- 예외는 [`legacy-exceptions.md`](legacy-exceptions.md)에 release tag, learning ref, 실제 불일치와
+  불변 경계를 구체적으로 등록한 경우에만 인정합니다.
+- 예외는 등록된 old commit/tag object에만 적용됩니다. 그 뒤에 만드는 source, tagger, learning
+  publication과 branch topology는 현행 규칙을 전부 따라야 합니다.
+- Legacy release의 metadata나 corpus 형식을 이유로 같은 release에 새 commit을 붙이거나
+  supplemental/fixup learning branch를 만들지 않습니다. Source 변경이 필요하면 새 release와 단일
+  `learning/<new-release>`를 만듭니다.
+- 최신 release 감사에서는 legacy cutoff까지의 불일치와 cutoff 이후의 불일치를 분리합니다.
+  전자는 원장과 object reachability를 검사하고, 후자는 예외 없이 실패로 처리합니다.
+- 과거 object가 immutable이라는 사실은 현재 `main`, 최신 annotated tag, learning path 경계와 raw
+  metadata 검사를 완화하지 않습니다.
+
 ## 4. 임시 branch
 
 `feature/*`, `fix/*`, `chore/*`와 작업용 candidate branch는 구현 중에만 사용합니다.
