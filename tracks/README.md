@@ -7,7 +7,7 @@
 ```text
 42 공통 기반
 ├─ Frontend → Reliability → unfamiliar-API transfer → Portfolio → Web production regression
-└─ Backend → Sportsbook → 통합 분산 시스템 평가(트랙 완성 후 확정)
+└─ Backend → Sportsbook → backend distributed incident → 지연 회상
 ```
 
 ## 어디서 시작하는가
@@ -53,9 +53,11 @@ backend-foundations-training → backend-delivery-training
 → backend-reliability-training → sportsbook
 ```
 
-Backend는 구현·정확성·성능 진단 학습 사이클을 종료했지만 통합 release는 미완료입니다. 완료되지
-않은 Risk release와 실행하지 않은 strict cold E2E를 트랙 release나 curriculum mastery로 계산하지
-않으며, Backend 전체가 green이 된 뒤 42·Frontend와의 최종 통합 평가를 설계합니다.
+Backend의 Training 3개와 Sportsbook 9개는 원격 release·learning ref와 fresh-clone gate가
+green입니다. Orchestration strict cold E2E도 144 pass/0 fail로 끝났습니다. Risk는 correctness
+release를 학습에 사용할 수 있지만 1,000 RPS 성능 qualification은 RED이므로 production SLO를
+주장하지 않습니다. 게시 완료 뒤에도 답지 없는 incident 평가와 회상 checkpoint를 통과하기 전에는
+curriculum mastery로 세지 않습니다.
 
 ## Git publication과 학습 순서
 
@@ -82,13 +84,13 @@ learning: 공통 개념/notes → practice → 직접 실행·실패
 | --- | --- | --- |
 | 42 | 프로젝트 release 완료 | 11개 프로젝트의 main/tag/learning과 fresh-clone gate 완료 |
 | Frontend | 프로젝트 release 완료 | 세 훈련 저장소와 Portfolio release gate 완료 |
-| Backend | 학습 사이클 종료 · 통합 release 미완료 | 독립 release 10/12와 Sportsbook 7/9는 green이지만 Risk release, Orchestration strict cold E2E와 `sportsbook-v1`은 미완료 |
+| Backend | 프로젝트 release 완료 | Training 3개와 Sportsbook 9/9의 main/tag/learning·fresh clone은 green. Risk 성능 qualification은 별도 RED |
 
 **프로젝트 release 완료**는 원격 main, annotated tag, immutable learning branch와 fresh-clone 검증이
 green인 상태입니다. **Curriculum mastery**는 여기에 답지 없는 전이·incident·운영 평가와 완료
 직후·7일·30일 회상 checkpoint까지 통과한 상태입니다. 게시 완료만으로 개인의 숙달을 선언하지
 않습니다.
 
-현재 42와 Frontend는 바로 학습을 시작할 수 있습니다. Backend도 공개된 green 범위와 known-red
-진단을 학습할 수 있지만, 모든 release가 끝났거나 curriculum mastery를 달성했고 최종 통합 평가가
-준비된 상태로 간주하지 않습니다.
+현재 세 트랙 모두 바로 학습을 시작할 수 있습니다. Backend의 Risk known-red 성능 근거는 실패를
+분석하는 자료이지 SLO 인증이 아닙니다. 프로젝트 release 완료와 별개로 답지 없는 incident 평가와
+지연 회상 전에는 curriculum mastery로 간주하지 않습니다.
