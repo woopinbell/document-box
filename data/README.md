@@ -7,6 +7,8 @@
 
 - [`jobs/frontend/`](jobs/frontend/): Frontend 정규직 중 보상 하한 또는 검증 가능한 보상 proxy를
   갖춘 공고 snapshot과 증거 matrix
+- [`jobs/backend/`](jobs/backend/): Backend 정규직 중 같은 보상 gate를 통과한 공고 snapshot과
+  Training·Sportsbook 증거 matrix
 
 ## 갱신 규칙
 

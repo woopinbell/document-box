@@ -6,6 +6,8 @@
 
 - [`frontend/`](frontend/): 42·Frontend 완주 후 지원할 정규직·보상 하한 또는 검증 가능한
   보상 proxy 통과 공고와 증거 packet
+- [`backend/`](backend/): 42·Backend 완주 후 지원할 정규직·보상 하한 또는 검증 가능한 보상
+  proxy 통과 공고와 Training·Sportsbook 증거 packet
 
 공고는 언제든 닫힐 수 있으므로 이 디렉터리의 링크만 보고 지원하지 않고 제출 직전에 원문을 다시
 확인합니다.

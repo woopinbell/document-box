@@ -160,3 +160,10 @@ fresh-clone gate가 green이므로 Backend 프로젝트 release 과정은 완료
 incident 평가와 완료 직후·7일·30일 회상 checkpoint까지 통과해야 curriculum mastery가 완료됩니다.
 Risk의 correctness release는 이 학습 경로에 사용할 수 있지만, 별도 1,000 RPS 성능 qualification은
 RED이며 production SLO 근거로 사용할 수 없습니다.
+
+## 완주 후 지원 데이터
+
+트랙 완료와 채용 공고의 활성 상태를 섞지 않습니다. 정규직, 보상 하한 또는 검증 가능한 proxy를
+통과한 현재 공고와 제출 근거는 [`../data/jobs/backend/`](../data/jobs/backend/)에서 확인하고 실제
+제출 직전에 원문과 지원 버튼을 다시 엽니다. 공식 27개 프로젝트의 private 전환과 원격 전수 audit는
+green이며, repository는 필요한 reviewer에게만 선택적으로 초대합니다.
