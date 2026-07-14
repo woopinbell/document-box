@@ -4,6 +4,26 @@
 이전 형식이거나 공개 뒤 발견된 immutable 위반만 기록합니다. 예외는 표에 적은 기존 object와 위반
 종류의 보존 범위이며 새 commit, tag와 branch에 적용되지 않습니다.
 
+## Cloud Launch pre-release preservation boundary
+
+`cloud-launch-training`의 공식 release 이전 혼합 `main`은 annotated
+`pre-cloud-launch-v1` tag object `b04d2ca9bfca65dd3412bd8e1d08d4a08b056069`가 peeled commit
+`a87a61061e084bb05fa00f6ccff34d0d9c9128a0`으로 보존합니다. 이 ref는 복구 경계일 뿐 공식
+release나 학습 진입점이 아닙니다.
+
+기존 source prefix는 root `1ad172b8865e7b62ee15d45ac5d60666faa40369`부터
+`ba661bd846f327b5a1180a1951ba967bbb2cd2a1`까지 14개 commit입니다. 이 객체들은 raw identity,
+timestamp와 3-section message를 포함해 현행 정책을 충족하므로 metadata 예외를 등록하지 않습니다.
+첫 strict replay object는 `8351231456de14562b92c06bf06194362bd61e50`이며, 이후 신규 source와
+publication object 전체에 현행 정책을 적용합니다.
+
+공식 annotated `cloud-launch-v1` tag object는
+`a2b68bd0c0cda5f20db8f641add436ba86a05375`, peeled source는
+`4c6dd0b7a6405ebf6776879450cf67eb20945dba`, 단일 immutable
+`learning/cloud-launch-v1` tip은 `94a69c837a53cb01ac0e29f25fd728517719d2de`입니다. 기존 혼합
+publication은 pre-release tag에서만 도달하고 새 release의 source 또는 learning path 예외로
+확장되지 않습니다.
+
 ## Backend Training v1
 
 | 저장소 | release tag object | peeled source cutoff (포함) | learning ref와 tip cutoff (포함) | 등록된 예외 | 후속 엄격 경계 |
