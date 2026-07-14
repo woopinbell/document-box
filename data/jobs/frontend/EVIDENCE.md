@@ -10,12 +10,13 @@
 |---|---|---|---|
 | `frontend-delivery-training` | `delivery-v1` = main `95c4d9e` | 비공개 | Next delivery, asset pipeline, SEO·sitemap·robots, build와 Chromium E2E |
 | `frontend-reliability-training` | `reliability-v1` = main `1988796` | 비공개 | React/Vite와 Next, TanStack Query·Zustand, async rollback, 접근성, unit/build/Playwright 6 smoke |
-| `portfolio-site` | `portfolio-v2` = main `a69b0ad` | public에서 private 전환·원격 audit 대기 | Next content/schema/render 경계, 5개 design, route/query/hydration/visual E2E 계약 |
+| `portfolio-site` | `portfolio-v3` = main `3f90d20` (`template-v3` = `82df0f2`) | 비공개, fresh lint/typecheck·unit 38·두 build·E2E 27 pass/1 expected skip green | Next content/schema/render 경계, 5개 design, route/query/native-details hydration/visual E2E 계약 |
 | `web-boundary-inspector` | `codex-5.6` = main `237834c` | 비공개 | HTTP trace 3, event/fetch/history/cache/cookie/CORS/CSP browser 계약 |
 | `pong-pong` | `codex-5.6` = main `b949bbe` | 비공개 | Next/React/Fastify/WS/Postgres, 서버 권위 게임 루프, auth/session과 shared schema |
 | `irc-relay-server` | `codex-5.6` = main `6c76d84` | 비공개 | C++17 nonblocking socket, kqueue/epoll, partial frame/write, backpressure와 TCP smoke |
 
-최종 visibility 전환과 원격 전수 audit가 green인 저장소만 private invitation 대상으로 확정합니다.
+공식 42·Frontend 저장소 15개는 원격 ref audit 뒤 모두 private로 확인했습니다. 필요한 저장소만
+private invitation 대상으로 사용합니다.
 Learning branch는 답지·문제지의 근거이며 repository invitation의 첫 surface로 사용하지 않습니다.
 Release tag 또는 main의 source·test·설계 문서를 먼저 연결합니다.
 
@@ -27,13 +28,13 @@ Release tag 또는 main의 source·test·설계 문서를 먼저 연결합니다
 | TanStack Query·Zustand·비동기 정합성 | Reliability의 stale response, optimistic rollback과 mutation identity test | 실제 사용자 규모나 제품 KPI를 붙이지 않습니다 |
 | 접근성·디자인 시스템 | Reliability의 modal/focus/axe와 design-state, Portfolio의 ARIA·reduced-motion E2E | 실제 디자이너 협업으로 표현하지 않습니다 |
 | SEO·asset·release | Delivery의 image pipeline, metadata, sitemap/robots와 production build | Search Console 운영 실적은 아직 없습니다 |
-| Browser·HTTP·security | Web Boundary의 request correlation, proxy sanitization, event loop, Fetch abort, CORS/CSP | 이번 감사 재현은 request 3/3·Chromium 7/7. Firefox/WebKit 14개는 실행 파일 설치 후 재검증 필요 |
+| Browser·HTTP·security | Web Boundary의 request correlation, proxy sanitization, event loop, Fetch abort, CORS/CSP | Release 게시 시 request 3/3·Chromium/Firefox/WebKit 21/21을 통과했습니다. 이번 지원 감사 재현은 설치된 request 3/3·Chromium 7/7까지만 확인했으므로 Firefox/WebKit은 제출 전에 다시 실행합니다. |
 | 실시간·전체 구조 | Pong의 서버 권위 WS schema와 game loop, IRC의 실제 TCP smoke | Pong을 transaction-safe 또는 production OAuth 운영으로 표현하지 않습니다 |
 | Linux·container | IRC, Container Stack, Linux Admin | Linux Admin은 documentation-first이며 실제 서버 운영 경력이 아닙니다 |
 | C/C++·CS | IRC, STL Container, Thread Dining, Stack Sort, Small Shell | STL은 C++98 기반기이며 현대 C++ production 증거가 아닙니다 |
 
-Visibility 전환이 끝나기 전 공개 접근 가능 여부를 제출 근거로 약속하지 않습니다. 전환과 audit가
-끝난 뒤 코드 검토가 필요하면 Portfolio publication commit, route·presentation characterization,
+공개 접근을 제출 근거로 약속하지 않습니다. 코드 검토가 필요하면 Portfolio V3 publication commit,
+route·presentation·native-details hydration characterization,
 Playwright 계약, content schema와 five-design registry가 있는 `portfolio-site`를 우선 제한
 초대합니다.
 
@@ -67,7 +68,8 @@ Playwright 계약, content schema와 five-design registry가 있는 `portfolio-s
 4. 초대받은 reviewer가 확인할 수 있는 CI에서 lint/typecheck/unit/build/E2E green run을 만듭니다.
    로컬 green을 원격 CI로 바꾸어 쓰지 않습니다.
 5. Web Boundary의 Firefox·WebKit browser binary를 설치하고 21/21을 다시 실행합니다.
-6. Portfolio hydration·visual E2E와 선택한 직무별 저장소 gate를 fresh clone에서 재실행합니다.
+6. Portfolio V3의 fresh hydration·visual E2E 27 pass/1 expected skip 근거를 보존하고, 지원 직전 선택한
+   직무별 저장소 gate를 다시 실행합니다.
 7. 이력서에는 문제 → 결정 → 검증 → 결과를 적되, 실무·프로덕션 트래픽·팀 KPI·운영 경력으로
    과장하지 않습니다.
 8. 보상 proxy 후보는 recruiter screen에서 기본연봉 4,000만원 이상을 확인하고, 해외 full-time은
