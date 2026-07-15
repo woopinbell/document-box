@@ -83,15 +83,19 @@ Delivery 결과물을 managed BaaS와 edge perimeter 경계에서 검증하는 C
 
 - 범위: Firebase Auth custom claim, Firestore owner/admin/server-owned 경계, fail-closed Rules,
   trusted Functions core, Cloudflare cache/WAF/rate-limit example과 다중 view
-- 현재 source release: `cloud-launch-v1` = `main`
-- 현재 학습 ref: `learning/cloud-launch-v1`
+- 현재 source release: `cloud-launch-v1.0.1` = `main`
+- 현재 학습 ref: `learning/cloud-launch-v1.0.1`
 - L3: client claim과 Rules의 권한 source of truth, server-owned write, provider authorization과
   Cloudflare perimeter의 분리
 - 검증: `make check`에서 metadata, unit 15, Firestore Emulator/config 6, production build와
   Chromium·Firefox·WebKit E2E 30 통과
+- 학습 검증: `make check-learning`에서 answer/practice의 commit·tree·parent와 release 뒤
+  notes → answers → practices path topology 통과
 - 완료: local emulator의 allow/deny 증거와 실제 Firebase/Cloudflare 계정·배포 증거를 구분하고,
   pure Functions core를 배포된 trigger라고 과장하지 않음
 
+기존 `cloud-launch-v1`과 `learning/cloud-launch-v1`은 immutable 과거 기록이며 현행 학습 진입점이
+아닙니다. V1.0.1은 runtime 기능을 바꾸지 않고 v1 corpus의 source identity 오류를 교정합니다.
 Cloud release는 실제 계정, DNS, credential, 비용 또는 production on-call을 증명하지 않습니다.
 그 경험을 AWS·GCP 운영 경력이나 실트래픽 성과로 바꾸어 쓰지 않습니다.
 

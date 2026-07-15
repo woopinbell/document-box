@@ -9,7 +9,7 @@
 | 저장소 | 기준 ref | 기록 시 접근 상태·최종 gate | 안전하게 주장할 수 있는 범위 |
 |---|---|---|---|
 | `frontend-delivery-training` | `delivery-v1` = main `95c4d9e` | 비공개 | Next delivery, asset pipeline, SEO·sitemap·robots, build와 Chromium E2E |
-| `cloud-launch-training` | `cloud-launch-v1` = main `4c6dd0b` | 비공개, fresh unit 15·emulator/config 6·production build·3-engine E2E 30 green | Firebase claim·Firestore Rules·trusted Functions core·Cloudflare perimeter의 local 검증 경계 |
+| `cloud-launch-training` | `cloud-launch-v1.0.1` = main `480e18b` | 비공개, fresh unit 15·emulator/config 6·production build·3-engine E2E 30·corpus object 8 green | Firebase claim·Firestore Rules·trusted Functions core·Cloudflare perimeter의 local 검증 경계 |
 | `frontend-reliability-training` | `reliability-v1` = main `1988796` | 비공개 | React/Vite와 Next, TanStack Query·Zustand, async rollback, 접근성, unit/build/Playwright 6 smoke |
 | `portfolio-site` | `portfolio-v3` = main `3f90d20` (`template-v3` = `82df0f2`) | 비공개, fresh lint/typecheck·unit 38·두 build·E2E 27 pass/1 expected skip green | Next content/schema/render 경계, 5개 design, route/query/native-details hydration/visual E2E 계약 |
 | `web-boundary-inspector` | `codex-5.6` = main `237834c` | 비공개 | HTTP trace 3, event/fetch/history/cache/cookie/CORS/CSP browser 계약 |
