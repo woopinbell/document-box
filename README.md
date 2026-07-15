@@ -23,18 +23,22 @@ document-box 자체와 `central-notes` 같은 거버넌스 저장소는 dual-for
 
 이 README는 권한 지도와 색인만 담당합니다. 세부 규칙을 복제하지 않습니다.
 
-## 시작점
+## 학습 시작
 
-- 전체 학습 가닥과 현재 완료 상태를 먼저 보려면 [`tracks/README.md`](tracks/README.md)를 읽습니다.
-- 실제 학습을 시작할 때는 전체 지도에서 해당 `tracks/*.md`로 들어갑니다.
+[**42 → Frontend/Backend 전체 완주 시작**](tracks/README.md)
+
+학습 경로, 환경 점검, 중단·재개, 개인 원장과 마지막 평가·회상까지 위 문서에서 끊김 없이
+연결합니다. 다른 문서를 학습 첫 진입점으로 사용하지 않습니다.
+
+## 거버넌스 작업
+
 - source refactor, history rewrite, 검증 또는 정리 작업이면 `WORKFLOW.md`를 읽습니다.
 - commit, tag, branch, push를 만들거나 바꾸면 `commit-policy.md`를 함께 읽습니다.
 - 기존 공개 object가 현행 규칙과 다르면 rewrite하지 말고 `legacy-exceptions.md`에 등록된 범위인지
   확인합니다.
 - `docs/commits/**` 또는 `docs/practice/**`를 만들거나 갱신하면 `docs-commit-note.md`도 반드시
   함께 읽습니다.
-- 트랙 완주 후 현재 채용 표적과 제출 근거를 고르면 [`data/jobs/`](data/jobs/)에서 최신 날짜
-  스냅샷을 읽고 원문을 다시 확인합니다.
+- 채용 데이터는 [`data/jobs/`](data/jobs/)의 최신 snapshot을 읽고 제출 직전에 원문을 확인합니다.
 
 복합 작업 순서는 다음과 같습니다.
 
