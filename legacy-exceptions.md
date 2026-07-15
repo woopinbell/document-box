@@ -24,6 +24,49 @@ publication object 전체에 현행 정책을 적용합니다.
 publication은 pre-release tag에서만 도달하고 새 release의 source 또는 learning path 예외로
 확장되지 않습니다.
 
+## Cloud Launch v1 immutable corpus basis 오류
+
+Annotated `cloud-launch-v1` tag object
+`a2b68bd0c0cda5f20db8f641add436ba86a05375`와 peeled source
+`4c6dd0b7a6405ebf6776879450cf67eb20945dba`, immutable
+`learning/cloud-launch-v1` tip `94a69c837a53cb01ac0e29f25fd728517719d2de`는 이동·재작성·삭제하지
+않습니다.
+
+Stable ID `012`의 실제 source object는
+`37c5dfb95c3bff4e3f488d6db52c906092cc3853`, tree는
+`ce5382acb90a347d44ee22d27e70d0b54f5be66c`, parent는
+`e644946819a3f4e9e342fa60e4319e9882dafa9c`입니다. 존재하지 않는
+`37c5dfb95c3bff4e9e342fa60e4319e9882dafa9c`가 아래 immutable corpus 필드에 기록됐습니다.
+
+| publication object | path | 잘못된 필드 |
+| --- | --- | --- |
+| `9403474fb8c7a18a75133f1bf8e6a3a1125f58a1` | `docs/commits/012.md` | 기준 commit |
+| `9403474fb8c7a18a75133f1bf8e6a3a1125f58a1` | `docs/commits/013.md` | 부모 commit |
+| `9403474fb8c7a18a75133f1bf8e6a3a1125f58a1` | `docs/commits/README.md` | ID 012 commit |
+| `9403474fb8c7a18a75133f1bf8e6a3a1125f58a1` | `docs/commits/README.md` | ID 013 parent |
+| `94a69c837a53cb01ac0e29f25fd728517719d2de` | `docs/practice/012.md` | 기준 commit |
+| `94a69c837a53cb01ac0e29f25fd728517719d2de` | `docs/practice/013.md` | 부모 commit |
+| `94a69c837a53cb01ac0e29f25fd728517719d2de` | `docs/practice/README.md` | ID 012 source basis |
+
+등록 예외는 위 일곱 필드의 잘못된 literal에만 적용합니다. V1 source graph, tag/tagger, 실제
+tree·parent, raw metadata와 나머지 corpus에는 예외를 적용하지 않으며 supplement/fixup learning
+branch도 만들지 않습니다.
+
+교정 release는 ID `019` source object
+`64750fe6a3e59734c2c320a23178253e9614e7f7`에서 실제 Git object 검사를 추가하고, ID `020`
+`480e18b5b47cccf5fe0f38e6c5811fde567bdfe4`에서 current release 경계를 문서화합니다. Annotated
+`cloud-launch-v1.0.1` tag object `20857ee56df971d3a1b5eb7a8cf181377dd971ef`는 ID `020`으로
+peel됩니다. 단일 `learning/cloud-launch-v1.0.1`은 release에서 다음 세 commit만 추가합니다.
+
+1. notes: `5c64cfac71dddae0abb04731cf642ad6012f1336`
+2. answers: `c4eae9f428b91158e1fd5a06fdbf27d994c20b45`
+3. practices/tip: `c13b944e41f7b3cbf4f6949636e2104218dc48a3`
+
+V1.0.1 corpus는 source 20, answers 20, practices 17(`002–017`, `019`), omissions 3(`001`,
+`018`, `020`), final reachable 23으로 reconcile됩니다. 잘못된 v1 literal은 새 corpus에 없고 모든
+basis/tree/parent가 실제 release object와 일치합니다. V1.0.1의 신규 source, tagger와 learning
+publication에는 위 v1 예외를 확장하지 않습니다.
+
 ## Backend Training v1
 
 | 저장소 | release tag object | peeled source cutoff (포함) | learning ref와 tip cutoff (포함) | 등록된 예외 | 후속 엄격 경계 |
