@@ -1,8 +1,9 @@
 # Frontend 지원 증거 matrix
 
 보상 하한 또는 조건부 보상 proxy를 통과한 정규직 공고의 요구사항을 기존 release에서 확인 가능한
-증거로 연결하고, 현재 입증하지 못한 내용을 분리합니다. 2026-07-14 read-only remote/fresh-clone
-감사 결과를 기준으로 합니다.
+증거로 연결하고, 현재 입증하지 못한 내용을 분리합니다. 공고 snapshot과 공통 release 근거는
+2026-07-14 read-only remote/fresh-clone 감사를 기준으로 하며, Cloud v1.0.1 교정 근거는
+2026-07-15 원격 게시·fresh-clone 감사를 기준으로 합니다.
 
 ## 접근 상태와 release
 
