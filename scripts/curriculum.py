@@ -91,6 +91,13 @@ PROJECT_FIELDS = (
     "prev",
     "next",
 )
+PRACTICE_POLICY = {
+    "mastery": "one-representative-plus-card-gate",
+    "remaining": "optional-deepening",
+    "historical_gate": "selected-practice-parent",
+    "release_gate": "clean-release-tree",
+    "wrapper_scope": "document-box-canonical",
+}
 LOCAL_NODE_FIELDS = ("id", "track", "doc", "anchor", "prev", "next")
 PROJECT_SETUP = {
     "linux-admin": "make && make test",
@@ -254,7 +261,8 @@ def _anchor_section(text: str, anchor: str) -> str:
 
 def _local_markdown_link_errors(root: Path) -> list[str]:
     errors: list[str] = []
-    root_resolved = root.resolve()
+    root = root.resolve()
+    root_resolved = root
     link_pattern = re.compile(r"(?<!!)\[[^\]]*\]\(([^)]+)\)")
     for document in sorted(root.rglob("*.md")):
         if ".git" in document.parts:
@@ -405,17 +413,76 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
                     (root / doc).read_text(encoding="utf-8"), node["anchor"]
                 )
                 owner = data.get("owner", "woopinbell")
-                expected_snippets = (
+                central_handoff = (
+                    f"https://github.com/{owner}/central-notes/blob/main/"
+                    f"TRACK_SEQUENCE.md#{node.get('anchor')}"
+                )
+                exact_targets = (
                     f"https://github.com/{owner}/{repo}",
-                    str(release),
-                    str(learning),
                     f"https://github.com/{owner}/{repo}/blob/{learning}/{node.get('practice')}",
                     f"https://github.com/{owner}/{repo}/blob/{learning}/{node.get('answer')}",
                 )
-                for snippet in expected_snippets:
-                    if snippet not in section:
+                for target in exact_targets:
+                    if f"]({target})" not in section:
                         errors.append(
-                            f"{node_id}: current stage card is missing {snippet}"
+                            f"{node_id}: current stage card is missing exact target {target}"
+                        )
+                for token in (str(release), str(learning)):
+                    if f"`{token}`" not in section:
+                        errors.append(
+                            f"{node_id}: current stage card is missing exact ref `{token}`"
+                        )
+                if f"]({central_handoff})" not in section:
+                    errors.append(
+                        f"{node_id}: current stage card is missing exact Central "
+                        f"handoff {central_handoff}"
+                    )
+                scope_handoff = "](README.md#공식-수행-범위)"
+                if scope_handoff not in section:
+                    errors.append(
+                        f"{node_id}: current stage card is missing canonical "
+                        "practice scope handoff"
+                    )
+                gate_markers = (
+                    "Clean release gate: annotated release의 별도 clean",
+                    "Historical 무자료 gate: 현재 practice 파일이 명시한 시작 tree",
+                    "연결 설명:",
+                )
+                for marker in gate_markers:
+                    if marker not in section:
+                        errors.append(
+                            f"{node_id}: current stage card is missing the two-tree "
+                            f"gate marker {marker}"
+                        )
+                if node_id == "sportsbook-odds-feed-service":
+                    if "Spring/Kafka 관련 index" in section:
+                        errors.append(
+                            "sportsbook-odds-feed-service: generic persistence index "
+                            "must not be labeled as Kafka"
+                        )
+                    note_links = (
+                        (
+                            "Spring Kafka",
+                            "https://github.com/woopinbell/sportsbook-orchestration/"
+                            "blob/learning/orchestration-v1/notes/spring-kafka.md",
+                        ),
+                        (
+                            "Avro",
+                            "https://github.com/woopinbell/sportsbook-orchestration/"
+                            "blob/learning/orchestration-v1/notes/avro.md",
+                        ),
+                    )
+                    for label, note_url in note_links:
+                        if f"[{label}]({note_url})" not in section:
+                            errors.append(
+                                "sportsbook-odds-feed-service: current stage card is "
+                                f"missing the original Sportsbook {label} handoff"
+                            )
+                    ownership = "Kafka·Avro의 정본은 Sportsbook 원본 notes다"
+                    if ownership not in section:
+                        errors.append(
+                            "sportsbook-odds-feed-service: current stage card must "
+                            "identify the original Sportsbook notes as canonical"
                         )
 
     counts = {track: 0 for track in VALID_TRACKS}
@@ -456,6 +523,11 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
         errors.append("entry must be linux-admin")
     if entry not in node_by_id:
         errors.append(f"entry node does not exist: {entry}")
+    if data.get("practice_policy") != PRACTICE_POLICY:
+        errors.append(
+            "practice_policy must require one representative practice plus the card "
+            "gate and classify remaining practices as optional deepening"
+        )
 
     for node_id, node in node_by_id.items():
         try:
@@ -655,6 +727,24 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
                 "root README's single '학습 시작' section must contain exactly one "
                 "Markdown link, the tracks/README.md CTA"
             )
+
+    track_readme = root / "tracks/README.md"
+    if track_readme.is_file():
+        track_text = track_readme.read_text(encoding="utf-8")
+        scope_markers = (
+            "### 공식 수행 범위",
+            "대표 practice 한 개",
+            "나머지 practice는 release 전체를 더 깊게 재구성하려는 선택 심화",
+            "Historical practice tree",
+            "Clean release tree",
+            "현행 필수 범위에는 이 Document Box 규칙이 우선",
+        )
+        for marker in scope_markers:
+            if marker not in track_text:
+                errors.append(
+                    "tracks/README.md is missing the canonical practice scope "
+                    f"marker: {marker}"
+                )
 
     return errors
 

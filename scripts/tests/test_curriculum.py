@@ -25,7 +25,12 @@ class RegistryFixture:
             encoding="utf-8",
         )
         (root / "tracks/README.md").write_text(
-            "# Curriculum\n",
+            "# Curriculum\n\n"
+            "### 공식 수행 범위\n\n"
+            "대표 practice 한 개와 카드 전체 gate를 수행한다.\n"
+            "나머지 practice는 release 전체를 더 깊게 재구성하려는 선택 심화다.\n"
+            "Historical practice tree와 Clean release tree를 구분한다.\n"
+            "현행 필수 범위에는 이 Document Box 규칙이 우선한다.\n",
             encoding="utf-8",
         )
         self.projects = []
@@ -87,14 +92,32 @@ class RegistryFixture:
                         if index + 1 < len(ids)
                         else "backend-incident"
                     )
+                odds_handoffs = (
+                    "[Spring Kafka](https://github.com/woopinbell/"
+                    "sportsbook-orchestration/blob/learning/orchestration-v1/"
+                    "notes/spring-kafka.md)\n"
+                    "[Avro](https://github.com/woopinbell/"
+                    "sportsbook-orchestration/blob/learning/orchestration-v1/"
+                    "notes/avro.md)\n"
+                    "Kafka·Avro의 정본은 Sportsbook 원본 notes다.\n"
+                    if node_id == "sportsbook-odds-feed-service"
+                    else ""
+                )
                 documents[track].append(
                     f'<a id="{anchor}"></a>\n## {node_id}\n'
-                    f'https://github.com/woopinbell/{node_id}\n'
-                    'release-v1\nlearning/release-v1\n'
-                    f'https://github.com/woopinbell/{node_id}/blob/'
-                    'learning/release-v1/docs/practice/README.md\n'
-                    f'https://github.com/woopinbell/{node_id}/blob/'
-                    'learning/release-v1/docs/commits/README.md\n'
+                    f'[repo](https://github.com/woopinbell/{node_id})\n'
+                    'release `release-v1`, learning `learning/release-v1`\n'
+                    f'[practice](https://github.com/woopinbell/{node_id}/blob/'
+                    'learning/release-v1/docs/practice/README.md)\n'
+                    f'[answer](https://github.com/woopinbell/{node_id}/blob/'
+                    'learning/release-v1/docs/commits/README.md)\n'
+                    '[Central](https://github.com/woopinbell/central-notes/blob/main/'
+                    f'TRACK_SEQUENCE.md#{anchor})\n'
+                    '[scope](README.md#공식-수행-범위)\n'
+                    '- Clean release gate: annotated release의 별도 clean worktree에서 검증한다.\n'
+                    '- Historical 무자료 gate: 현재 practice 파일이 명시한 시작 tree에서 검증한다.\n'
+                    '- 연결 설명: 두 tree의 경계를 설명한다.\n'
+                    f'{odds_handoffs}'
                     f'[next](#stage-{next_id})\n'
                 )
                 project = {
@@ -199,6 +222,7 @@ class RegistryFixture:
             "version": 1,
             "owner": "woopinbell",
             "entry": "linux-admin",
+            "practice_policy": dict(curriculum.PRACTICE_POLICY),
             "projects": self.projects,
             "assessments": self.assessments,
             "completions": self.completions,
@@ -238,6 +262,13 @@ class CurriculumValidationTest(unittest.TestCase):
         self.assertEqual(
             curriculum.validate_registry(self.fixture.data, self.root), []
         )
+
+    def test_repository_registry_and_current_cards_pass(self):
+        repository_root = SCRIPT_DIR.parent
+        data = json.loads(
+            (repository_root / "tracks/curriculum.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(curriculum.validate_registry(data, repository_root), [])
 
     def test_unchanged_backlink_exception_is_explicit_and_scoped(self):
         by_id = {project["id"]: project for project in self.fixture.data["projects"]}
@@ -299,6 +330,113 @@ class CurriculumValidationTest(unittest.TestCase):
         )
         errors = curriculum.validate_registry(self.fixture.data, self.root)
         self.assertTrue(any("missing next link" in error for error in errors))
+
+    def test_project_card_requires_exact_central_stage_handoff(self):
+        path = self.root / "tracks/42.md"
+        expected = (
+            "https://github.com/woopinbell/central-notes/blob/main/"
+            "TRACK_SEQUENCE.md#stage-linux-admin"
+        )
+        path.write_text(
+            path.read_text(encoding="utf-8").replace(expected, expected + "-wrong", 1),
+            encoding="utf-8",
+        )
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        self.assertTrue(
+            any("linux-admin: current stage card is missing exact" in error for error in errors)
+        )
+
+    def test_project_card_rejects_repo_and_corpus_target_suffixes(self):
+        path = self.root / "tracks/42.md"
+        text = path.read_text(encoding="utf-8")
+        text = text.replace(
+            "https://github.com/woopinbell/linux-admin)",
+            "https://github.com/woopinbell/linux-admin-wrong)",
+            1,
+        )
+        text = text.replace("docs/practice/README.md)", "docs/practice/README.md-wrong)", 1)
+        text = text.replace("docs/commits/README.md)", "docs/commits/README.md-wrong)", 1)
+        path.write_text(text, encoding="utf-8")
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        exact_target_errors = [error for error in errors if "missing exact target" in error]
+        self.assertEqual(len(exact_target_errors), 3)
+
+    def test_project_card_requires_exact_ref_tokens(self):
+        path = self.root / "tracks/42.md"
+        text = path.read_text(encoding="utf-8")
+        text = text.replace("`release-v1`", "release-v1", 1)
+        text = text.replace("`learning/release-v1`", "learning/release-v1", 1)
+        path.write_text(text, encoding="utf-8")
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        exact_ref_errors = [error for error in errors if "missing exact ref" in error]
+        self.assertEqual(len(exact_ref_errors), 2)
+
+    def test_practice_scope_policy_is_explicit(self):
+        self.fixture.data["practice_policy"]["mastery"] = "all-provided"
+        path = self.root / "tracks/README.md"
+        path.write_text(
+            path.read_text(encoding="utf-8").replace(
+                "대표 practice 한 개",
+                "모든 practice",
+            ).replace(
+                "Historical practice tree와 Clean release tree를 구분한다.",
+                "하나의 tree에서 모든 gate를 실행한다.",
+            ).replace(
+                "현행 필수 범위에는 이 Document Box 규칙이 우선한다.",
+                "project wrapper가 우선한다.",
+            ),
+            encoding="utf-8",
+        )
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        self.assertTrue(any("practice_policy must require" in error for error in errors))
+        self.assertGreaterEqual(
+            sum("canonical practice scope marker" in error for error in errors),
+            3,
+        )
+
+    def test_each_project_card_links_canonical_practice_scope(self):
+        path = self.root / "tracks/42.md"
+        path.write_text(
+            path.read_text(encoding="utf-8").replace(
+                "](README.md#공식-수행-범위)",
+                "](README.md#wrong-scope)",
+                1,
+            ),
+            encoding="utf-8",
+        )
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        self.assertTrue(any("missing canonical practice scope" in error for error in errors))
+
+    def test_each_project_card_separates_historical_and_release_gates(self):
+        path = self.root / "tracks/42.md"
+        text = path.read_text(encoding="utf-8")
+        text = text.replace("Clean release gate:", "통합 gate:", 1)
+        text = text.replace("Historical 무자료 gate:", "무자료 gate:", 1)
+        text = text.replace("연결 설명:", "설명:", 1)
+        path.write_text(text, encoding="utf-8")
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        self.assertEqual(
+            sum("missing the two-tree gate marker" in error for error in errors),
+            3,
+        )
+
+    def test_odds_card_uses_original_kafka_and_avro_handoffs(self):
+        path = self.root / "tracks/backend.md"
+        text = path.read_text(encoding="utf-8")
+        text = text.replace("[Spring Kafka]", "[Kafka]", 1)
+        text = text.replace("[Avro]", "[Schema]", 1)
+        text = text.replace(
+            "Kafka·Avro의 정본은 Sportsbook 원본 notes다.",
+            "Kafka 관련 index를 따른다.",
+            1,
+        )
+        path.write_text(text, encoding="utf-8")
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        self.assertEqual(
+            sum("missing the original Sportsbook" in error for error in errors),
+            2,
+        )
+        self.assertTrue(any("identify the original Sportsbook" in error for error in errors))
 
     def test_completion_cannot_form_a_cycle(self):
         frontend_assessment = next(
