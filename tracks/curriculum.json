@@ -2,6 +2,13 @@
   "version": 1,
   "owner": "woopinbell",
   "entry": "linux-admin",
+  "practice_policy": {
+    "mastery": "one-representative-plus-card-gate",
+    "remaining": "optional-deepening",
+    "historical_gate": "selected-practice-parent",
+    "release_gate": "clean-release-tree",
+    "wrapper_scope": "document-box-canonical"
+  },
   "projects": [
     {
       "id": "linux-admin",
