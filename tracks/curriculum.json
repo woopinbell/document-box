@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "owner": "woopinbell",
   "entry": "linux-foundation",
   "practice_policy": {
@@ -430,6 +430,63 @@
       "anchor": "stage-backend-complete",
       "prev": "backend-incident",
       "next": null
+    }
+  ],
+  "overlays": [
+    {
+      "id": "frontend-application-bridge",
+      "track": "frontend",
+      "doc": "tracks/frontend-fast-track.md",
+      "anchor": "route-frontend-application-bridge",
+      "entry_after": "42-incident",
+      "required_prior": [
+        "web-boundary-inspector",
+        "42-incident"
+      ],
+      "outcome": "frontend-application-readiness",
+      "grants_mastery": false,
+      "resume_at": "frontend-delivery-training",
+      "preflight_projects": [
+        "web-boundary-inspector",
+        "frontend-foundations-training",
+        "frontend-reliability-training",
+        "portfolio-site"
+      ],
+      "selections": [
+        {
+          "project": "frontend-foundations-training",
+          "learning": "learning/foundations-v1.0.1",
+          "practice_paths": [
+            "docs/practice/041.md"
+          ]
+        },
+        {
+          "project": "frontend-reliability-training",
+          "learning": "learning/reliability-v1.0.1",
+          "practice_paths": [
+            "docs/practice/010.md",
+            "docs/practice/011.md",
+            "docs/practice/013.md",
+            "docs/practice/036.md",
+            "docs/practice/037.md",
+            "docs/practice/039.md",
+            "docs/practice/043.md",
+            "docs/practice/044.md",
+            "docs/practice/046.md",
+            "docs/practice/047.md",
+            "docs/practice/108.md",
+            "docs/practice/109.md",
+            "docs/practice/110.md",
+            "docs/practice/112.md"
+          ]
+        }
+      ],
+      "portfolio": {
+        "project": "portfolio-site",
+        "template": "template-v3.0.1",
+        "release": "portfolio-v3.0.1",
+        "learning": "learning/portfolio-v3.0.1"
+      }
     }
   ],
   "branches": [

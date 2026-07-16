@@ -14,6 +14,11 @@ Central Linux/Git Foundations → 42의 10개 프로젝트
 병행하면서 Frontend, Backend 또는 둘 다 시작할 수 있다. 두 확장 트랙은 서로 기다리지 않지만 각
 트랙 내부 카드 순서는 바꾸지 않는다.
 
+42를 이미 직접 구현했고 Frontend 지원 준비를 먼저 해야 하는 학습자는 42 incident 뒤
+[Frontend 지원 준비 브리지](frontend-fast-track.md#route-frontend-application-bridge)를 선택할 수 있다.
+이 브리지는 정규 prev/next 사슬을 바꾸지 않으며 outcome `frontend-application-readiness`만 부여한다.
+`grants_mastery=false`이므로 지원을 시작한 뒤 정규 Frontend의 Delivery 카드로 복귀해야 한다.
+
 ## 처음 한 번만 준비
 
 1. 이 repository를 clone하고 원하는 트랙의 환경을 검사한다.
@@ -23,6 +28,8 @@ Central Linux/Git Foundations → 42의 10개 프로젝트
    # 42 incident 뒤 선택할 때:
    make preflight TRACK=frontend
    make preflight TRACK=backend
+   # 42 복습자의 Frontend 지원 준비 브리지를 선택할 때:
+   make preflight ROUTE=frontend-application-bridge
    ```
 
    `BLOCK`은 현재 단계를 시작하기 전에 해결한다. `WARN`은 뒤 프로젝트에서 필요한 도구이므로 해당
@@ -61,17 +68,26 @@ Central Linux/Git Foundations → 42의 10개 프로젝트
 
    `learning/<release>`는 읽기 전용이다. checkout해 수정하거나 `main`에 merge하지 않는다.
 
-5. **개인 구현** — release tag는 baseline에만 사용한다. 현재 practice 상단의 `부모 commit`을 정확히
-   복사해 그 parent에서 개인 branch를 만든다. 그래야 아직 정답 diff가 없는 상태에서 실패와 구현을
-   재현할 수 있다.
+5. **개인 구현** — release tag는 baseline에만 사용한다. 먼저 현재 practice의 full `부모 commit`을
+   사용한다. Practice에 parent가 없으면 answer 본문 파일은 열지 않고, current answer ledger
+   README에서 연결한 full crosswalk의 해당 stable ID metadata mapping 행만 읽어 parent를 확인한다.
+   Mapping이 abbreviated SHA라면 clone에서 mapped commit과 parent를 각각
+   `git rev-parse <mapped-sha>^{commit}`으로 full SHA로 해소하고, commit tree는
+   `git show -s --format=%T <full-commit>`으로 기록한다. 그 parent에서 개인
+   branch를 만들어야 아직 정답 diff가 없는 상태에서 실패와 구현을 재현할 수 있다.
 
    ```sh
-   PRACTICE_PARENT=<practice에 적힌 full parent hash>
+   PRACTICE_PARENT=<practice 또는 current answer ledger mapping의 full parent hash>
    git switch -c study/<project>-<practice-id> "$PRACTICE_PARENT"
    ```
 
    Root commit을 재구현하는 practice처럼 부모가 없다고 명시된 경우에만 별도 빈 디렉터리 또는
    `git switch --orphan study/<project>-<practice-id>`를 사용한다.
+
+   Ledger가 해당 항목을 `metadata-only`로 분류한다면 root practice가 아니다. Branch나 실패를
+   만들지 말고 실제 hash·parent·tree, 분류와 practice 생략 사유를 원장에 기록한 뒤 source
+   관찰·설명으로 검토한다. 구현 항목은 practice와 ledger mapping 어느 쪽에도 full parent가 없거나
+   두 문서의 mapping이 충돌할 때만 `BLOCK`으로 기록하고 문서 교정을 요청한다.
 
    최소 한 번의 실제 실패와 자기 원인 가설·반증·검증 결과를 원장에 남긴다. 실패를 일부러 꾸미거나
    source/test 계약을 바꾸지 않는다.
@@ -107,7 +123,7 @@ Central Linux/Git Foundations → 42의 10개 프로젝트
   전수 수행이 필수는 아니다.
 - 대표 practice는 baseline 뒤 answer를 보지 않고 구현·검증 계획을 설명하지 못한 첫 제공 항목으로
   고른다. 모든 항목을 설명할 수 있으면 current ledger의 첫 제공 practice를 사용한다. Omission과
-  reserved 항목은 선택 대상이 아니다.
+  reserved 항목, `metadata-only` review는 선택 대상이 아니다.
 - Immutable learning wrapper에 남은 “기존 N개 practice 수행” 문구는 전체 corpus를 순회하던 과거
   navigation이자 선택 심화 경로다. 현행 필수 범위에는 이 Document Box 규칙이 우선한다. 단, 선택한
   대표 practice 파일 자체의 구현 범위와 historical 검증 계약은 줄이지 않는다.
@@ -119,10 +135,18 @@ Central Linux/Git Foundations → 42의 10개 프로젝트
 일부 이미 공개된 immutable project navigation wrapper에는 `tag에서 study branch`라는 축약 문구가
 남아 있다. 그 문구는 release baseline checkout에만 적용하며 commit 재구현의 시작점을 뜻하지 않는다.
 현재 학습에서는 수행 수량·선택 규칙은 이 문서, 선택한 항목의 구현·historical 검증은 각 practice
-파일의 full `부모 commit` 지시가 우선한다. 공개된 tag와 learning ref는 이 문구를 고치기 위해
+파일의 full `부모 commit` 지시가 우선한다. 그 값이 없을 때는 answer 본문을 열지 않고 current
+answer ledger README가 연결한 full crosswalk의 해당 metadata mapping 행만 읽어 parent를 보충하고,
+abbreviated SHA는 clone에서 full commit으로 해소한다. 공개된 tag와 learning
+ref는 이 문구를 고치기 위해
 이동하거나 rewrite하지 않는다. Portfolio의 통합 content
 publication 과제만 카드가 지정한 neutral template tag에서 시작하고, 개별 commit practice는 동일하게
 각 파일의 parent를 따른다.
+
+Immutable ledger가 명시적으로 `metadata-only`라고 분류하고 practice 생략 사유를 기록한 행은 위
+full-parent 규칙의 구현 대상이 아니다. 실제 commit object의 hash·parent·tree를 대조하고 source를
+관찰·설명하되 `study/*`, 의도적 실패나 무자료 구현을 꾸미지 않는다. Practice와 ledger mapping
+모두에 parent가 없거나 서로 충돌하는 구현 항목은 이 예외에 포함하지 않는다.
 
 ## 중단과 재개
 
@@ -148,6 +172,10 @@ Linux/Git Foundations → format-printer → signal-message-bus → thread-dinin
 
 - [Frontend 첫 카드](frontend.md#stage-frontend-foundations-training)
 - [Backend 첫 카드](backend.md#stage-backend-foundations-training)
+
+이미 42를 구현한 복습자는 필요하면 [Frontend 지원 준비 브리지](frontend-fast-track.md#route-frontend-application-bridge)를
+거쳐 지원을 시작할 수 있다. 이 선택은 Frontend 완료나 mastery가 아니며 정규 사슬의 Delivery로
+돌아간다.
 
 42의 30일 회상까지 통과해야 42 curriculum mastery를 확정한다. 확장 트랙을 먼저 시작해도 이 clock을
 삭제하거나 다시 시작하지 않는다.

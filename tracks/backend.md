@@ -10,8 +10,10 @@ Foundations → Delivery → Reliability
 ```
 
 시작 전에 `make preflight TRACK=backend`를 실행한다. `learning/*`는 읽기 전용이고 release tag는
-baseline에만 사용한다. 실제 구현은 대표 practice 파일의 full 부모 commit에서 만든 `study/*`
-branch에 둔다. 대표 항목의 결정 규칙과 선택 심화의 경계는
+baseline에만 사용한다. 실제 구현은 [Basis 안내의 우선순위](README.md#basis-안내의-우선순위)에
+따라 practice 또는 current ledger crosswalk에서 해소한 historical parent의 `study/*` branch에
+둔다. 아래 카드의 “현재 practice의 full 부모 commit”도 이 해소 규칙을 줄여 쓴 표현이다. 대표
+항목의 결정 규칙과 선택 심화의 경계는
 [공식 수행 범위](README.md#공식-수행-범위)를 따른다. Spring main track을 먼저
 수행하고 Go 비교 구현은 같은 계약을 압축해 재확인하는 용도로 사용한다.
 

@@ -8,10 +8,19 @@ Foundations → Delivery → Cloud → Reliability → unfamiliar-API transfer
 ```
 
 시작 전에 `make preflight TRACK=frontend`를 실행한다. `learning/*`는 읽기 전용이고 release tag는
-baseline에만 사용한다. 실제 구현은 대표 practice 파일의 full 부모 commit에서 만든 `study/*`
-branch에 둔다. 대표 항목의 결정 규칙과 선택 심화의 경계는
+baseline에만 사용한다. 실제 구현은 [Basis 안내의 우선순위](README.md#basis-안내의-우선순위)에
+따라 practice 또는 current ledger crosswalk에서 해소한 historical parent의 `study/*` branch에
+둔다. 아래 카드의 “현재 practice의 full 부모 commit”도 이 해소 규칙을 줄여 쓴 표현이다. 대표
+항목의 결정 규칙과 선택 심화의 경계는
 [공식 수행 범위](README.md#공식-수행-범위)를 따른다. Portfolio의 통합 content
 publication 과제만 neutral template tag에서 시작한다.
+
+42를 이미 직접 구현했고 지원 자료를 먼저 준비해야 한다면
+[Frontend 지원 준비 브리지](frontend-fast-track.md#route-frontend-application-bridge)를 선택할 수 있다.
+Foundations 4개 review, Reliability 4개 hands-on과 Portfolio 병행 범위를 정확히 제한한 경로이며
+`grants_mastery=false`다. 지원 gate 뒤에는 이 문서의
+[Delivery 카드](#stage-frontend-delivery-training)로 복귀한다. 아래 정규 카드와 prev/next 순서는
+그대로 유지된다.
 
 <a id="stage-frontend-foundations-training"></a>
 ## 1. frontend-foundations-training
