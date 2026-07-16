@@ -20,6 +20,17 @@ seungwoo7050 <seungwoo7050@naver.com>
 - `.mailmap` 표시 통합은 준수가 아닙니다. raw object를 직접 검사합니다.
 - `Co-authored-by`, AI 도구나 다른 contributor trailer를 넣지 않습니다.
 
+### 실제 시각과 학습 순서
+
+- Author/committer timestamp는 commit object를 실제 작성·재작성한 시각입니다. 트랙의 학습 순서나
+  과거 수행 시기를 연출하려고 backdate하지 않습니다.
+- 새 이력에서는 모든 parent가 child보다 늦지 않아야 하고 미래 시각을 만들지 않습니다. 이미 공개된
+  과거 object의 겹침·시각 결함은 예외 원장과 보존 ref로 설명하되 object 자체를 고치지 않습니다.
+- 프로젝트 사이의 curriculum 순서는 commit 날짜 정렬이 아니라 Document Box registry와 단계 카드의
+  `prev`/`next` gate가 소유합니다. 같은 기간에 병행된 실제 개발 기록은 그대로 유지합니다.
+- History cleanup이나 clean-root 재설계는 그 유지보수 작업이 일어난 현재 시각을 사용하고, 대체된
+  과거 main은 annotated preservation tag에서 도달 가능하게 둡니다.
+
 ## 2. Commit message
 
 ```text
