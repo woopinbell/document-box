@@ -1,10 +1,11 @@
 PYTHON ?= python3
 TRACK ?=
+ROUTE ?=
 
 .PHONY: preflight check-navigation check-remote-navigation test
 
 preflight:
-	@$(PYTHON) scripts/curriculum.py preflight --registry tracks/curriculum.json --track "$(TRACK)"
+	@$(PYTHON) scripts/curriculum.py preflight --registry tracks/curriculum.json $(if $(strip $(TRACK)),--track "$(TRACK)") $(if $(strip $(ROUTE)),--route "$(ROUTE)")
 
 check-navigation:
 	@$(PYTHON) scripts/curriculum.py check --registry tracks/curriculum.json --root .

@@ -26,6 +26,7 @@ class RegistryFixture:
         )
         (root / "tracks/README.md").write_text(
             "# Curriculum\n\n"
+            "[application overlay](frontend-fast-track.md#route-frontend-application-bridge)\n\n"
             "### 공식 수행 범위\n\n"
             "대표 practice 한 개와 카드 전체 gate를 수행한다.\n"
             "나머지 practice는 release 전체를 더 깊게 재구성하려는 선택 심화다.\n"
@@ -93,6 +94,21 @@ class RegistryFixture:
                     learning = "learning/risk-v1.0.2"
                     practice = "docs/practice-risk-v1.0.2/README.md"
                     answer = "docs/commits-risk-v1.0.2/README.md"
+                if node_id == "frontend-foundations-training":
+                    release = "foundations-v1.0.1"
+                    learning = "learning/foundations-v1.0.1"
+                    practice = "docs/practice-foundations-v1.0.1/README.md"
+                    answer = "docs/commits-foundations-v1.0.1/README.md"
+                if node_id == "frontend-reliability-training":
+                    release = "reliability-v1.0.1"
+                    learning = "learning/reliability-v1.0.1"
+                    practice = "docs/practice-reliability-v1.0.1/README.md"
+                    answer = "docs/commits-reliability-v1.0.1/README.md"
+                if node_id == "portfolio-site":
+                    release = "portfolio-v3.0.1"
+                    learning = "learning/portfolio-v3.0.1"
+                    practice = "docs/practice-portfolio-v3.0.1/README.md"
+                    answer = "docs/commits-portfolio-v3.0.1/README.md"
                 if track == "42":
                     next_id = ids[index + 1] if index + 1 < len(ids) else "42-incident"
                 elif track == "frontend":
@@ -151,11 +167,19 @@ class RegistryFixture:
                 }
                 if node_id in curriculum.UNCHANGED_NAVIGATION_RELEASES:
                     project["main_backlink"] = False
+                if node_id == "portfolio-site":
+                    project["template"] = "template-v3.0.1"
                 self.projects.append(project)
             (root / f"tracks/{track}.md").write_text(
                 "\n".join(documents[track]), encoding="utf-8"
             )
 
+        frontend_path = root / "tracks/frontend.md"
+        frontend_path.write_text(
+            "[application overlay](frontend-fast-track.md#route-frontend-application-bridge)\n\n"
+            + frontend_path.read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
         by_id = {project["id"]: project for project in self.projects}
         ids_42 = track_ids["42"]
         ids_frontend = track_ids["frontend"]
@@ -249,12 +273,79 @@ class RegistryFixture:
                     stream.write(
                         "[frontend](frontend.md#stage-frontend-foundations-training)\n"
                         "[backend](backend.md#stage-backend-foundations-training)\n"
+                        "[application overlay](frontend-fast-track.md#route-frontend-application-bridge)\n"
                     )
                 elif node["next"]:
                     stream.write(f'[next](#stage-{node["next"]})\n')
 
+        selections = []
+        selected_links = []
+        for project_id, paths in curriculum.FRONTEND_APPLICATION_PRACTICES.items():
+            project = by_id[project_id]
+            selections.append(
+                {
+                    "project": project_id,
+                    "learning": project["learning"],
+                    "practice_paths": list(paths),
+                }
+            )
+            selected_links.append(
+                f"[answer](https://github.com/woopinbell/{project['repo']}/"
+                f"blob/{project['learning']}/{project['answer']})"
+            )
+            for path in paths:
+                selected_links.append(
+                    f"[selected](https://github.com/woopinbell/{project['repo']}/"
+                    f"blob/{project['learning']}/{path})"
+                )
+        self.overlay = {
+            "id": curriculum.FRONTEND_APPLICATION_OVERLAY_ID,
+            "track": "frontend",
+            "doc": "tracks/frontend-fast-track.md",
+            "anchor": "route-frontend-application-bridge",
+            "entry_after": "42-incident",
+            "required_prior": ["web-boundary-inspector", "42-incident"],
+            "outcome": "frontend-application-readiness",
+            "grants_mastery": False,
+            "resume_at": "frontend-delivery-training",
+            "preflight_projects": list(curriculum.FRONTEND_APPLICATION_PREFLIGHT),
+            "selections": selections,
+            "portfolio": dict(curriculum.FRONTEND_APPLICATION_PORTFOLIO),
+        }
+        route_42_links = []
+        for stage in curriculum.CANONICAL_SEQUENCES["42"]:
+            if stage == "42-incident":
+                central = (
+                    "https://github.com/woopinbell/central-notes/blob/main/"
+                    "assessments/42-incident/README.md#assessment-42-incident"
+                )
+            else:
+                central = (
+                    "https://github.com/woopinbell/central-notes/blob/main/"
+                    f"TRACK_SEQUENCE.md#stage-{stage}"
+                )
+            route_42_links.append(
+                f"[central]({central}) [card](42.md#stage-{stage})"
+            )
+        (root / "tracks/frontend-fast-track.md").write_text(
+            '<a id="route-frontend-application-bridge"></a>\n'
+            "# Frontend application bridge\n\n"
+            "`frontend-application-readiness`\n"
+            "`grants_mastery=false`\n"
+            "`make preflight ROUTE=frontend-application-bridge`\n"
+            "[prior](42.md#stage-42-incident)\n"
+            + "\n".join(route_42_links)
+            + "\n"
+            + "\n".join(selected_links)
+            + "\n[portfolio](https://github.com/woopinbell/portfolio-site)\n"
+            "`template-v3.0.1` `portfolio-v3.0.1` "
+            "`learning/portfolio-v3.0.1`\n"
+            "[resume](frontend.md#stage-frontend-delivery-training)\n",
+            encoding="utf-8",
+        )
+
         self.data = {
-            "version": 1,
+            "version": 2,
             "owner": "woopinbell",
             "entry": "linux-foundation",
             "practice_policy": dict(curriculum.PRACTICE_POLICY),
@@ -262,6 +353,7 @@ class RegistryFixture:
             "prerequisites": [prerequisite],
             "assessments": self.assessments,
             "completions": self.completions,
+            "overlays": [self.overlay],
             "branches": [
                 {
                     "from": "42-incident",
@@ -298,6 +390,90 @@ class CurriculumValidationTest(unittest.TestCase):
         self.assertEqual(
             curriculum.validate_registry(self.fixture.data, self.root), []
         )
+
+    def test_registry_version_two_is_required(self):
+        self.fixture.data["version"] = 1
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        self.assertTrue(any("registry version must be 2" in error for error in errors))
+
+    def test_application_overlay_stays_outside_the_canonical_graph(self):
+        canonical_ids = {
+            node_id
+            for sequence in curriculum.CANONICAL_SEQUENCES.values()
+            for node_id in sequence
+        }
+        self.assertNotIn(curriculum.FRONTEND_APPLICATION_OVERLAY_ID, canonical_ids)
+        incident = next(
+            node
+            for node in self.fixture.data["assessments"]
+            if node["id"] == "42-incident"
+        )
+        self.assertNotIn(
+            curriculum.FRONTEND_APPLICATION_OVERLAY_ID,
+            curriculum._ids(incident["next"]),
+        )
+        self.assertEqual(
+            curriculum.validate_registry(self.fixture.data, self.root), []
+        )
+
+    def test_application_overlay_cannot_grant_mastery_or_join_next_edges(self):
+        self.fixture.overlay["grants_mastery"] = True
+        incident = next(
+            node
+            for node in self.fixture.data["assessments"]
+            if node["id"] == "42-incident"
+        )
+        incident["next"].append(curriculum.FRONTEND_APPLICATION_OVERLAY_ID)
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        self.assertTrue(any("grants_mastery=false" in error for error in errors))
+        self.assertTrue(any("unknown next node" in error for error in errors))
+        self.assertTrue(any("canonical next" in error for error in errors))
+
+    def test_application_overlay_requires_reviewed_practices_and_delivery_resume(self):
+        self.fixture.overlay["resume_at"] = "portfolio-site"
+        self.fixture.overlay["outcome"] = "frontend-complete"
+        self.fixture.overlay["selections"][0]["practice_paths"] = [
+            "docs/practice/039.md"
+        ]
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        self.assertTrue(any("resume the canonical track" in error for error in errors))
+        self.assertTrue(any("outcome must be" in error for error in errors))
+        self.assertTrue(any("reviewed hands-on scope" in error for error in errors))
+
+    def test_application_overlay_document_chain_and_markers_are_required(self):
+        path = self.root / "tracks/frontend-fast-track.md"
+        text = path.read_text(encoding="utf-8")
+        text = text.replace("`grants_mastery=false`", "mastery maybe", 1)
+        text = text.replace(
+            "[resume](frontend.md#stage-frontend-delivery-training)",
+            "resume later",
+            1,
+        )
+        path.write_text(text, encoding="utf-8")
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        self.assertTrue(any("grants_mastery=false" in error for error in errors))
+        self.assertTrue(
+            any("stage-frontend-delivery-training" in error for error in errors)
+        )
+
+    def test_empty_application_overlay_section_still_fails_markers(self):
+        path = self.root / "tracks/frontend-fast-track.md"
+        anchor = '<a id="route-frontend-application-bridge"></a>'
+        path.write_text(anchor, encoding="utf-8")
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        self.assertTrue(any("frontend-application-readiness" in error for error in errors))
+        self.assertTrue(any("stage-frontend-delivery-training" in error for error in errors))
+
+    def test_42_incident_card_must_offer_the_application_overlay(self):
+        path = self.root / "tracks/42.md"
+        text = path.read_text(encoding="utf-8").replace(
+            "](frontend-fast-track.md#route-frontend-application-bridge)",
+            "](frontend-fast-track.md#wrong-route)",
+            1,
+        )
+        path.write_text(text, encoding="utf-8")
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        self.assertTrue(any("tracks/42.md is missing" in error for error in errors))
 
     def test_repository_registry_and_current_cards_pass(self):
         repository_root = SCRIPT_DIR.parent
@@ -710,6 +886,93 @@ class RemoteContractTest(unittest.TestCase):
 
         return dispatch
 
+    @staticmethod
+    def _application_overlay_fixture():
+        projects = {
+            "frontend-foundations-training": {
+                "id": "frontend-foundations-training",
+                "repo": "frontend-foundations-training",
+                "learning": "learning/foundations-v1.0.1",
+            },
+            "frontend-reliability-training": {
+                "id": "frontend-reliability-training",
+                "repo": "frontend-reliability-training",
+                "learning": "learning/reliability-v1.0.1",
+            },
+            "portfolio-site": {
+                "id": "portfolio-site",
+                "repo": "portfolio-site",
+                "template": "template-v3.0.1",
+                "release": "portfolio-v3.0.1",
+                "learning": "learning/portfolio-v3.0.1",
+            },
+        }
+        selections = [
+            {
+                "project": project_id,
+                "learning": projects[project_id]["learning"],
+                "practice_paths": list(paths),
+            }
+            for project_id, paths in curriculum.FRONTEND_APPLICATION_PRACTICES.items()
+        ]
+        overlay = {
+            "id": curriculum.FRONTEND_APPLICATION_OVERLAY_ID,
+            "selections": selections,
+            "portfolio": dict(curriculum.FRONTEND_APPLICATION_PORTFOLIO),
+        }
+        return overlay, projects
+
+    def _overlay_dispatcher(
+        self, *, missing_path=None, missing_mapping_id=None, drift=False
+    ):
+        branch_shas = {
+            "frontend-foundations-training": "1" * 40,
+            "frontend-reliability-training": "2" * 40,
+        }
+        calls = {repo: 0 for repo in branch_shas}
+        portfolio_refs = "\n".join(
+            (
+                f"{'3' * 40}\trefs/heads/main",
+                f"{'a' * 40}\trefs/tags/portfolio-v3.0.1",
+                f"{'3' * 40}\trefs/tags/portfolio-v3.0.1^{{}}",
+                f"{'4' * 40}\trefs/heads/learning/portfolio-v3.0.1",
+                f"{'b' * 40}\trefs/tags/template-v3.0.1",
+                f"{'5' * 40}\trefs/tags/template-v3.0.1^{{}}",
+            )
+        )
+        mapping_rows = "\n".join(
+            f"| {Path(path).stem} | `{'c' * 8}` | `{'d' * 8}` | phase |"
+            for paths in curriculum.FRONTEND_APPLICATION_PRACTICES.values()
+            for path in paths
+            if Path(path).stem != missing_mapping_id
+        )
+        mapping_payload = {
+            "encoding": "base64",
+            "content": base64.b64encode(mapping_rows.encode()).decode(),
+        }
+
+        def dispatch(command, timeout=20, cwd=None):
+            if command[:2] == ["git", "ls-remote"]:
+                repo = command[2].rstrip("/").rsplit("/", 1)[-1]
+                if repo == "portfolio-site":
+                    return self._response(portfolio_refs)
+                calls[repo] += 1
+                sha = branch_shas[repo]
+                if drift and repo == "frontend-foundations-training" and calls[repo] > 1:
+                    sha = "9" * 40
+                learning = command[-1]
+                return self._response(f"{sha}\t{learning}")
+            if command[:2] == ["gh", "api"]:
+                endpoint = command[-1]
+                if missing_path and missing_path in endpoint:
+                    return self._response(returncode=1, stderr="not found")
+                if "docs/commits-codex-5.6/README.md" in endpoint:
+                    return self._response(mapping_payload)
+                return self._response()
+            raise AssertionError(f"unexpected command: {command}")
+
+        return dispatch
+
     def test_annotated_release_linear_learning_and_sha_paths_pass(self):
         project = {
             "id": "format-printer",
@@ -727,6 +990,58 @@ class RemoteContractTest(unittest.TestCase):
             self.assertEqual(
                 curriculum._check_remote_project("woopinbell", project), []
             )
+
+    def test_application_overlay_remote_paths_and_portfolio_refs_pass(self):
+        overlay, projects = self._application_overlay_fixture()
+        with patch.object(
+            curriculum, "_run", side_effect=self._overlay_dispatcher()
+        ):
+            self.assertEqual(
+                curriculum._check_remote_overlay("woopinbell", overlay, projects),
+                [],
+            )
+
+    def test_application_overlay_whole_run_manifest_detects_ref_drift(self):
+        overlay, projects = self._application_overlay_fixture()
+        dispatcher = self._overlay_dispatcher(drift=True)
+        with patch.object(curriculum, "_run", side_effect=dispatcher):
+            start, start_errors = curriculum._overlay_ref_manifest(
+                "woopinbell", [overlay], projects
+            )
+            final, final_errors = curriculum._overlay_ref_manifest(
+                "woopinbell", [overlay], projects
+            )
+        self.assertEqual(start_errors, [])
+        self.assertEqual(final_errors, [])
+        self.assertNotEqual(start, final)
+
+    def test_application_overlay_missing_practice_and_ref_drift_are_rejected(self):
+        overlay, projects = self._application_overlay_fixture()
+        with patch.object(
+            curriculum,
+            "_run",
+            side_effect=self._overlay_dispatcher(
+                missing_path="docs/practice/041.md",
+                drift=True,
+            ),
+        ):
+            errors = curriculum._check_remote_overlay(
+                "woopinbell", overlay, projects
+            )
+        self.assertTrue(any("missing selected practice path" in error for error in errors))
+        self.assertTrue(any("changed during overlay verification" in error for error in errors))
+
+    def test_application_overlay_missing_answer_metadata_is_rejected(self):
+        overlay, projects = self._application_overlay_fixture()
+        with patch.object(
+            curriculum,
+            "_run",
+            side_effect=self._overlay_dispatcher(missing_mapping_id="041"),
+        ):
+            errors = curriculum._check_remote_overlay(
+                "woopinbell", overlay, projects
+            )
+        self.assertTrue(any("lacks commit/parent metadata for 041" in error for error in errors))
 
     def test_lightweight_supplemental_and_missing_backlink_are_rejected(self):
         project = {
@@ -864,6 +1179,59 @@ class RemoteContractTest(unittest.TestCase):
         self.assertEqual(result, 1)
         self.assertIn("BLOCK navigation", output.getvalue())
         access.assert_not_called()
+
+    def test_frontend_application_route_without_track_preflights_only_overlay_projects(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture = RegistryFixture(Path(temporary))
+            pass_result = curriculum.Result("PASS", "tool", "available")
+            access_results = [pass_result] * len(
+                curriculum.FRONTEND_APPLICATION_PREFLIGHT
+            )
+            with patch.object(
+                curriculum,
+                "_github_track_access",
+                return_value=access_results,
+            ) as access, patch.object(
+                curriculum, "_tool_result", return_value=pass_result
+            ), patch.object(
+                curriculum, "_compose_result"
+            ) as compose, patch.object(
+                curriculum.shutil,
+                "which",
+                side_effect=lambda name: f"/bin/{name}",
+            ), patch.object(curriculum, "_run") as run:
+                output = io.StringIO()
+                with redirect_stdout(output):
+                    result = curriculum.preflight(
+                        fixture.data,
+                        None,
+                        Path(temporary),
+                        curriculum.FRONTEND_APPLICATION_OVERLAY_ID,
+                    )
+            self.assertEqual(result, 0)
+            selected = access.call_args.args[1]
+            self.assertEqual(
+                [project["id"] for project in selected],
+                list(curriculum.FRONTEND_APPLICATION_PREFLIGHT),
+            )
+            compose.assert_not_called()
+            run.assert_not_called()
+            self.assertIn("does not grant curriculum mastery", output.getvalue())
+            self.assertNotIn("cloud-launch-training", output.getvalue())
+
+    def test_frontend_application_route_rejects_the_wrong_track(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            fixture = RegistryFixture(Path(temporary))
+            output = io.StringIO()
+            with redirect_stdout(output):
+                result = curriculum.preflight(
+                    fixture.data,
+                    "backend",
+                    Path(temporary),
+                    curriculum.FRONTEND_APPLICATION_OVERLAY_ID,
+                )
+        self.assertEqual(result, 2)
+        self.assertIn("belongs to frontend, not backend", output.getvalue())
 
     def test_browser_cache_never_claims_three_engine_pass(self):
         project = {"track": "frontend", "repo": "frontend-foundations-training"}

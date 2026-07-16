@@ -25,6 +25,7 @@ from urllib.parse import quote, unquote
 
 TRACK_COUNTS = {"42": 10, "frontend": 5, "backend": 12}
 VALID_TRACKS = frozenset(TRACK_COUNTS)
+REGISTRY_VERSION = 2
 CANONICAL_SEQUENCES = {
     "42": (
         "linux-foundation",
@@ -99,6 +100,58 @@ PRACTICE_POLICY = {
     "wrapper_scope": "document-box-canonical",
 }
 LOCAL_NODE_FIELDS = ("id", "track", "doc", "anchor", "prev", "next")
+OVERLAY_FIELDS = (
+    "id",
+    "track",
+    "doc",
+    "anchor",
+    "entry_after",
+    "required_prior",
+    "outcome",
+    "grants_mastery",
+    "resume_at",
+    "preflight_projects",
+    "selections",
+    "portfolio",
+)
+FRONTEND_APPLICATION_OVERLAY_ID = "frontend-application-bridge"
+FRONTEND_APPLICATION_PREFLIGHT = (
+    "web-boundary-inspector",
+    "frontend-foundations-training",
+    "frontend-reliability-training",
+    "portfolio-site",
+)
+FRONTEND_APPLICATION_PRACTICES = {
+    "frontend-foundations-training": (
+        "docs/practice/041.md",
+    ),
+    "frontend-reliability-training": (
+        "docs/practice/010.md",
+        "docs/practice/011.md",
+        "docs/practice/013.md",
+        "docs/practice/036.md",
+        "docs/practice/037.md",
+        "docs/practice/039.md",
+        "docs/practice/043.md",
+        "docs/practice/044.md",
+        "docs/practice/046.md",
+        "docs/practice/047.md",
+        "docs/practice/108.md",
+        "docs/practice/109.md",
+        "docs/practice/110.md",
+        "docs/practice/112.md",
+    ),
+}
+FRONTEND_APPLICATION_ANSWER_MAPPINGS = {
+    "frontend-foundations-training": "docs/commits-codex-5.6/README.md",
+    "frontend-reliability-training": "docs/commits-codex-5.6/README.md",
+}
+FRONTEND_APPLICATION_PORTFOLIO = {
+    "project": "portfolio-site",
+    "template": "template-v3.0.1",
+    "release": "portfolio-v3.0.1",
+    "learning": "learning/portfolio-v3.0.1",
+}
 CURRENT_42_RELEASE = "codex-5.7"
 CURRENT_42_LEARNING = "learning/codex-5.7"
 CURRENT_42_PRACTICE = "docs/practice-codex-5.7/README.md"
@@ -309,8 +362,291 @@ def _local_markdown_link_errors(root: Path) -> list[str]:
     return errors
 
 
+def _validate_overlays(
+    data: dict[str, Any],
+    root: Path,
+    node_by_id: dict[str, dict[str, Any]],
+) -> list[str]:
+    """Validate optional learning routes without adding them to the mastery graph."""
+
+    errors: list[str] = []
+    overlays = data.get("overlays")
+    if not isinstance(overlays, list):
+        return ["overlays must be a list"]
+    if len(overlays) != 1:
+        errors.append(f"overlays must contain exactly one entry, found {len(overlays)}")
+        return errors
+    overlay = overlays[0]
+    if not isinstance(overlay, dict):
+        return ["every overlay must be an object"]
+
+    missing = [field for field in OVERLAY_FIELDS if field not in overlay]
+    extra = sorted(set(overlay) - set(OVERLAY_FIELDS))
+    if missing:
+        errors.append("frontend application overlay missing: " + ", ".join(missing))
+    if extra:
+        errors.append("frontend application overlay has unknown fields: " + ", ".join(extra))
+    if missing:
+        return errors
+
+    overlay_id = overlay.get("id")
+    if overlay_id != FRONTEND_APPLICATION_OVERLAY_ID:
+        errors.append(
+            "overlay id must be " + FRONTEND_APPLICATION_OVERLAY_ID
+        )
+    if overlay_id in node_by_id:
+        errors.append(f"overlay id collides with canonical node: {overlay_id}")
+    if overlay.get("track") != "frontend":
+        errors.append("frontend application overlay track must be frontend")
+    if overlay.get("entry_after") != "42-incident":
+        errors.append("frontend application overlay must enter after 42-incident")
+    if overlay.get("required_prior") != [
+        "web-boundary-inspector",
+        "42-incident",
+    ]:
+        errors.append(
+            "frontend application overlay must require the current web boundary gate "
+            "and 42 incident"
+        )
+    if overlay.get("outcome") != "frontend-application-readiness":
+        errors.append(
+            "frontend application overlay outcome must be "
+            "frontend-application-readiness"
+        )
+    if overlay.get("grants_mastery") is not False:
+        errors.append("frontend application overlay must set grants_mastery=false")
+    if overlay.get("resume_at") != "frontend-delivery-training":
+        errors.append(
+            "frontend application overlay must resume the canonical track at "
+            "frontend-delivery-training"
+        )
+    preflight_projects = overlay.get("preflight_projects")
+    if not isinstance(preflight_projects, list) or not all(
+        isinstance(project_id, str) for project_id in preflight_projects
+    ):
+        errors.append(
+            "frontend application overlay preflight_projects must be a string list"
+        )
+        preflight_projects = []
+    if preflight_projects != list(FRONTEND_APPLICATION_PREFLIGHT):
+        errors.append(
+            "frontend application overlay preflight_projects must be the current "
+            "Web Boundary, Foundations, Reliability and Portfolio projects"
+        )
+    for project_id in preflight_projects:
+        if project_id not in node_by_id or "repo" not in node_by_id[project_id]:
+            errors.append(
+                f"frontend application overlay references unknown project {project_id}"
+            )
+
+    selections = overlay.get("selections")
+    if not isinstance(selections, list):
+        errors.append("frontend application overlay selections must be a list")
+        selections = []
+    selection_by_project: dict[str, dict[str, Any]] = {}
+    for selection in selections:
+        if not isinstance(selection, dict):
+            errors.append("every frontend application selection must be an object")
+            continue
+        if set(selection) != {"project", "learning", "practice_paths"}:
+            errors.append(
+                "frontend application selections must contain exactly project, "
+                "learning and practice_paths"
+            )
+            continue
+        project_id = selection.get("project")
+        if not isinstance(project_id, str):
+            errors.append("frontend application selection project must be a string")
+            continue
+        if project_id in selection_by_project:
+            errors.append(
+                f"frontend application selection repeats project {project_id}"
+            )
+            continue
+        selection_by_project[project_id] = selection
+        project = node_by_id.get(project_id)
+        if not project or "repo" not in project:
+            errors.append(
+                f"frontend application selection references unknown project {project_id}"
+            )
+            continue
+        if selection.get("learning") != project.get("learning"):
+            errors.append(
+                f"frontend application selection {project_id} must use current learning "
+                f"ref {project.get('learning')}"
+            )
+        paths = selection.get("practice_paths")
+        if not isinstance(paths, list) or not paths or not all(
+            isinstance(path, str) and path for path in paths
+        ):
+            errors.append(
+                f"frontend application selection {project_id} practice_paths must be "
+                "a non-empty string list"
+            )
+            continue
+        if len(paths) != len(set(paths)):
+            errors.append(
+                f"frontend application selection {project_id} repeats a practice path"
+            )
+        for path in paths:
+            try:
+                _safe_relative_path(path, f"overlay.{project_id}.practice_paths")
+            except CurriculumError as exc:
+                errors.append(str(exc))
+            if not path.startswith("docs/practice/") or not path.endswith(".md"):
+                errors.append(
+                    f"frontend application selection {project_id} must use exact "
+                    f"docs/practice/*.md paths: {path}"
+                )
+
+    if set(selection_by_project) != set(FRONTEND_APPLICATION_PRACTICES):
+        errors.append(
+            "frontend application selections must contain exactly Foundations and "
+            "Reliability"
+        )
+    for project_id, expected_paths in FRONTEND_APPLICATION_PRACTICES.items():
+        selection = selection_by_project.get(project_id)
+        if selection and selection.get("practice_paths") != list(expected_paths):
+            errors.append(
+                f"frontend application selection {project_id} practice paths do not "
+                "match the reviewed hands-on scope"
+            )
+
+    portfolio = overlay.get("portfolio")
+    if portfolio != FRONTEND_APPLICATION_PORTFOLIO:
+        errors.append(
+            "frontend application overlay portfolio must pin portfolio-site "
+            "template-v3.0.1, portfolio-v3.0.1 and learning/portfolio-v3.0.1"
+        )
+    portfolio_project = node_by_id.get("portfolio-site")
+    if portfolio_project:
+        for field in ("template", "release", "learning"):
+            if FRONTEND_APPLICATION_PORTFOLIO[field] != portfolio_project.get(field):
+                errors.append(
+                    f"frontend application portfolio {field} must match the registered "
+                    "portfolio-site project"
+                )
+
+    doc = overlay.get("doc")
+    anchor = overlay.get("anchor")
+    section: str | None = None
+    if not isinstance(doc, str):
+        errors.append("frontend application overlay doc must be a path")
+    else:
+        try:
+            _safe_relative_path(doc, "overlay.doc")
+            doc_path = root / doc
+            if not doc_path.is_file():
+                errors.append(f"frontend application overlay document not found: {doc}")
+            elif not isinstance(anchor, str) or not anchor:
+                errors.append("frontend application overlay anchor must be non-empty")
+            else:
+                text = doc_path.read_text(encoding="utf-8")
+                count = _document_anchor_count(text, anchor)
+                if count != 1:
+                    errors.append(
+                        f"frontend application overlay anchor #{anchor} must appear "
+                        f"exactly once in {doc}, found {count}"
+                    )
+                section = _anchor_section(text, anchor)
+        except CurriculumError as exc:
+            errors.append(str(exc))
+
+    owner = str(data.get("owner", "woopinbell"))
+    if section is not None:
+        required_markers = (
+            "`frontend-application-readiness`",
+            "`grants_mastery=false`",
+            "`make preflight ROUTE=frontend-application-bridge`",
+            "](42.md#stage-42-incident)",
+            "](frontend.md#stage-frontend-delivery-training)",
+        )
+        for marker in required_markers:
+            if marker not in section:
+                errors.append(
+                    "frontend application overlay document is missing marker " + marker
+                )
+        for stage in CANONICAL_SEQUENCES["42"]:
+            card_marker = f"](42.md#stage-{stage})"
+            if card_marker not in section:
+                errors.append(
+                    f"frontend application overlay document is missing 42 stage {stage}"
+                )
+            if stage == "42-incident":
+                central_marker = (
+                    f"https://github.com/{owner}/central-notes/blob/main/"
+                    "assessments/42-incident/README.md#assessment-42-incident"
+                )
+            else:
+                central_marker = (
+                    f"https://github.com/{owner}/central-notes/blob/main/"
+                    f"TRACK_SEQUENCE.md#stage-{stage}"
+                )
+            if f"]({central_marker})" not in section:
+                errors.append(
+                    f"frontend application overlay document is missing Central handoff "
+                    f"for 42 stage {stage}"
+                )
+        for project_id, expected_paths in FRONTEND_APPLICATION_PRACTICES.items():
+            project = node_by_id.get(project_id, {})
+            learning = project.get("learning", "")
+            repo = project.get("repo", project_id)
+            answer = project.get("answer", "")
+            answer_target = (
+                f"https://github.com/{owner}/{repo}/blob/{learning}/{answer}"
+            )
+            if f"]({answer_target})" not in section:
+                errors.append(
+                    f"frontend application overlay document is missing current "
+                    f"answer ledger {project_id}:{answer}"
+                )
+            for path in expected_paths:
+                target = (
+                    f"https://github.com/{owner}/{repo}/blob/{learning}/{path}"
+                )
+                if f"]({target})" not in section:
+                    errors.append(
+                        f"frontend application overlay document is missing selected "
+                        f"practice {project_id}:{path}"
+                    )
+        portfolio_url = f"https://github.com/{owner}/portfolio-site"
+        if f"]({portfolio_url})" not in section:
+            errors.append(
+                "frontend application overlay document is missing portfolio-site link"
+            )
+        for token in (
+            "template-v3.0.1",
+            "portfolio-v3.0.1",
+            "learning/portfolio-v3.0.1",
+        ):
+            if f"`{token}`" not in section:
+                errors.append(
+                    f"frontend application overlay document is missing portfolio ref `{token}`"
+                )
+
+    overlay_link = "](frontend-fast-track.md#route-frontend-application-bridge)"
+    for source in (
+        root / "tracks/README.md",
+        root / "tracks/42.md",
+        root / "tracks/frontend.md",
+    ):
+        if not source.is_file():
+            continue
+        source_text = source.read_text(encoding="utf-8")
+        if source.name == "42.md":
+            source_text = _anchor_section(source_text, "stage-42-incident")
+        if overlay_link not in source_text:
+            errors.append(
+                f"{source.relative_to(root)} is missing the frontend application overlay link"
+            )
+    return errors
+
+
 def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
     errors: list[str] = _local_markdown_link_errors(root)
+
+    if data.get("version") != REGISTRY_VERSION:
+        errors.append(f"registry version must be {REGISTRY_VERSION}")
 
     def record(action: Any) -> None:
         try:
@@ -512,6 +848,8 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
                             "sportsbook-odds-feed-service: current stage card must "
                             "identify the original Sportsbook notes as canonical"
                         )
+
+    errors.extend(_validate_overlays(data, root, node_by_id))
 
     counts = {track: 0 for track in VALID_TRACKS}
     repos: set[str] = set()
@@ -888,10 +1226,39 @@ def _compose_result() -> Result:
     return Result("PASS", "Docker Compose", compose.stdout.strip().splitlines()[0])
 
 
-def preflight(data: dict[str, Any], track: str, root: Path | None = None) -> int:
+def preflight(
+    data: dict[str, Any],
+    track: str | None,
+    root: Path | None = None,
+    route: str | None = None,
+) -> int:
+    selected_track = track.strip() if isinstance(track, str) else ""
+    selected_overlay: dict[str, Any] | None = None
+    if route:
+        overlays = [
+            item
+            for item in data.get("overlays", [])
+            if isinstance(item, dict) and item.get("id") == route
+        ]
+        if len(overlays) != 1:
+            print(f"BLOCK route: unknown curriculum overlay {route}")
+            return 2
+        selected_overlay = overlays[0]
+        overlay_track = selected_overlay.get("track")
+        if selected_track and overlay_track != selected_track:
+            print(
+                f"BLOCK route: {route} belongs to {overlay_track}, not {selected_track}"
+            )
+            return 2
+        selected_track = str(overlay_track)
+
+    track = selected_track
     if track not in VALID_TRACKS:
         print("BLOCK TRACK: choose exactly one of 42, frontend, backend")
-        print("usage: make preflight TRACK=42|frontend|backend")
+        print(
+            "usage: make preflight TRACK=42|frontend|backend or "
+            "make preflight ROUTE=frontend-application-bridge"
+        )
         return 2
     if root is not None:
         navigation_errors = validate_registry(data, root.resolve())
@@ -900,7 +1267,24 @@ def preflight(data: dict[str, Any], track: str, root: Path | None = None) -> int
                 print(f"BLOCK navigation: {error}")
             return 1
         print("PASS  local navigation: registry, cards, links and sequence")
-    projects = [item for item in data.get("projects", []) if item.get("track") == track]
+    all_projects = data.get("projects", [])
+    projects = [item for item in all_projects if item.get("track") == track]
+    if selected_overlay is not None:
+        overlay = selected_overlay
+        project_by_id = {
+            item.get("id"): item
+            for item in all_projects
+            if isinstance(item, dict) and isinstance(item.get("id"), str)
+        }
+        projects = [
+            project_by_id[project_id]
+            for project_id in overlay.get("preflight_projects", [])
+            if project_id in project_by_id
+        ]
+        print(
+            f"PASS  route: {route} ({overlay.get('outcome')}; "
+            "does not grant curriculum mastery)"
+        )
     if not projects:
         print(f"BLOCK registry: no projects found for {track}")
         return 1
@@ -923,6 +1307,20 @@ def preflight(data: dict[str, Any], track: str, root: Path | None = None) -> int
                 _tool_result("pnpm", False, "run `corepack enable` before pong-pong"),
                 _tool_result("docker", True, "install Docker Desktop and start the daemon"),
                 _compose_result(),
+            )
+        )
+    elif track == "frontend" and route == FRONTEND_APPLICATION_OVERLAY_ID:
+        results.extend(
+            (
+                _tool_result("make", True),
+                _tool_result("node", True, "install the Node version requested by each release"),
+                _tool_result("npm", True),
+                _tool_result(
+                    "pnpm",
+                    True,
+                    "run `corepack enable` before the selected Foundations/Reliability gates",
+                ),
+                _tool_result("npx", True),
             )
         )
     elif track == "frontend":
@@ -957,7 +1355,10 @@ def preflight(data: dict[str, Any], track: str, root: Path | None = None) -> int
             )
         )
 
-    if shutil.which("docker"):
+    route_needs_docker = not (
+        track == "frontend" and route == FRONTEND_APPLICATION_OVERLAY_ID
+    )
+    if route_needs_docker and shutil.which("docker"):
         docker = _run(["docker", "info"], timeout=12)
         results.append(
             Result(
@@ -1310,6 +1711,195 @@ def _check_remote_project(owner: str, project: dict[str, Any]) -> list[str]:
     return errors
 
 
+def _overlay_ref_manifest(
+    owner: str,
+    overlays: list[dict[str, Any]],
+    project_by_id: dict[str, dict[str, Any]],
+) -> tuple[dict[str, dict[str, str]], list[str]]:
+    """Freeze every ref consumed by an overlay for whole-run drift detection."""
+
+    commands: dict[str, list[str]] = {}
+    errors: list[str] = []
+    for overlay in overlays:
+        for selection in overlay.get("selections", []):
+            if not isinstance(selection, dict):
+                continue
+            project = project_by_id.get(str(selection.get("project")))
+            if not project:
+                continue
+            learning = str(selection.get("learning", ""))
+            label = f"{owner}/{project['repo']}:{learning}"
+            commands[label] = [
+                "git",
+                "ls-remote",
+                f"https://github.com/{owner}/{project['repo']}",
+                f"refs/heads/{learning}",
+            ]
+        portfolio = overlay.get("portfolio")
+        if not isinstance(portfolio, dict):
+            continue
+        project = project_by_id.get(str(portfolio.get("project", "")))
+        if not project:
+            continue
+        release = str(portfolio.get("release", ""))
+        learning = str(portfolio.get("learning", ""))
+        template = str(portfolio.get("template", ""))
+        label = f"{owner}/{project['repo']}:portfolio-overlay"
+        commands[label] = [
+            "git",
+            "ls-remote",
+            f"https://github.com/{owner}/{project['repo']}",
+            "refs/heads/main",
+            f"refs/tags/{release}",
+            f"refs/tags/{release}^{{}}",
+            f"refs/heads/{learning}",
+            f"refs/tags/{template}",
+            f"refs/tags/{template}^{{}}",
+        ]
+
+    manifest: dict[str, dict[str, str]] = {}
+    for label, command in commands.items():
+        result = _run(command, timeout=30)
+        refs = _parse_ls_remote(result.stdout)
+        if result.returncode != 0 or not refs:
+            errors.append(f"cannot freeze overlay refs for {label}")
+            continue
+        manifest[label] = refs
+    return manifest, errors
+
+
+def _check_remote_overlay(
+    owner: str,
+    overlay: dict[str, Any],
+    project_by_id: dict[str, dict[str, Any]],
+) -> list[str]:
+    """Verify overlay-only practice paths and Portfolio refs at frozen SHAs."""
+
+    errors: list[str] = []
+    overlay_id = str(overlay.get("id", "<unknown>"))
+    for selection in overlay.get("selections", []):
+        if not isinstance(selection, dict):
+            continue
+        project_id = selection.get("project")
+        project = project_by_id.get(str(project_id))
+        if not project:
+            errors.append(f"{overlay_id}: unknown selected project {project_id}")
+            continue
+        repo = project["repo"]
+        learning = selection.get("learning")
+        label = f"{owner}/{repo}"
+        command = [
+            "git",
+            "ls-remote",
+            f"https://github.com/{label}",
+            f"refs/heads/{learning}",
+        ]
+        remote = _run(command, timeout=30)
+        refs = _parse_ls_remote(remote.stdout)
+        learning_ref = f"refs/heads/{learning}"
+        learning_sha = refs.get(learning_ref)
+        if remote.returncode != 0 or not learning_sha:
+            errors.append(
+                f"{overlay_id}: cannot freeze {label} {learning_ref}"
+            )
+            continue
+        mapping_path = FRONTEND_APPLICATION_ANSWER_MAPPINGS.get(str(project_id))
+        mapping_text: str | None = None
+        if mapping_path:
+            mapping_text, mapping_error = _remote_text(
+                owner, repo, mapping_path, learning_sha
+            )
+            if mapping_error:
+                errors.append(
+                    f"{overlay_id}: {label}@{learning_sha} has unreadable answer "
+                    f"mapping {mapping_path}: {mapping_error}"
+                )
+        for path in selection.get("practice_paths", []):
+            endpoint = (
+                f"repos/{owner}/{repo}/contents/{quote(path, safe='/')}"
+                f"?ref={quote(learning_sha, safe='')}"
+            )
+            result = _run(["gh", "api", "--silent", endpoint], timeout=20)
+            if result.returncode != 0:
+                errors.append(
+                    f"{overlay_id}: {label}@{learning_sha} is missing selected "
+                    f"practice path {path}"
+                )
+            stable_id = Path(path).stem
+            mapping_row = re.compile(
+                rf"^\|\s*{re.escape(stable_id)}\s*\|\s*"
+                r"`[0-9a-f]{8,40}`\s*\|\s*`[0-9a-f]{8,40}`\s*\|",
+                re.MULTILINE,
+            )
+            if mapping_text is not None and not mapping_row.search(mapping_text):
+                errors.append(
+                    f"{overlay_id}: {label}@{learning_sha} answer mapping "
+                    f"{mapping_path} lacks commit/parent metadata for {stable_id}"
+                )
+        final = _run(command, timeout=30)
+        if final.returncode != 0 or _parse_ls_remote(final.stdout) != refs:
+            errors.append(
+                f"{overlay_id}: {label} learning ref changed during overlay verification"
+            )
+
+    portfolio = overlay.get("portfolio")
+    if isinstance(portfolio, dict):
+        project_id = str(portfolio.get("project", ""))
+        project = project_by_id.get(project_id)
+        if not project:
+            errors.append(f"{overlay_id}: unknown Portfolio project {project_id}")
+            return errors
+        repo = project["repo"]
+        label = f"{owner}/{repo}"
+        release = str(portfolio.get("release", ""))
+        learning = str(portfolio.get("learning", ""))
+        template = str(portfolio.get("template", ""))
+        patterns = (
+            "refs/heads/main",
+            f"refs/tags/{release}",
+            f"refs/tags/{release}^{{}}",
+            f"refs/heads/{learning}",
+            f"refs/tags/{template}",
+            f"refs/tags/{template}^{{}}",
+        )
+        command = ["git", "ls-remote", f"https://github.com/{label}", *patterns]
+        remote = _run(command, timeout=30)
+        refs = _parse_ls_remote(remote.stdout)
+        if remote.returncode != 0:
+            errors.append(f"{overlay_id}: cannot read Portfolio refs from {label}")
+        else:
+            main_sha = refs.get("refs/heads/main")
+            release_tag = refs.get(f"refs/tags/{release}")
+            release_sha = refs.get(f"refs/tags/{release}^{{}}")
+            learning_sha = refs.get(f"refs/heads/{learning}")
+            template_tag = refs.get(f"refs/tags/{template}")
+            template_sha = refs.get(f"refs/tags/{template}^{{}}")
+            if not main_sha:
+                errors.append(f"{overlay_id}: {label} main is missing")
+            if not release_tag or not release_sha or release_tag == release_sha:
+                errors.append(
+                    f"{overlay_id}: {label} release {release} must be annotated"
+                )
+            if main_sha and release_sha and main_sha != release_sha:
+                errors.append(
+                    f"{overlay_id}: {label} release {release} does not peel to main"
+                )
+            if not learning_sha:
+                errors.append(
+                    f"{overlay_id}: {label} learning branch {learning} is missing"
+                )
+            if not template_tag or not template_sha or template_tag == template_sha:
+                errors.append(
+                    f"{overlay_id}: {label} template {template} must be annotated"
+                )
+        final = _run(command, timeout=30)
+        if final.returncode != 0 or _parse_ls_remote(final.stdout) != refs:
+            errors.append(
+                f"{overlay_id}: {label} refs changed during overlay verification"
+            )
+    return errors
+
+
 def _central_link_targets(root: Path, owner: str) -> dict[str, set[str]]:
     pattern = re.compile(
         rf"https://github\.com/{re.escape(owner)}/central-notes/blob/main/"
@@ -1371,6 +1961,20 @@ def check_remote(data: dict[str, Any], root: Path) -> int:
     owner = data.get("owner", "woopinbell")
     projects = data.get("projects", [])
     errors: list[str] = []
+    project_by_id = {
+        project["id"]: project
+        for project in projects
+        if isinstance(project, dict) and isinstance(project.get("id"), str)
+    }
+    overlays = [
+        overlay
+        for overlay in data.get("overlays", [])
+        if isinstance(overlay, dict)
+    ]
+    overlay_start, overlay_start_errors = _overlay_ref_manifest(
+        owner, overlays, project_by_id
+    )
+    errors.extend(overlay_start_errors)
     central_url = f"https://github.com/{owner}/central-notes"
     central_command = ["git", "ls-remote", central_url, "refs/heads/main"]
     central_remote = _run(central_command, timeout=30)
@@ -1395,6 +1999,22 @@ def check_remote(data: dict[str, Any], root: Path) -> int:
                 print(f"FAIL  {project.get('repo')}")
             else:
                 print(f"PASS  {project.get('repo')}")
+    for overlay in overlays:
+        overlay_errors = _check_remote_overlay(owner, overlay, project_by_id)
+        if overlay_errors:
+            errors.extend(overlay_errors)
+            print(f"FAIL  overlay {overlay.get('id')}")
+        else:
+            print(f"PASS  overlay {overlay.get('id')}")
+    overlay_final, overlay_final_errors = _overlay_ref_manifest(
+        owner, overlays, project_by_id
+    )
+    errors.extend(overlay_final_errors)
+    if overlay_start != overlay_final:
+        errors.append("overlay refs changed during the full remote verification run")
+        print("FAIL  overlay ref snapshot")
+    elif not overlay_start_errors and not overlay_final_errors:
+        print("PASS  overlay ref snapshot")
     central_errors = _check_remote_central_links(owner, root, central_main)
     central_final = _run(central_command, timeout=30)
     if (
@@ -1421,7 +2041,8 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
     preflight_parser = subparsers.add_parser("preflight")
     preflight_parser.add_argument("--registry", type=Path, required=True)
-    preflight_parser.add_argument("--track", required=True)
+    preflight_parser.add_argument("--track")
+    preflight_parser.add_argument("--route")
     check_parser = subparsers.add_parser("check")
     check_parser.add_argument("--registry", type=Path, required=True)
     check_parser.add_argument("--root", type=Path, required=True)
@@ -1440,6 +2061,7 @@ def main(argv: Iterable[str] | None = None) -> int:
                 data,
                 args.track,
                 args.registry.resolve().parent.parent,
+                args.route,
             )
         if args.command == "check-remote":
             return check_remote(data, args.root.resolve())
@@ -1456,7 +2078,8 @@ def main(argv: Iterable[str] | None = None) -> int:
         "navigation: PASS "
         f"({len(data['projects'])} projects, "
         f"{len(data.get('prerequisites', []))} prerequisites, "
-        f"{len(data.get('assessments', []))} assessments)"
+        f"{len(data.get('assessments', []))} assessments, "
+        f"{len(data.get('overlays', []))} overlays)"
     )
     return 0
 
