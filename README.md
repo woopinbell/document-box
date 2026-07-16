@@ -16,7 +16,7 @@ document-box 자체와 `central-notes` 같은 거버넌스 저장소는 dual-for
 | [`docs-commit-note.md`](docs-commit-note.md) | 답지 선집필, 문제지 수작업 파생, stable ID, mapping과 수량 reconciliation |
 | [`legacy-exceptions.md`](legacy-exceptions.md) | 이미 공개된 pre-policy release의 불변 예외 범위와 후속 준수 경계 |
 | [`tracks/README.md`](tracks/README.md) | 공통 기반에서 Frontend/Backend로 갈라지는 전체 과정 지도와 현재 상태 |
-| [`tracks/42.md`](tracks/42.md) | 42 트랙 11개 프로젝트의 공식 순서와 완료 gate |
+| [`tracks/42.md`](tracks/42.md) | Linux/Git Foundations와 42 트랙 10개 프로젝트의 공식 순서·완료 gate |
 | [`tracks/backend.md`](tracks/backend.md) | Backend 3개 훈련 저장소와 Sportsbook 9개 하위 저장소의 공식 순서 |
 | [`tracks/frontend.md`](tracks/frontend.md) | Frontend 4개 훈련 저장소와 5-design Portfolio의 공식 순서 |
 | [`data/README.md`](data/README.md) | 날짜가 붙는 공고·시장 관측과 지원 증거처럼 변동하는 운영 데이터의 색인·갱신 규칙 |

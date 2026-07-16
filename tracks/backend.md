@@ -104,15 +104,15 @@ branch에 둔다. 대표 항목의 결정 규칙과 선택 심화의 경계는
 ## 6. sportsbook-risk-service
 
 - 이전 gate: wallet money/lock/idempotency 불변식 완료.
-- 저장소·ref: [`sportsbook-risk-service`](https://github.com/woopinbell/sportsbook-risk-service), release `risk-v1.0.1`, learning `learning/risk-v1.0.1`.
+- 저장소·ref: [`sportsbook-risk-service`](https://github.com/woopinbell/sportsbook-risk-service), release `risk-v1.0.2`, learning `learning/risk-v1.0.2`.
 - Central 상세 목록: [sportsbook-risk-service 전체 읽기 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-sportsbook-risk-service). 이 단계에서 새로 읽을 노트와 다시 볼 범위를 따른다.
 - 빠른 노트: [Transaction·rate limit·Redis](https://github.com/woopinbell/central-notes/blob/main/java-spring/README.md#persistence-transaction-reliability-redis).
 - 수행 범위: [대표 practice 한 개와 카드 전체 gate](README.md#공식-수행-범위). 나머지는 선택 심화다.
-- 프로젝트 노트: [current learning index](https://github.com/woopinbell/sportsbook-risk-service/blob/learning/risk-v1.0.1/docs/README.md).
+- 프로젝트 노트: [current learning index](https://github.com/woopinbell/sportsbook-risk-service/blob/learning/risk-v1.0.2/docs/README.md).
 - Clean release gate: annotated release의 별도 clean worktree에서 Java/Maven, Redis와 Docker 환경으로 `./mvnw verify` correctness 결과를 기록한다.
-- 문제지: [current practice ledger](https://github.com/woopinbell/sportsbook-risk-service/blob/learning/risk-v1.0.1/docs/practice-risk-v1.0.1/README.md).
+- 문제지: [current practice ledger](https://github.com/woopinbell/sportsbook-risk-service/blob/learning/risk-v1.0.2/docs/practice-risk-v1.0.2/README.md).
 - 구현: 현재 practice의 full `부모 commit`에서 `study/risk-<ID>`를 만들고 limit snapshot, replay, fail-closed와 decision 실패를 남긴다.
-- 답지 개방: correctness 반증 근거 뒤 [answer ledger](https://github.com/woopinbell/sportsbook-risk-service/blob/learning/risk-v1.0.1/docs/commits-risk-v1.0.1/README.md)를 연다.
+- 답지 개방: correctness 반증 근거 뒤 [answer ledger](https://github.com/woopinbell/sportsbook-risk-service/blob/learning/risk-v1.0.2/docs/commits-risk-v1.0.2/README.md)를 연다.
 - Historical 무자료 gate: 현재 practice 파일이 명시한 시작 tree의 새 branch에서 그 파일의 구현 범위와 당시 검증 계약만 통과한다.
 - 연결 설명: 선택한 decision 변경이 current release의 limit snapshot·replay·fail-closed·Redis atomicity로 이어지는 근거를 설명한다. 별도 1,000 RPS `p99 < 30 ms`, errors=0, drops=0 qualification은 RED이므로 성공 사례로 주장하지 않는다.
 - 다음: [sportsbook-odds-feed-service](#stage-sportsbook-odds-feed-service).

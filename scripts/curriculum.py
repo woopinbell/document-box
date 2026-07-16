@@ -23,11 +23,11 @@ from typing import Any, Iterable
 from urllib.parse import quote, unquote
 
 
-TRACK_COUNTS = {"42": 11, "frontend": 5, "backend": 12}
+TRACK_COUNTS = {"42": 10, "frontend": 5, "backend": 12}
 VALID_TRACKS = frozenset(TRACK_COUNTS)
 CANONICAL_SEQUENCES = {
     "42": (
-        "linux-admin",
+        "linux-foundation",
         "format-printer",
         "signal-message-bus",
         "thread-dining",
@@ -99,8 +99,11 @@ PRACTICE_POLICY = {
     "wrapper_scope": "document-box-canonical",
 }
 LOCAL_NODE_FIELDS = ("id", "track", "doc", "anchor", "prev", "next")
+CURRENT_42_RELEASE = "codex-5.7"
+CURRENT_42_LEARNING = "learning/codex-5.7"
+CURRENT_42_PRACTICE = "docs/practice-codex-5.7/README.md"
+CURRENT_42_ANSWER = "docs/commits-codex-5.7/README.md"
 PROJECT_SETUP = {
-    "linux-admin": "make && make test",
     "format-printer": "make && make test",
     "signal-message-bus": "make && make test (repeat; include long/abandoned sender cases)",
     "thread-dining": "make && make test (repeat the timing scenarios)",
@@ -189,6 +192,7 @@ def load_registry(path: Path) -> dict[str, Any]:
 def _all_nodes(data: dict[str, Any]) -> list[tuple[str, dict[str, Any]]]:
     groups = (
         ("project", data.get("projects", [])),
+        ("prerequisite", data.get("prerequisites", [])),
         ("assessment", data.get("assessments", [])),
         ("completion", data.get("completions", [])),
     )
@@ -317,8 +321,8 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
     projects = data.get("projects", [])
     if not isinstance(projects, list):
         return ["projects must be a list"]
-    if len(projects) != 28:
-        errors.append(f"projects must contain exactly 28 entries, found {len(projects)}")
+    if len(projects) != 27:
+        errors.append(f"projects must contain exactly 27 entries, found {len(projects)}")
 
     nodes_with_kind: list[tuple[str, dict[str, Any]]] = []
     try:
@@ -406,6 +410,30 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
                         _safe_relative_path(value, f"{node_id}.{field}")
                 except CurriculumError as exc:
                     errors.append(str(exc))
+            if node.get("track") == "42":
+                expected_42 = {
+                    "release": CURRENT_42_RELEASE,
+                    "learning": CURRENT_42_LEARNING,
+                    "practice": CURRENT_42_PRACTICE,
+                    "answer": CURRENT_42_ANSWER,
+                }
+                for field, expected in expected_42.items():
+                    if node.get(field) != expected:
+                        errors.append(
+                            f"{node_id}: current 42 {field} must be {expected}"
+                        )
+            if node_id == "sportsbook-risk-service":
+                expected_risk = {
+                    "release": "risk-v1.0.2",
+                    "learning": "learning/risk-v1.0.2",
+                    "practice": "docs/practice-risk-v1.0.2/README.md",
+                    "answer": "docs/commits-risk-v1.0.2/README.md",
+                }
+                for field, expected in expected_risk.items():
+                    if node.get(field) != expected:
+                        errors.append(
+                            f"sportsbook-risk-service: current {field} must be {expected}"
+                        )
             if isinstance(doc, str) and (root / doc).is_file() and isinstance(
                 node.get("anchor"), str
             ):
@@ -519,8 +547,8 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
             )
 
     entry = data.get("entry")
-    if entry != "linux-admin":
-        errors.append("entry must be linux-admin")
+    if entry != "linux-foundation":
+        errors.append("entry must be linux-foundation")
     if entry not in node_by_id:
         errors.append(f"entry node does not exist: {entry}")
     if data.get("practice_policy") != PRACTICE_POLICY:
@@ -654,6 +682,35 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
             "assessment nodes must be exactly 42-incident, frontend-transfer, "
             "web-production-regression, and backend-incident"
         )
+
+    actual_prerequisites = {
+        node_id for node_id, kind in kind_by_id.items() if kind == "prerequisite"
+    }
+    if actual_prerequisites != {"linux-foundation"}:
+        errors.append("prerequisite nodes must contain exactly linux-foundation")
+    foundation = node_by_id.get("linux-foundation")
+    if foundation:
+        foundation_path = root / str(foundation.get("doc"))
+        section = (
+            _anchor_section(
+                foundation_path.read_text(encoding="utf-8"),
+                str(foundation.get("anchor")),
+            )
+            if foundation_path.is_file()
+            else ""
+        )
+        central_target = (
+            "https://github.com/woopinbell/central-notes/blob/main/"
+            "TRACK_SEQUENCE.md#stage-linux-foundation"
+        )
+        if f"]({central_target})" not in section:
+            errors.append(
+                "linux-foundation: stage card is missing the exact Central handoff"
+            )
+        if "https://github.com/woopinbell/linux-admin" in section:
+            errors.append(
+                "linux-foundation: retired linux-admin must not be an active remote link"
+            )
 
     branches = data.get("branches", [])
     if not isinstance(branches, list):
@@ -1398,6 +1455,7 @@ def main(argv: Iterable[str] | None = None) -> int:
     print(
         "navigation: PASS "
         f"({len(data['projects'])} projects, "
+        f"{len(data.get('prerequisites', []))} prerequisites, "
         f"{len(data.get('assessments', []))} assessments)"
     )
     return 0

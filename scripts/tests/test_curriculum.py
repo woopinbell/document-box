@@ -38,7 +38,6 @@ class RegistryFixture:
         self.completions = []
         track_ids = {
             "42": [
-                "linux-admin",
                 "format-printer",
                 "signal-message-bus",
                 "thread-dining",
@@ -77,6 +76,23 @@ class RegistryFixture:
             for index, node_id in enumerate(ids):
                 doc = f"tracks/{track}.md"
                 anchor = f"stage-{node_id}"
+                release = "codex-5.7" if track == "42" else "release-v1"
+                learning = f"learning/{release}"
+                practice = (
+                    "docs/practice-codex-5.7/README.md"
+                    if track == "42"
+                    else "docs/practice/README.md"
+                )
+                answer = (
+                    "docs/commits-codex-5.7/README.md"
+                    if track == "42"
+                    else "docs/commits/README.md"
+                )
+                if node_id == "sportsbook-risk-service":
+                    release = "risk-v1.0.2"
+                    learning = "learning/risk-v1.0.2"
+                    practice = "docs/practice-risk-v1.0.2/README.md"
+                    answer = "docs/commits-risk-v1.0.2/README.md"
                 if track == "42":
                     next_id = ids[index + 1] if index + 1 < len(ids) else "42-incident"
                 elif track == "frontend":
@@ -106,11 +122,11 @@ class RegistryFixture:
                 documents[track].append(
                     f'<a id="{anchor}"></a>\n## {node_id}\n'
                     f'[repo](https://github.com/woopinbell/{node_id})\n'
-                    'release `release-v1`, learning `learning/release-v1`\n'
+                    f'release `{release}`, learning `{learning}`\n'
                     f'[practice](https://github.com/woopinbell/{node_id}/blob/'
-                    'learning/release-v1/docs/practice/README.md)\n'
+                    f'{learning}/{practice})\n'
                     f'[answer](https://github.com/woopinbell/{node_id}/blob/'
-                    'learning/release-v1/docs/commits/README.md)\n'
+                    f'{learning}/{answer})\n'
                     '[Central](https://github.com/woopinbell/central-notes/blob/main/'
                     f'TRACK_SEQUENCE.md#{anchor})\n'
                     '[scope](README.md#공식-수행-범위)\n'
@@ -124,12 +140,12 @@ class RegistryFixture:
                     "id": node_id,
                     "track": track,
                     "repo": node_id,
-                    "release": "release-v1",
-                    "learning": "learning/release-v1",
+                    "release": release,
+                    "learning": learning,
                     "doc": doc,
                     "anchor": anchor,
-                    "practice": "docs/practice/README.md",
-                    "answer": "docs/commits/README.md",
+                    "practice": practice,
+                    "answer": answer,
                     "prev": None,
                     "next": None,
                 }
@@ -148,6 +164,25 @@ class RegistryFixture:
             for left, right in zip(ids, ids[1:]):
                 by_id[left]["next"] = right
                 by_id[right]["prev"] = left
+
+        prerequisite = self._local_node(
+            "linux-foundation",
+            "42",
+            "tracks/42.md",
+            None,
+            ids_42[0],
+        )
+        by_id[ids_42[0]]["prev"] = "linux-foundation"
+        path_42 = root / "tracks/42.md"
+        path_42.write_text(
+            '<a id="stage-linux-foundation"></a>\n'
+            "## Linux/Git Foundations\n"
+            "[Central](https://github.com/woopinbell/central-notes/blob/main/"
+            "TRACK_SEQUENCE.md#stage-linux-foundation)\n"
+            f'[next](#stage-{ids_42[0]})\n\n'
+            + path_42.read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
 
         incident = self._local_node(
             "42-incident",
@@ -221,9 +256,10 @@ class RegistryFixture:
         self.data = {
             "version": 1,
             "owner": "woopinbell",
-            "entry": "linux-admin",
+            "entry": "linux-foundation",
             "practice_policy": dict(curriculum.PRACTICE_POLICY),
             "projects": self.projects,
+            "prerequisites": [prerequisite],
             "assessments": self.assessments,
             "completions": self.completions,
             "branches": [
@@ -272,17 +308,17 @@ class CurriculumValidationTest(unittest.TestCase):
 
     def test_unchanged_backlink_exception_is_explicit_and_scoped(self):
         by_id = {project["id"]: project for project in self.fixture.data["projects"]}
-        del by_id["signal-message-bus"]["main_backlink"]
-        by_id["linux-admin"]["main_backlink"] = False
+        del by_id["cloud-launch-training"]["main_backlink"]
+        by_id["format-printer"]["main_backlink"] = False
         errors = curriculum.validate_registry(self.fixture.data, self.root)
         self.assertTrue(
             any(
-                "signal-message-bus: unchanged navigation release" in error
+                "cloud-launch-training: unchanged navigation release" in error
                 for error in errors
             )
         )
         self.assertTrue(
-            any("linux-admin: only an explicitly unchanged" in error for error in errors)
+            any("format-printer: only an explicitly unchanged" in error for error in errors)
         )
 
     def test_github_slug_preserves_meaningful_hyphens(self):
@@ -297,7 +333,7 @@ class CurriculumValidationTest(unittest.TestCase):
         ]
         self.fixture.data["projects"].pop()
         errors = curriculum.validate_registry(self.fixture.data, self.root)
-        self.assertTrue(any("exactly 28" in error for error in errors))
+        self.assertTrue(any("exactly 27" in error for error in errors))
         self.assertTrue(any("appears more than once" in error for error in errors))
 
     def test_asymmetric_edge_is_rejected(self):
@@ -307,16 +343,16 @@ class CurriculumValidationTest(unittest.TestCase):
 
     def test_symmetric_but_noncanonical_order_is_rejected(self):
         by_id = {node["id"]: node for node in self.fixture.data["projects"]}
-        linux = by_id["linux-admin"]
         formatter = by_id["format-printer"]
         signal = by_id["signal-message-bus"]
         thread = by_id["thread-dining"]
-        linux["next"] = "signal-message-bus"
-        signal["prev"] = "linux-admin"
-        signal["next"] = "format-printer"
-        formatter["prev"] = "signal-message-bus"
+        shell = by_id["small-shell"]
         formatter["next"] = "thread-dining"
         thread["prev"] = "format-printer"
+        thread["next"] = "signal-message-bus"
+        signal["prev"] = "thread-dining"
+        signal["next"] = "small-shell"
+        shell["prev"] = "signal-message-bus"
         errors = curriculum.validate_registry(self.fixture.data, self.root)
         self.assertTrue(any("canonical next" in error for error in errors))
 
@@ -335,7 +371,7 @@ class CurriculumValidationTest(unittest.TestCase):
         path = self.root / "tracks/42.md"
         expected = (
             "https://github.com/woopinbell/central-notes/blob/main/"
-            "TRACK_SEQUENCE.md#stage-linux-admin"
+            "TRACK_SEQUENCE.md#stage-format-printer"
         )
         path.write_text(
             path.read_text(encoding="utf-8").replace(expected, expected + "-wrong", 1),
@@ -343,19 +379,27 @@ class CurriculumValidationTest(unittest.TestCase):
         )
         errors = curriculum.validate_registry(self.fixture.data, self.root)
         self.assertTrue(
-            any("linux-admin: current stage card is missing exact" in error for error in errors)
+            any("format-printer: current stage card is missing exact" in error for error in errors)
         )
 
     def test_project_card_rejects_repo_and_corpus_target_suffixes(self):
         path = self.root / "tracks/42.md"
         text = path.read_text(encoding="utf-8")
         text = text.replace(
-            "https://github.com/woopinbell/linux-admin)",
-            "https://github.com/woopinbell/linux-admin-wrong)",
+            "https://github.com/woopinbell/format-printer)",
+            "https://github.com/woopinbell/format-printer-wrong)",
             1,
         )
-        text = text.replace("docs/practice/README.md)", "docs/practice/README.md-wrong)", 1)
-        text = text.replace("docs/commits/README.md)", "docs/commits/README.md-wrong)", 1)
+        text = text.replace(
+            "docs/practice-codex-5.7/README.md)",
+            "docs/practice-codex-5.7/README.md-wrong)",
+            1,
+        )
+        text = text.replace(
+            "docs/commits-codex-5.7/README.md)",
+            "docs/commits-codex-5.7/README.md-wrong)",
+            1,
+        )
         path.write_text(text, encoding="utf-8")
         errors = curriculum.validate_registry(self.fixture.data, self.root)
         exact_target_errors = [error for error in errors if "missing exact target" in error]
@@ -364,8 +408,8 @@ class CurriculumValidationTest(unittest.TestCase):
     def test_project_card_requires_exact_ref_tokens(self):
         path = self.root / "tracks/42.md"
         text = path.read_text(encoding="utf-8")
-        text = text.replace("`release-v1`", "release-v1", 1)
-        text = text.replace("`learning/release-v1`", "learning/release-v1", 1)
+        text = text.replace("`codex-5.7`", "codex-5.7", 1)
+        text = text.replace("`learning/codex-5.7`", "learning/codex-5.7", 1)
         path.write_text(text, encoding="utf-8")
         errors = curriculum.validate_registry(self.fixture.data, self.root)
         exact_ref_errors = [error for error in errors if "missing exact ref" in error]
@@ -461,7 +505,7 @@ class CurriculumValidationTest(unittest.TestCase):
             for project in self.fixture.data["projects"]
             if project["id"] == "frontend-foundations-training"
         )
-        first_frontend["prev"] = "linux-admin"
+        first_frontend["prev"] = "format-printer"
         first_42 = self.fixture.data["projects"][0]
         first_42["next"] = [first_42["next"], first_frontend["id"]]
         errors = curriculum.validate_registry(self.fixture.data, self.root)
@@ -498,6 +542,40 @@ class CurriculumValidationTest(unittest.TestCase):
         ]
         errors = curriculum.validate_registry(self.fixture.data, self.root)
         self.assertTrue(any("assessment nodes must be exactly" in error for error in errors))
+
+    def test_linux_foundation_prerequisite_is_required(self):
+        self.fixture.data["prerequisites"] = []
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        self.assertTrue(
+            any("prerequisite nodes must contain exactly linux-foundation" in error for error in errors)
+        )
+        self.assertTrue(any("entry node does not exist" in error for error in errors))
+
+    def test_current_42_and_risk_refs_are_pinned(self):
+        by_id = {project["id"]: project for project in self.fixture.data["projects"]}
+        by_id["format-printer"]["release"] = "codex-5.6.1"
+        by_id["sportsbook-risk-service"]["learning"] = "learning/risk-v1.0.1"
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        self.assertTrue(any("current 42 release must be codex-5.7" in error for error in errors))
+        self.assertTrue(
+            any(
+                "sportsbook-risk-service: current learning must be learning/risk-v1.0.2"
+                in error
+                for error in errors
+            )
+        )
+
+    def test_linux_foundation_rejects_retired_remote_link(self):
+        path = self.root / "tracks/42.md"
+        text = path.read_text(encoding="utf-8").replace(
+            "## Linux/Git Foundations\n",
+            "## Linux/Git Foundations\n"
+            "[retired](https://github.com/woopinbell/linux-admin)\n",
+            1,
+        )
+        path.write_text(text, encoding="utf-8")
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        self.assertTrue(any("must not be an active remote link" in error for error in errors))
 
     def test_missing_local_markdown_link_is_rejected(self):
         (self.root / "README.md").write_text(
@@ -634,14 +712,14 @@ class RemoteContractTest(unittest.TestCase):
 
     def test_annotated_release_linear_learning_and_sha_paths_pass(self):
         project = {
-            "id": "linux-admin",
-            "repo": "linux-admin",
-            "release": "codex-5.6.1",
-            "learning": "learning/codex-5.6.1",
-            "practice": "docs/practice-codex-5.6.1/README.md",
-            "answer": "docs/commits-codex-5.6.1/README.md",
+            "id": "format-printer",
+            "repo": "format-printer",
+            "release": "codex-5.7",
+            "learning": "learning/codex-5.7",
+            "practice": "docs/practice-codex-5.7/README.md",
+            "answer": "docs/commits-codex-5.7/README.md",
             "doc": "tracks/42.md",
-            "anchor": "stage-linux-admin",
+            "anchor": "stage-format-printer",
         }
         with patch.object(
             curriculum, "_run", side_effect=self._project_dispatcher(project)
@@ -652,14 +730,14 @@ class RemoteContractTest(unittest.TestCase):
 
     def test_lightweight_supplemental_and_missing_backlink_are_rejected(self):
         project = {
-            "id": "linux-admin",
-            "repo": "linux-admin",
-            "release": "codex-5.6.1",
-            "learning": "learning/codex-5.6.1",
+            "id": "format-printer",
+            "repo": "format-printer",
+            "release": "codex-5.7",
+            "learning": "learning/codex-5.7",
             "practice": "docs/practice/README.md",
             "answer": "docs/commits/README.md",
             "doc": "tracks/42.md",
-            "anchor": "stage-linux-admin",
+            "anchor": "stage-format-printer",
         }
         with patch.object(
             curriculum,
@@ -771,12 +849,12 @@ class RemoteContractTest(unittest.TestCase):
     def test_public_repository_is_a_preflight_block(self):
         response = self._response({"visibility": "PUBLIC"})
         with patch.object(curriculum, "_run", return_value=response):
-            result = curriculum._github_access("woopinbell", "linux-admin")
+            result = curriculum._github_access("woopinbell", "format-printer")
         self.assertEqual(result.level, "BLOCK")
         self.assertIn("expected PRIVATE", result.detail)
 
     def test_preflight_runs_navigation_first(self):
-        data = {"projects": [{"track": "42", "repo": "linux-admin"}]}
+        data = {"projects": [{"track": "42", "repo": "format-printer"}]}
         with patch.object(
             curriculum, "validate_registry", return_value=["broken chain"]
         ), patch.object(curriculum, "_github_track_access") as access:
