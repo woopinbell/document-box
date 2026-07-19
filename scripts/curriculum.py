@@ -143,7 +143,7 @@ FRONTEND_APPLICATION_PRACTICES = {
     ),
 }
 FRONTEND_APPLICATION_ANSWER_MAPPINGS = {
-    "frontend-foundations-training": "docs/commits-codex-5.6/README.md",
+    "frontend-foundations-training": "docs/commits/README.md",
     "frontend-reliability-training": "docs/commits-codex-5.6/README.md",
 }
 FRONTEND_APPLICATION_PORTFOLIO = {
@@ -1827,7 +1827,8 @@ def _check_remote_overlay(
                 )
             stable_id = Path(path).stem
             mapping_row = re.compile(
-                rf"^\|\s*{re.escape(stable_id)}\s*\|\s*"
+                rf"^\|\s*(?:{re.escape(stable_id)}|"
+                rf"`{re.escape(stable_id)} / {re.escape(stable_id)}`)\s*\|\s*"
                 r"`[0-9a-f]{8,40}`\s*\|\s*`[0-9a-f]{8,40}`\s*\|",
                 re.MULTILINE,
             )

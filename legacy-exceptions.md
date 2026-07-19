@@ -102,6 +102,210 @@ final source basis / 판단 근거 / reviewer / review 시각
 `learning/current`와 기존 `learning/*`, `document-box/main`, `central-notes/main` 본문은 이 제거 대상에서
 제외되며 canonical identity와 trailer 금지 규칙만 그대로 적용합니다.
 
+### `frontend-foundations-training` 일회성 corpus 형식·교정 경계
+
+이 절은 2026-07 정렬 migration의 `frontend-foundations-training` 한 저장소와 그
+`learning/current` 정렬에만 적용합니다. Old learning 기준은 다음과 같습니다.
+
+- `learning/foundations-v1`
+  - tip `446e6d59f0e8acec6fe62ffbbaf7b5c048d9e3ff`
+  - tree `4c7087dab9050ae43af16c1b1121ef8cd61cd1b8`
+- `learning/foundations-v1.0.1`
+  - tip `fdffc0e6842df7d44701bb2569806f72e5c72d67`
+  - tree `11814eafe1f7ba2859940a479dc1df67930977e6`
+- legacy answer subtree `b2a3211f8ec4dce7357d59be3cbe0a811e66c35c`
+- legacy practice subtree `3b0b0c4e9c19fc6d4afdab538fbb6634251b3bd7`
+
+README를 제외한 numbered legacy file의 pre-migration path·blob·byte manifest는 다음과 같습니다.
+
+| corpus | 파일 | bytes | manifest SHA-256 |
+| --- | ---: | ---: | --- |
+| answers | 73 | 253966 | `621f9cb2d57040d408c5907455803e0f032379822aaeb0db0dba0963ff0408b3` |
+| practices | 12 | 55451 | `4c306aa78e366cbf8913b79df35a620b98ec5ad9639c4d5e95bc8bf2307cd076` |
+| 합계 | 85 | 309417 | `ae70f92fee7d307d62ddbcb1f83314dc8872daefc924b6d51fd6b828b0a34624` |
+
+위 digest는 예외 대상인 old 입력 집합의 경계이며 잘못된 내용을 byte 보존하라는 지시가 아닙니다.
+저장소 실행 원장은 각 row의 exact old path, blob OID와 byte 수를 보존하고, 교정 파일은 final blob
+OID와 old↔new hunk disposition을 추가합니다.
+
+이 85개 numbered file에는 구 corpus 형식을 한 번 유지할 수 있습니다. 구체적으로
+`docs-commit-note.md` §6의 현행 metadata·번호형 H3·`**책임:**` 전체 형식과 §7의 현행 practice
+banner 문구를 소급해 전면 재작성하지 않아도 됩니다. 다음 항목은 예외가 아닙니다.
+
+- source commit·parent·tree·diff·공개 계약·검증 계약의 사실 정확성
+- answer→practice link, active path, stable ID와 번호 대응
+- 신규·변경·source 영향 파일의 직접 검토
+- active README의 전체 mapping, exclusion, omission과 수량식
+- 단일 집필자, source freeze, answer 전체 완료·검토 뒤 practice 진입
+- 수작업 교정, commit별 path allowlist와 실제 집필 시각
+- `docs/README.md`, `docs/commits/README.md`, `docs/practice/README.md`의 현행 형식
+
+다음 answer는 old blob을 그대로 채택할 수 있습니다.
+
+```text
+000 001 002 003 004 005 007 008 011 012 015 016 019 020
+023 024 027 028 031 032 035 036 039 040 043 044 047 048
+051 052 055 056 059 060 063 064 067 068 071 072 075 076
+079 080 083 084 087 088 089 090 092 093 094
+```
+
+다음 practice도 old blob을 그대로 채택할 수 있습니다.
+
+```text
+001 002 003 004 005 087 088 090 092 094
+```
+
+단, answer·practice `090`은 final source에서 parent patch 관계가 달라졌으므로 byte가 같아도
+`oid-identical`로 기록하지 않습니다. 전담 집필자가 파일 전체를 final source와 직접 대조하고
+`direct-content — reviewed, unchanged`로 기록합니다.
+
+다음 answer는 파일 전체를 한 번 직접 읽고 final source의 catalog diff·계약과 충돌하는 hunk만
+수작업 교정합니다.
+
+```text
+009 013 017 021 025 029 033 037 041 045
+049 053 057 061 065 069 073 077 081 085
+```
+
+대응 practice 중 실제로 존재하는 `009`, `041`도 교정합니다. 모든 answer 교정과 answer review가 끝난
+뒤, 같은 집필자가 교정된 answer 전체와 해당 practice 전체를 다시 대조하고 잘못된 hunk만 수정합니다.
+따라서 final diff가 hunk 단위라는 사실은 §7이 금지한 “hunk만 보고 치환하는 파생”을 허용하지 않습니다.
+각 파일은 `direct-content`로 기록합니다.
+
+다음 파일은 위 legacy-format manifest의 적용 대상이 아닙니다.
+
+- old `docs/commits-codex-5.6/104.md`와 대응 practice는 실제 stable ID `105`로 판정해
+  `docs/commits/105.md`, `docs/practice/105.md`로 옮기고 현행 metadata를 적용합니다.
+- old `docs/commits-codex-5.6/107.md`와 대응 practice는 실제 stable ID `106`으로 판정해
+  `docs/commits/106.md`, `docs/practice/106.md`로 옮기고 현행 metadata를 적용합니다.
+- stable ID `104`의 Zustand source 책임은 새 현행-format answer와 practice를 수작업 작성합니다.
+- final source의 stable ID `107` source-doc 책임은 commit exclusion으로 기록합니다.
+- old stable ID `108` learner-navigation-only commit은 final source에서 비도달하므로 reserved로
+  기록하고 old answer를 active corpus에서 폐기합니다.
+
+`104`, `105`, `106`, 세 active README와 이번 migration 뒤 새로 만드는 모든 파일은
+`docs-commit-note.md` 현행 형식을 완전히 따릅니다. 등록된 legacy file도 위에 열거한 교정 hunk 외의
+본문을 바꾸거나 이후 source 의미 변경 때문에 다시 수정하면 이 예외가 끝나며 해당 파일을 현행
+형식으로 전환하거나 새 별도 승인을 받아야 합니다. 이 예외는 다른 저장소로 복제하지 않습니다.
+
+Final README와 실제 graph는 최소한 다음을 reconcile합니다.
+
+```text
+reachable source commits 99 = answers 76 + exclusions 23
+answers 76 = practices 15 + omissions 61
+exclusions 23 = resolution 없는 merge 22 + stable ID 107 source-doc 1
+stable ID 108 = old release 전용 reserved, final reachable count에서 제외
+```
+
+### `frontend-foundations-training` source product-token allowlist
+
+| 저장소 | exact path | 허용 token·context | exact blob과 책임 commit | 제품상 이유·검토 근거 |
+| --- | --- | --- | --- | --- |
+| `frontend-foundations-training` | `src/exercises/ExerciseDemo.tsx` | 소문자 `cursor`가 exact Tailwind utility `disabled:cursor-not-allowed` 안에 있는 경우만 | blob `6a2df91aa750ceb812fbc32f034e596070da66fd`, replay commit `4a5e35f6a1b42af82ec5e7284f6c6d3332018f9b`; blob `73e1c8b09e72cd6cc128f6e91ca9abbfaa92054c`, replay commit `db6b2310203604744793152447c5cea8137b6783` | disabled pagination button의 CSS `cursor: not-allowed` 시각 피드백입니다. 두 blob의 JSX, `disabled` 조건과 source diff를 직접 확인했으며 작업 도구 provenance가 아닙니다. |
+
+각 blob에는 이 utility가 pagination 이전·다음 button에 두 번 존재합니다. 이 allowlist는 exact path,
+exact blob과 exact utility context에만 적용합니다. 다른 path·blob의 `cursor`, 대소문자 변형, ref/tag
+이름, commit/tag metadata·trailer, tool-control artifact를 허용하지 않습니다. 새 occurrence는 별도
+승인 전까지 실패입니다. Source provenance gate는 “등록되지 않은 일치 0건”과 위 등록 occurrence를
+분리해 보고합니다.
+
+### `frontend-foundations-training` 실행 원장
+
+이 원장은 위 일회성 예외를 실제 object와 review disposition에 닫습니다. 원격 전환 전 고정한 source
+기준은 `main` `3fb57c957265a76301dbad44f2abd8be074318b5`, tree
+`a078559ec7d206fa31f533256507090d769b3d74`입니다. 두 차례의 승인된 atomic transition 뒤 최종
+게시 state는 다음과 같습니다.
+
+- `main` `cfa232f03aab569d7ebb6c8ed1f1a7ac1dc2464c`, tree
+  `b1b5d3236f13c1f5f89c5fc2210dd9deb7039d04`
+- annotated `foundations-v1.0.1` tag object
+  `c535edc866d84b1769953a0e2f35b2b0d0dd47fa`, peeled source tip `cfa232f03aab569d7ebb6c8ed1f1a7ac1dc2464c`
+- source graph 99 commits, 고유 resolution이 없는 merge 22개, root
+  `3873113c30b132034533ab0f080e578090801688`
+
+최초 transition은 `main` `206a4a5b333e3110cc0216e3b94111fb211f0f30`, tree
+`73af694cbc32daea022b71eeb7ca5c74e59b706a`, tag object
+`d63004ae0927582f705e5d64781f05fc9c923f5d`, `learning/current`
+`51020f0d7e391db94305409894e0effa68fff1d1`을 게시했습니다. 게시 뒤 authenticated remote-navigation이
+root README의 exact 단계 카드 backlink, 현행 stable/ordinal mapping row 인식과 두 learning publication
+scope를 각각 보정해야 함을 발견했습니다. 후속 정정은 final source 문서 commit에 backlink 한 줄을
+추가하고 같은 source basis에서 learning publication 세 개를 다시 만들었습니다. 최초 publication과 최종
+publication의 전체 path set은 같고 변경 blob은 root `README.md`, `docs/README.md`,
+`docs/commits/README.md`, `docs/practice/README.md` 네 개뿐입니다.
+
+Old `foundations-v1.0.1` object `0a1a725407eb199f7f283e86e46ffa417fdb5ce3`(peel old `main`)은 위
+최종 annotated object로 교체했습니다. Old `foundations-v1` object
+`bc22473d30b398108b0af03749ee5b6664c3a939`, `legacy-feature-graph-v1` object
+`645ad72533fa9fa8df202cce3e0b350347e36c9d`, `pre-codex-5.6` object
+`43b6ba37cc7c1adcfb688b6b0f9a113cc3c64b34`는 원격에서 삭제하고 최초 source rollback bundle에 포함한 뒤
+아래 fresh-clone gate가 끝나자 함께 폐기했습니다.
+
+99개 old↔new commit·tree·parent·timestamp row는
+[`data/migrations/frontend-foundations-training-source-crosswalk.tsv`](data/migrations/frontend-foundations-training-source-crosswalk.tsv)에
+고정합니다. 파일은 header 포함 100줄이며 SHA-256은
+`5d9f66baab190b28593770811b358b030560e4944c154467784c6f89b57b83d8`입니다. Source commit의 patch
+순서와 기존 timestamp는 보존했고, 승인 window 밖 publication 책임 4개만 같은 마지막 개발일의 순서
+안으로 옮겼습니다. Source identity, `%aI == %cI`, message, trailer와 등록되지 않은 provenance 검사는
+모두 0건입니다. 위 product-token allowlist 4 occurrence만 별도로 통과합니다.
+
+최초 transition의 source rollback bundle은 승인 전 다음 값으로 검증했습니다.
+
+- 경로:
+  `/Users/woopinbell/Documents/Codex/2026-07-19/1/work/frontend-lane/frontend-foundations-training/frontend-foundations-training-3fb57c95-source.bundle`
+- SHA-256: `a534e577221e1d8a9bf204a9825b4ba542883fdbd5d796f43036db9ab21fd267`
+- 범위: old `main`과 old source tag 4개, learning ref 0개
+- 복원 검증: bundle verify, restore clone의 exact ref와 `git fsck --full --no-reflogs` 통과
+
+이 bundle과 검증용 restore clone은 최초 published fresh-clone gate가 끝날 때까지만 보존했고,
+2026-07-19T22:41:21+09:00에 성공 gate를 확인한 뒤 폐기했습니다. 복구할 수 있는 local copy는 남기지
+않았습니다.
+
+후속 정정 전에는 당시 공개 source만 담은 별도 rollback bundle을 다시 만들었습니다.
+
+- 경로:
+  `/Users/woopinbell/Documents/Codex/2026-07-19/1/artifacts/frontend-foundations-training-correction-206a4a5b/frontend-foundations-training-206a4a5b-source.bundle`
+- SHA-256: `8a9e7083ed0d0f931ce520a74121d12b5f2582b299621a408172c91f2460b0e1`
+- 범위: 당시 `main` `206a4a5b333e3110cc0216e3b94111fb211f0f30`과 tag object
+  `d63004ae0927582f705e5d64781f05fc9c923f5d`, learning ref 0개
+- 복원 검증: bundle verify, restore clone의 exact main·tag와 strict fsck 통과
+
+후속 정정의 fresh clone에서 source build·test·E2E, 독립 Zustand package와 corrected corpus를 확인한 뒤
+2026-07-19T23:19:57+09:00에 bundle·snapshot·restore clone을 함께 폐기했습니다. 복구할 수 있는 local
+copy는 남기지 않았습니다. Learning branch는 사용자 결정대로 두 transition 모두 bundle, archive ref
+또는 보존 tag를 만들지 않았습니다. 따라서 삭제한 기존 두 learning ref와 교체된 최초
+`learning/current`는 아래 object 기록만으로 복구를 보장하지 않습니다.
+
+Learning 입력과 단일화 결과는 다음과 같습니다.
+
+- `learning/foundations-v1`: tip `446e6d59f0e8acec6fe62ffbbaf7b5c048d9e3ff`, tree
+  `4c7087dab9050ae43af16c1b1121ef8cd61cd1b8`
+- `learning/foundations-v1.0.1`: tip `fdffc0e6842df7d44701bb2569806f72e5c72d67`, tree
+  `11814eafe1f7ba2859940a479dc1df67930977e6`; path/blob matrix에서 앞 branch의 유효 corpus를 포함하므로
+  canonical legacy basis로 사용
+- 최종 `learning/current`: tip `96e1d790d4c606212f1f1a5afe9500e395cce2ec`, tree
+  `d8a79df99ecfe3cdde4953f9f21397cd2d83e886`
+- 최종 실제 시각 publication commits: notes `98e82792e756a060eb9d65294869b23bdb78b09c`, answers
+  `85abe85711fd3311d821a5c48906f3b451df21c4`, practices
+  `96e1d790d4c606212f1f1a5afe9500e395cce2ec`
+
+96개 old corpus path의 blob·byte·final path·final blob·판정·review mode는
+[`data/migrations/frontend-foundations-training-learning-disposition.tsv`](data/migrations/frontend-foundations-training-learning-disposition.tsv)에
+고정합니다. 파일은 header 포함 97줄이며 SHA-256은
+`95325fe3023fbf136d193b26eabda818b0509cda77d6615e0c884e6bacb582bf`입니다. Disposition은
+`adopted 63 / corrected 22 / replaced 10 / discarded 1`, review mode는
+`oid-identical 61 / direct-content 35`입니다. Direct-content answer review는
+2026-07-19 21:31:20 KST, practice review는 2026-07-19 21:57:47 KST에 닫았습니다. 후속 정정은 위 네
+README의 backlink·basis metadata hunk만 전담 집필자와 저장소 담당자가 다시 읽고 나머지 동일 blob은
+재독하지 않았습니다.
+
+Final corpus 수량은 `99 reachable = 76 answers + 23 exclusions`,
+`76 answers = 15 practices + 61 omissions`입니다. Old stable `108` navigation-only 문서는 active corpus에서
+폐기하고 번호만 reserved로 남깁니다. 2026-07-19 최초 전환과 후속 정정은 각각 exact lease와 사용자
+승인을 통과해 atomic push로 완료했습니다. Advertised project ref는 `main`, `learning/current`, annotated
+`foundations-v1.0.1`만 남았고 fresh clone에서 source build·test·E2E, 독립 Zustand package와 corpus
+topology를 다시 검증했습니다. Authenticated remote-navigation에서도 project와 Frontend application
+overlay가 통과했습니다.
+
 ### 승인된 source window
 
 날짜는 모두 Asia/Seoul `+09:00` 기준이며 양 끝 날짜를 포함합니다. `extensionEnd`가 있는 신규 프로젝트는

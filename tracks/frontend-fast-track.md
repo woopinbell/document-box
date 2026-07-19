@@ -62,7 +62,7 @@ checkpoint까지 통과해야 한다.
   `make preflight ROUTE=frontend-application-bridge`를 실행하고 현재 단계의 `BLOCK`을
   없앤다.
 - 기준 ref:
-  - Foundations `foundations-v1.0.1`, `learning/foundations-v1.0.1`
+  - Foundations `foundations-v1.0.1`, `learning/current`
   - Reliability `reliability-v1.0.1`, `learning/reliability-v1.0.1`
   - Portfolio neutral `template-v3.0.1`, release `portfolio-v3.0.1`, learning
     `learning/portfolio-v3.0.1`
@@ -87,7 +87,7 @@ review 행만 훑은 것은 Foundations 완료가 아니다.
 
 | 순서 | Stable ID | review 대상 | 수행·증거 |
 | ---: | --- | --- | --- |
-| 1 | `039/040/041` | [Form Validation Zod](https://github.com/woopinbell/frontend-foundations-training/blob/foundations-v1.0.1/src/exercises/spine/09-form-validation-zod/README.md) | schema와 React Hook Form의 책임, client/server error, 접근 가능한 feedback을 먼저 설명한다. 이어 [`041` practice](https://github.com/woopinbell/frontend-foundations-training/blob/learning/foundations-v1.0.1/docs/practice/041.md)를 practice-first로 수행한다. Parent가 파일에 없으면 current answer ledger가 연결한 full crosswalk의 `041` metadata mapping 행만 확인한다. Catalog와 E2E는 `pnpm test src/exercises/catalog.test.ts`, `pnpm test:e2e e2e/exercise.spec.ts`로 검증한다. |
+| 1 | `039/040/041` | [Form Validation Zod](https://github.com/woopinbell/frontend-foundations-training/blob/foundations-v1.0.1/src/exercises/spine/09-form-validation-zod/README.md) | schema와 React Hook Form의 책임, client/server error, 접근 가능한 feedback을 먼저 설명한다. 이어 [`041` practice](https://github.com/woopinbell/frontend-foundations-training/blob/learning/current/docs/practice/041.md)를 practice-first로 수행한다. Parent가 파일에 없으면 current answer ledger가 연결한 full crosswalk의 `041` metadata mapping 행만 확인한다. Catalog와 E2E는 `pnpm test src/exercises/catalog.test.ts`, `pnpm test:e2e e2e/exercise.spec.ts`로 검증한다. |
 | 2 | `067/068/069` | [App Router Boundary Lite](https://github.com/woopinbell/frontend-foundations-training/blob/foundations-v1.0.1/src/exercises/bridge/app-router-boundary-lite/README.md) | server/client 책임, serializable props와 boundary를 source에서 찾아 설명하고 `pnpm typecheck`, `pnpm build`를 통과한다. Metadata-only review이며 구현 완료로 세지 않는다. |
 | 3 | `071/072/073` | [Query Cache Lite](https://github.com/woopinbell/frontend-foundations-training/blob/foundations-v1.0.1/src/exercises/bridge/query-cache-lite/README.md) | `/exercises/bridge/query-cache-lite`에서 query status와 refetch를 관찰하고 server state, cache state, form/UI state를 구분한다. Metadata-only review다. |
 | 4 | `079/080/081` | [Accessibility Check Lite](https://github.com/woopinbell/frontend-foundations-training/blob/foundations-v1.0.1/src/exercises/bridge/accessibility-check-lite/README.md) | `/exercises/bridge/accessibility-check-lite`에서 label 연결, role feedback, keyboard 도달성을 검사한다. Metadata-only review다. |
@@ -95,7 +95,7 @@ review 행만 훑은 것은 Foundations 완료가 아니다.
 각 행마다 진행 원장에 stable ID, 실제 commit hash·parent·tree, 읽은 source 경로, 자기 설명, 실행한
 명령과 관찰 결과를 남긴다. `041`에만 일반 practice-first 절차와
 실패→answer→무자료 재구현을 적용한다. 자기 설명을 쓴 뒤
-[Foundations current answer ledger](https://github.com/woopinbell/frontend-foundations-training/blob/learning/foundations-v1.0.1/docs/commits-foundations-v1.0.1/README.md)에서
+[Foundations current answer ledger](https://github.com/woopinbell/frontend-foundations-training/blob/learning/current/docs/commits/README.md)에서
 연결한 full crosswalk의 stable ID 행만 먼저 대조한다. Mapping의 abbreviated commit·parent는
 clone에서 `git rev-parse <mapped-sha>^{commit}`으로 full SHA를 확인하고, tree는
 `git show -s --format=%T <full-commit>`으로 기록한다.

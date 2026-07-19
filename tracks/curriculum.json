@@ -147,11 +147,11 @@
       "track": "frontend",
       "repo": "frontend-foundations-training",
       "release": "foundations-v1.0.1",
-      "learning": "learning/foundations-v1.0.1",
+      "learning": "learning/current",
       "doc": "tracks/frontend.md",
       "anchor": "stage-frontend-foundations-training",
-      "practice": "docs/practice-foundations-v1.0.1/README.md",
-      "answer": "docs/commits-foundations-v1.0.1/README.md",
+      "practice": "docs/practice/README.md",
+      "answer": "docs/commits/README.md",
       "prev": "42-incident",
       "next": "frontend-delivery-training"
     },
@@ -455,7 +455,7 @@
       "selections": [
         {
           "project": "frontend-foundations-training",
-          "learning": "learning/foundations-v1.0.1",
+          "learning": "learning/current",
           "practice_paths": [
             "docs/practice/041.md"
           ]

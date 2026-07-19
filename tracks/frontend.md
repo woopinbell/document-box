@@ -26,15 +26,15 @@ Foundations 4개 review, Reliability 4개 hands-on과 Portfolio 병행 범위를
 ## 1. frontend-foundations-training
 
 - 이전 gate: [42 통합 incident](42.md#stage-42-incident)의 자동·사람 gate와 즉시 회상 통과.
-- 저장소·ref: [`frontend-foundations-training`](https://github.com/woopinbell/frontend-foundations-training), release `foundations-v1.0.1`, learning `learning/foundations-v1.0.1`.
+- 저장소·ref: [`frontend-foundations-training`](https://github.com/woopinbell/frontend-foundations-training), release `foundations-v1.0.1`, learning `learning/current`.
 - Central 상세 목록: [frontend-foundations-training 전체 읽기 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-frontend-foundations-training). 이 목록이 language·React·build·state·test 선수 범위를 확정한다.
 - 빠른 노트: [Frontend Language and Runtime](https://github.com/woopinbell/central-notes/blob/main/frontend-react/README.md#language-and-runtime), [React, Build, Routing](https://github.com/woopinbell/central-notes/blob/main/frontend-react/README.md#react-build-routing).
 - 수행 범위: [대표 practice 한 개와 카드 전체 gate](README.md#공식-수행-범위). 나머지는 선택 심화다.
-- 프로젝트 노트: [current learning index](https://github.com/woopinbell/frontend-foundations-training/blob/learning/foundations-v1.0.1/docs/README.md)에서 notes를 읽고 practice로 이동한다.
+- 프로젝트 노트: [current learning index](https://github.com/woopinbell/frontend-foundations-training/blob/learning/current/docs/README.md)에서 notes를 읽고 practice로 이동한다.
 - Clean release gate: annotated release의 별도 clean worktree에서 Node/pnpm과 browser를 확인하고 `make check-repo && make build && make test-e2e`를 기록한다.
-- 문제지: [current practice ledger](https://github.com/woopinbell/frontend-foundations-training/blob/learning/foundations-v1.0.1/docs/practice-foundations-v1.0.1/README.md).
+- 문제지: [current practice ledger](https://github.com/woopinbell/frontend-foundations-training/blob/learning/current/docs/practice/README.md).
 - 구현: 현재 practice의 full `부모 commit`에서 `study/frontend-foundations-<ID>`를 만들고 route, server/client boundary, form/data/UI state 실패를 원장에 남긴다.
-- 답지 개방: 자기 구현·expected/actual·검증 근거 뒤 [answer ledger](https://github.com/woopinbell/frontend-foundations-training/blob/learning/foundations-v1.0.1/docs/commits-foundations-v1.0.1/README.md)를 연다.
+- 답지 개방: 자기 구현·expected/actual·검증 근거 뒤 [answer ledger](https://github.com/woopinbell/frontend-foundations-training/blob/learning/current/docs/commits/README.md)를 연다.
 - Historical 무자료 gate: 현재 practice 파일이 명시한 시작 tree의 새 branch에서 그 파일의 구현 범위와 당시 검증 계약만 통과한다.
 - 연결 설명: 선택한 UI 변경이 current release의 route·server/client·form·data/UI state 경계로 이어지는 근거를 설명한다.
 - 다음: [frontend-delivery-training](#stage-frontend-delivery-training).

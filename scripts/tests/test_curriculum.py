@@ -96,9 +96,9 @@ class RegistryFixture:
                     answer = "docs/commits-risk-v1.0.2/README.md"
                 if node_id == "frontend-foundations-training":
                     release = "foundations-v1.0.1"
-                    learning = "learning/foundations-v1.0.1"
-                    practice = "docs/practice-foundations-v1.0.1/README.md"
-                    answer = "docs/commits-foundations-v1.0.1/README.md"
+                    learning = "learning/current"
+                    practice = "docs/practice/README.md"
+                    answer = "docs/commits/README.md"
                 if node_id == "frontend-reliability-training":
                     release = "reliability-v1.0.1"
                     learning = "learning/reliability-v1.0.1"
@@ -892,7 +892,7 @@ class RemoteContractTest(unittest.TestCase):
             "frontend-foundations-training": {
                 "id": "frontend-foundations-training",
                 "repo": "frontend-foundations-training",
-                "learning": "learning/foundations-v1.0.1",
+                "learning": "learning/current",
             },
             "frontend-reliability-training": {
                 "id": "frontend-reliability-training",
@@ -923,7 +923,13 @@ class RemoteContractTest(unittest.TestCase):
         return overlay, projects
 
     def _overlay_dispatcher(
-        self, *, missing_path=None, missing_mapping_id=None, drift=False
+        self,
+        *,
+        missing_path=None,
+        missing_mapping_id=None,
+        mapping_format="legacy",
+        missing_mapping_field=None,
+        drift=False,
     ):
         branch_shas = {
             "frontend-foundations-training": "1" * 40,
@@ -940,12 +946,32 @@ class RemoteContractTest(unittest.TestCase):
                 f"{'5' * 40}\trefs/tags/template-v3.0.1^{{}}",
             )
         )
-        mapping_rows = "\n".join(
-            f"| {Path(path).stem} | `{'c' * 8}` | `{'d' * 8}` | phase |"
-            for paths in curriculum.FRONTEND_APPLICATION_PRACTICES.values()
-            for path in paths
-            if Path(path).stem != missing_mapping_id
-        )
+        mapping_rows = []
+        for paths in curriculum.FRONTEND_APPLICATION_PRACTICES.values():
+            for path in paths:
+                stable_id = Path(path).stem
+                if stable_id == missing_mapping_id:
+                    continue
+                mapping_id = (
+                    stable_id
+                    if mapping_format == "legacy"
+                    else f"`{stable_id} / {stable_id}`"
+                )
+                commit = f"`{'c' * 8}`"
+                parent = f"`{'d' * 8}`"
+                if stable_id == "041":
+                    if missing_mapping_field == "stable-id":
+                        mapping_id = (
+                            "" if mapping_format == "legacy" else f"` / {stable_id}`"
+                        )
+                    elif missing_mapping_field == "commit":
+                        commit = ""
+                    elif missing_mapping_field == "parent":
+                        parent = ""
+                mapping_rows.append(
+                    f"| {mapping_id} | {commit} | {parent} | phase |"
+                )
+        mapping_rows = "\n".join(mapping_rows)
         mapping_payload = {
             "encoding": "base64",
             "content": base64.b64encode(mapping_rows.encode()).decode(),
@@ -966,7 +992,10 @@ class RemoteContractTest(unittest.TestCase):
                 endpoint = command[-1]
                 if missing_path and missing_path in endpoint:
                     return self._response(returncode=1, stderr="not found")
-                if "docs/commits-codex-5.6/README.md" in endpoint:
+                if (
+                    "docs/commits/README.md" in endpoint
+                    or "docs/commits-codex-5.6/README.md" in endpoint
+                ):
                     return self._response(mapping_payload)
                 return self._response()
             raise AssertionError(f"unexpected command: {command}")
@@ -1001,6 +1030,23 @@ class RemoteContractTest(unittest.TestCase):
                 [],
             )
 
+    def test_application_overlay_accepts_both_answer_mapping_row_formats(self):
+        overlay, projects = self._application_overlay_fixture()
+        for mapping_format in ("legacy", "stable-pair"):
+            with self.subTest(mapping_format=mapping_format), patch.object(
+                curriculum,
+                "_run",
+                side_effect=self._overlay_dispatcher(
+                    mapping_format=mapping_format
+                ),
+            ):
+                self.assertEqual(
+                    curriculum._check_remote_overlay(
+                        "woopinbell", overlay, projects
+                    ),
+                    [],
+                )
+
     def test_application_overlay_whole_run_manifest_detects_ref_drift(self):
         overlay, projects = self._application_overlay_fixture()
         dispatcher = self._overlay_dispatcher(drift=True)
@@ -1033,15 +1079,28 @@ class RemoteContractTest(unittest.TestCase):
 
     def test_application_overlay_missing_answer_metadata_is_rejected(self):
         overlay, projects = self._application_overlay_fixture()
-        with patch.object(
-            curriculum,
-            "_run",
-            side_effect=self._overlay_dispatcher(missing_mapping_id="041"),
-        ):
-            errors = curriculum._check_remote_overlay(
-                "woopinbell", overlay, projects
-            )
-        self.assertTrue(any("lacks commit/parent metadata for 041" in error for error in errors))
+        for mapping_format in ("legacy", "stable-pair"):
+            for missing_field in ("stable-id", "commit", "parent"):
+                with self.subTest(
+                    mapping_format=mapping_format,
+                    missing_field=missing_field,
+                ), patch.object(
+                    curriculum,
+                    "_run",
+                    side_effect=self._overlay_dispatcher(
+                        mapping_format=mapping_format,
+                        missing_mapping_field=missing_field,
+                    ),
+                ):
+                    errors = curriculum._check_remote_overlay(
+                        "woopinbell", overlay, projects
+                    )
+                self.assertTrue(
+                    any(
+                        "lacks commit/parent metadata for 041" in error
+                        for error in errors
+                    )
+                )
 
     def test_lightweight_supplemental_and_missing_backlink_are_rejected(self):
         project = {
