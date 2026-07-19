@@ -60,13 +60,92 @@ source history와 단일 `learning/current` 진입점을 만드는 일회성 승
   허용하지 않습니다.
 - 단일 `docs(learning)` role은 위 exact object의 `format-printer`에만 허용합니다. 이후 새 learning
   publication은 전역의 notes → commits → practice 순서를 따릅니다.
-- `format-printer`, `signal-message-bus`, `thread-dining`의 current source release에는
-  learner-navigation-only commit을 추가하지 않았습니다. 세 저장소의 main backlink 부재는 명시적
+- `format-printer`, `signal-message-bus`, `thread-dining`, `small-shell`의 current source release에는
+  learner-navigation-only commit을 추가하지 않았습니다. 네 저장소의 main backlink 부재는 명시적
   예외이며 current ref·학습 진입점은 Document Box 단계 카드가 소유합니다. 이 예외는 각각
   `be4966f3c1d176453a34b609036ef4998fa8b022`/`fe7a0d79cb9733f4f6871e5164a305907cd7b78e`,
   `ed859ce08c0d84154c21be6ffd6cdb1ea1c353c3`/`7563b6325e6c1a31bc63dbf22b935bb155e0e434`,
-  `94ccaa4085af3decfd6d7bba2ff0b879954947e5`/`983bb1f4ce52ce33feb68955d9c0788670b12fb4`
+  `94ccaa4085af3decfd6d7bba2ff0b879954947e5`/`983bb1f4ce52ce33feb68955d9c0788670b12fb4`,
+  `0fb1f6bf4825890f7b657ce5de918aed52a8318d`/`3e7164817b3883783c80c6a1ced90531faf85efe`
   main/tag object 쌍에만 적용하며 어느 object든 이동하면 backlink 검사를 다시 요구합니다.
+
+### `small-shell` 정렬 실행 원장
+
+2026-07-20 KST에 private `woopinbell/small-shell`의 source와 learning ref를 exact lease를 사용한 단일
+atomic push로 전환했습니다. Expected-old `main`은
+`8b83a05024136f599414e37e76b207bdd7f8f513`이었고 replacement `main`은
+`0fb1f6bf4825890f7b657ce5de918aed52a8318d`(tree
+`656c3a1e0e3fa404501e0a2382c757670e660f54`)입니다. Annotated `v1.0.0` tag object
+`3e7164817b3883783c80c6a1ced90531faf85efe`는 replacement `main`으로 peel됩니다.
+
+Source-only rollback bundle은 old `main`과 아래 여섯 source tag만 담았고 learning ref는 포함하지
+않았습니다. Bundle SHA-256은
+`684cc16c34b7641501533982aced38b54ec35995ae31d97dda09ab4c41a8ae79`이며 verify, strict fsck와
+복원 clone의 일곱 ref exact 대조를 통과했습니다. Project remote publication과 fresh-clone gate가
+green이 된 뒤 snapshot, bundle과 restore clone을 폐기했으므로 active ref나 offline 보존본으로
+복구할 수 없습니다.
+
+삭제한 source tag의 ref/object/peeled target은 다음과 같습니다.
+
+| ref | old tag object | old peeled target |
+| --- | --- | --- |
+| `codex-5.6` | `16529accf835ac4cfcc0372fc2946d5195b97fef` | `3e25f6430b70df68896c46c9a310ca37dbc4d13f` |
+| `codex-5.6.1` | `cd40c73311a882ebcc5401100d392c8f87f11bb2` | `340456da2599637c759848da65706e7d7c3b6c0a` |
+| `codex-5.7` | `7f6f5244891efcdff172613470951dbda42be24c` | `8b83a05024136f599414e37e76b207bdd7f8f513` |
+| `pre-codex-5.6` | `cdd9f5d697a078590bd82054ef8e579e2730eb09` | `c9ebf6e378b11a5346d8db939fc97b4567d7b279` |
+| `pre-history-clean-codex-5.7` | `9fb9682463e82c0f527aa02bd1423533c9b48e34` | `340456da2599637c759848da65706e7d7c3b6c0a` |
+| `pre-learning-split-codex-5.6` | `ec2e9d447362a2ebb9ad4f74cccde7268f11ffd9` | `b9730315b24a71d1c31d6c22cd88a19d48991354` |
+
+Source replay는 old patch 순서와 16개 책임을 보존하고 source window
+`2023-09-25`–`2023-12-27` KST에 배치했습니다. 아래 표의 tree·patch 표기 `same`은 양쪽 object가
+byte-for-byte 같음을 뜻합니다. Makefile의 progressive build repair가 누적 tree를 바꾼 행도 그
+책임의 source patch가 `same`이면 기존 patch를 보존한 것입니다.
+
+| source ID | old commit | new commit | old tree → new tree | patch-id disposition |
+| --- | --- | --- | --- | --- |
+| `000` | `02dd49b3b95a70db8038756c634678c926e09afa` | `68f812ed16a568198f59d63f578a201cfe56d6d2` | `eebce37a1f7cfc42d85927fc08e7a8a9c42779fa` → same | `27e84a0dd329babca280dc3e224d78a9e044d7ff` same |
+| `001` | `a0fd80ed0338474b6ef86bc03c8238a46d4464fd` | `7de0bb7d81de6c8b215ddcbba91c6cc6f7f93c22` | `a2ea801d5af3af94c835fcef730dac75929e7aa9` → `0fc8c25997e2bee51b5cd80f10d059817b5db033` | `6e80be6e82b76ee3c68699a6759417f112fe8c71` → `758fcca1a25556545dd2d8bccc282856c621ceda` |
+| `002` | `13d020b180fb8d29f71930be1d681194e308e6f5` | `a8ac47ada9515814f5c075240a298f5f6b03db07` | `abb1e534b14f786c1c42dd31b8967381aae19fa6` → `fd9235c87ed0ec8cedd1774c34a3ed4a308baa65` | `d297a6e0eff28a3339179f5090ef17ac3a7dc1e1` same |
+| `003` | `d44fdd013d4bb2f70d7c54cfaa9e50324b944307` | `e4251bbe9995d4716a8b702e031824c0f5608a1e` | `64483c04daab60c779fdfcefd4bcd05e18e43943` → `b33ae344fe66261f8404b975c68f017b69bbeaa8` | `a249cb954dac3030c59a5815db836eaf7274573a` same |
+| `004` | `3f0080f6ab4d8959d34105075e9abb1a873b4f31` | `04a86da2100f42ff53a851020a7044df18a7d15d` | `77ab21a890d7a67aa5d4eb6b33e92a78e82f2a32` → `a01d8956406c03b077f7327f283a40c0c4726acb` | `5fa66e6cf7a5cf46424851f4575d12582bbf89ec` same |
+| `005` | `16358b56cc8a78efdbd3ab3a5b7d7a712d7f290c` | `32f83bda23c7cabfba2356452020247bc814f329` | `d8a446a09aa5a740a6c8acc3e165dac49557da0f` → `909cba1b9d487f0431e2391958dbfba51035db79` | `940af06a195a3f3f88e80220e763dfefdd9033ad` same |
+| `006` | `1a12abf78fe0bfb8edbf710957ee63551c3b4775` | `7187aa05d8a9f7f02f8878697e40bf06a84fa1c5` | `a106c9c307e8d54b31089aa9d13b0d79dcc7ee7a` → `41b37eed629935e20c5394c7bdb79d324ae2ea4a` | `345742007b2d4087e2bc6f211408fd6b45dd7280` same |
+| `007` | `6ce670e7bde2a8818073d820ed87a97ad7c3b17c` | `0bed1831b0fe0c54307e45c4fbb42c7cf39420df` | `953e59e96746dc1a6bb768ec25600e4a839dc54f` → `2d59dfe7caa92ec98977241b368e84ae57611f4f` | `a97bc70a9b36ebdb60833f507afe7e000ef75c23` same |
+| `008` | `83c8ca0c6e708ce5a0fef7bcfea5b850f7e79042` | `498bebe6e526646ed092fca5b391389a98128c27` | `25b45baa357e0387e46d05124116aa61459e4fe2` → `485a7031c61b2cb37fc6ba1b71b088228e353cd0` | `fa079ce3f0a3d2a90bd4023408f0e701c21e3896` same |
+| `009` | `9f53db822082dd8a22c2757496fdc3f6d894fa2c` | `662e7bd8dd5a3e968f03b4c3c2d366249b3f64ab` | `0dba248ff9df3ec4cc68a336f9fe37c7be21ecbe` → `15467d770f1ce9ccc45e55a517bf13743a38a250` | `eddaab3f3ecf36f7bdeaad92b1ec00ece70c3f74` same |
+| `010` | `ace1be3c63dfdfbc87a3f2cd5507a7131b9ca5e6` | `105ba8422c5352998137b41f5078d11183950d31` | `21b3f36d2440459e14beaf72796f59c6870a4f71` same | `3b290732e54c252e0189bdfb4aee83fa7020de0f` → `918d0e7d73f9fdaa284cb4ce0e8afc872403926a` |
+| `015` | `03a0be74c907c5fc036a429b1a42dd38e19140cd` | `ed06ae2045228c5bc397efa9fdd6e3ee8e049823` | `cf83233d435f77081cc347a2a47dc59ecdc8d890` same | `890bb84900c33bb3fc783cc5ab9ec5c76e88a020` same |
+| `012` | `8af7cfd473c3e8f8ed2401b278acbacf646e1561` | `8f4ec5b78a65a2de3fad00a9d2009b1a8b17dcda` | `36baa81ea89ec5f1d833072d90a9eb455c02fc15` same | `3e46237a08080b10372f449fe01ef1c0e6dfd05b` same |
+| `013` | `d027bb9faa4ea1b7be433dc289d18cf9f245896b` | `14b1f75475cb16b0ba183a7d2c9bbe04924697f8` | `c4186af4f13db79ae8d427174015327300cf2a37` same | `2549f972f87abc4348370b3a0278c6ed1a6b1b1d` same |
+| `014` | `846d5d04ba592d8d5b1802c082538c3e44816d16` | `33f342e75a3b633b7ff43a2e939b65ebef4e5585` | `c72aa65ae635785a3f96f651095bd4772c64cc86` same | `f407b3e5f3f8544f77e3aff193ac15510b207ef2` same |
+| `016` | `676b60b002e0c109cd8c51c2dd21809b20916e4b` | `0fb1f6bf4825890f7b657ce5de918aed52a8318d` | `67256970c24e427b7817fe19f981ca7f77da1a72` → `656c3a1e0e3fa404501e0a2382c757670e660f54` | `120c4eefa17655842a6be0d5173c95b37c30974f` → `1bb599f15539b97494c37305f9c653b2fe6abd4d` |
+
+Old final object `8b83a05024136f599414e37e76b207bdd7f8f513`(tree
+`6b43f81cacfa0e03ee724f23ca53fba87287ac4c`, patch-id
+`e66e745bf6363630e12e8b53c4a0181f2056e24c`)은 source 기여가 없는 learner-navigation-only 책임이라
+replay에서 제외하고 stable ID `017`을 reserved 처리했습니다.
+
+Learning 후보는 다음 세 ref였습니다.
+
+| old ref | tip | tree | paths |
+| --- | --- | --- | --- |
+| `learning/codex-5.6` | `6af122bd5c4219c8496975d8f5098ba432420b09` | `670917acea0a98dcd42190bb8f25b7c34f71ef82` | 97 |
+| `learning/codex-5.6.1` | `1f907da4122e1ac4ec3a4307dba2e7dbab5c3ebc` | `1f922fc573dde6dad015d8d3abe68be7a2cafca5` | 100 |
+| `learning/codex-5.7` | `90bc14a293e393fb83b3850ddd5a11fbd59391db` | `02c0cc7b8a371553f4c42e2a6208bb49409c1e10` | 112 |
+
+세 후보는 commit ancestor 관계가 아니지만 path set이 5.6 ⊂ 5.6.1 ⊂ 5.7이고 공통 92 paths와
+5.6.1 추가 3 paths의 blob이 동일해 5.7을 기준본으로 택했습니다. 84개 legacy Markdown 후보는
+contributing 47, discarded/reserved 37로 disposition했고 동일 blob 12개는 재독하지 않았습니다.
+최종 corpus는 source 16 = answers 16 + exclusions 0, answers 16 = practices 14 + omissions 2
+(`000`, `016`)입니다.
+
+`learning/current`는 source 뒤의 actual-time publication 세 commit
+`a2418a623eb5afbdb22ada4f04bbef226a515405`(`docs(notes)`),
+`280beb3427206c40ac8fc5ba248605ade21689e1`(`docs(commits)`),
+`45d367edb7191ffc1f0165e97e2b069400a583fa`(`docs(practice)`, tip)으로만 구성되며 tip tree는
+`e5b66ee99c2b882ee5b7c8e5294ba69b1bc26101`입니다. Fresh clone에서 advertised ref가 `main`,
+`learning/current`, annotated `v1.0.0`뿐임을 확인하고 default/readline build·smoke, 두 reference,
+source provenance, corpus metadata·H3·links와 source drift zero gate를 다시 통과했습니다.
 
 ### Execution lane handoff 원장
 
