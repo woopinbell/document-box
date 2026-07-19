@@ -11,7 +11,8 @@
    파생합니다.
 3. 현재 HEAD나 이후 phase의 동작을 과거 commit에 소급하지 않습니다.
 4. 근거 없는 동작, 설계 이유와 실행 결과를 추측하지 않습니다.
-5. 기존 corpus를 보존하기로 했다면 subtree bytes를 바꾸지 않습니다.
+5. 기존 learning corpus는 비교할 근거이지 자동 정본이 아닙니다. Final source와 맞는 내용만
+   `learning/current`에 채택합니다.
 6. 답지·문제지 README는 mapping, 제외/생략 사유와 수량을 완전히 reconcile합니다.
 
 ## 2. 집필 ownership과 직렬 gate
@@ -27,7 +28,7 @@ source 전체 gate green
 → answers 100% 직접 검토
 → practices를 같은 번호별로 한 파일씩 수작업 파생
 → corpus 전수검토
-→ publication
+→ learning/current publication
 ```
 
 - 저장소마다 source 개발자와 다른 전담 집필자 한 명이 Central gap, answers와 practices 본문을
@@ -41,6 +42,7 @@ source 전체 gate green
   모든 본문을 처음부터 다시 대조합니다.
 - 저장소 담당자는 publication 전에 Central 신규 본문과 learning의 README·answer·practice를 100%
   직접 읽고 허용 path만 stage합니다. 집필자에게 publication 권한을 위임하지 않습니다.
+- Learning·Central commit은 실제 집필·검토 시각을 사용합니다. Source window로 backdate하지 않습니다.
 
 ## 3. 절대 금지
 
@@ -197,63 +199,87 @@ final learning reachable = source/release history + learning publication commits
 파일을 A/B로 분할했다면 문서 파일 수가 아니라 고유 commit 수로 계산합니다. Self-publication commit은
 자기 hash를 순환 기록하지 않고 meta exclusion으로 설명합니다.
 
-## 9. Branch별 corpus
+## 9. 기존 learning branch 통합 판단
 
-`learning/<release>`는 release tag에서 분기합니다.
+여러 `learning/*` tip이 서로 상위·하위 관계가 아니어도 branch 이름, commit 시각, 파일 수 또는 최신
+tip만으로 우열을 정하지 않습니다. 전담 집필자가 final source commit/tree/diff를 기준으로 모든 기존
+파일을 같은 stable ID·책임 단위별로 직접 대조합니다.
 
-1. 선택적 notes commit: `notes/**`, `docs/notes/**`, `docs/reflection/**`
-2. answers commit: `docs/commits/**`와 해당 answer ledger만
-3. practices commit: `docs/practice/**`와 해당 practice ledger만
+판단 순서는 다음과 같습니다.
 
-선택적 `docs(notes)` publication은 learning branch 안의 자료를 찾기 위한 `docs/README.md` 한 개를
-함께 가질 수 있습니다. 이 파일은 notes·answers·practices의 소비 순서와 링크만 색인하며, 답지 본문이나
-source/release 운영 문서를 복제하지 않습니다. `main`의 `docs/README.md`와 책임을 섞지 않고 answers나
-practices commit에서 뒤늦게 추가하지 않습니다.
+1. **정확성**: 기준 commit·parent·tree·changed path와 설명이 일치하는가.
+2. **공개 계약**: 실제 signature, type, schema, CLI, 상태와 ownership 경계를 빠짐없이 설명하는가.
+3. **핵심 흐름**: body, branch, error/rollback/cleanup path를 재구현할 수 있는가.
+4. **검증 계약**: test input, fixture, assertion, 실패 조건과 실행 명령이 source와 일치하는가.
+5. **완전성**: changed path, answer/exclusion, practice/omission과 수량이 전부 reconcile되는가.
+6. **문제지 품질**: 공개 계약과 검증 계약은 남기되 구현 답이나 assertion을 누설하지 않는가.
 
-`docs(notes)` 중간 commit에서는 이 색인이 뒤의 publication에서 생길 `docs/commits/**`와
-`docs/practice/**`를 미리 링크할 수 있습니다. 중간 tree의 link 검사는 `docs/README.md`에 명시된 이 두
-후속 corpus root만 `prospective`로 분류하고, 다른 깨진 내부 링크는 그대로 실패시킵니다. 최종
-`learning/<release>` tip에서는 prospective 예외가 0개이고 모든 링크가 실제 path로 해소돼야 합니다.
-Answers와 practices commit은 이 링크를 고치기 위해 `docs/README.md`를 다시 변경하지 않습니다.
+Source 사실과 충돌하면 source가 우선합니다. 한 branch의 문장이 더 자세해도 틀리면 폐기하고, 여러
+branch의 장점이 나뉘어 있으면 서로 복사·치환하지 않고 final source를 다시 읽어 새 문장으로 작성합니다.
+판단이 해소되지 않은 stable ID가 하나라도 있으면 `learning/current`를 확정하거나 old branch를 삭제하지
+않습니다.
 
-이 순서는 Git publication 순서입니다. 학습자는 같은 자료를 다음 소비 순서로 사용합니다.
+Document Box disposition ledger에는 다음 metadata만 남깁니다. 삭제할 본문을 복제하거나 bundle로
+보존하지 않습니다.
 
 ```text
-publication: notes → answers → practices
-learning: notes → practice → 실행/실패 → answer → 재구현
+repository / old learning ref / old tip / old tree
+stable ID / old path / blob OID / 채택·대체·폐기
+final source basis / 판단 근거 / reviewer / review 시각
 ```
 
-문제지는 답지를 모두 집필·검토한 뒤에만 공개하지만, 학습자는 답지를 열기 전에 문제지를 구현하고
-실패 근거를 남깁니다. 답지를 확인한 뒤에는 원본을 복사하지 않고 결정과 경계를 다시 구현합니다.
+## 10. `learning/current` active corpus
 
-기존 corpus를 byte 보존하면서 rewrite된 source를 별도로 설명해야 하면
-`docs/commits-<revision>/**`, `docs/practice-<revision>/**` 같은 독립 corpus를 둘 수 있습니다. 이때
-각 corpus는 자체 README, 전체 mapping, 제외·생략 사유와 수량 reconciliation을 가져야 합니다.
+`learning/current`는 고정 release tag 또는 승인된 source tip에서 분기하며 독자가 읽을 유일한 project
+learning branch입니다.
 
-Portfolio release처럼 notes가 없으면 answers → practices 두 commit만 둡니다. Learning branch를
-`main`에 merge하지 않습니다.
+1. 선택적 notes commit: `docs/README.md`, `notes/**`, `docs/notes/**`, `docs/reflection/**`
+2. answers commit: `docs/commits/**`와 answer ledger
+3. practices commit: `docs/practice/**`와 practice ledger
 
-동일 release의 supplemental/fixup learning branch는 만들지 않습니다. Source release에 종속되지 않는
-공통 개념, bridge와 독립 평가는 central-notes에 두며 프로젝트 corpus에 중복 발행하지 않습니다.
-기존 공개 learning ref의 migration·삭제·재작성은 이 규칙의 범위가 아닙니다.
+Active tip에는 다음 root가 정확히 하나씩만 존재해야 합니다.
 
-## 10. Rewrite와 carry-forward
+```text
+docs/README.md
+docs/commits/
+docs/practice/
+```
 
-- Hash만 바뀌어도 basis, parent, tree와 diff를 다시 대조합니다.
-- 의미가 달라지면 첫 영향 commit부터 답지를 다시 쓰고 문제지를 재파생합니다.
-- 같은 저장소의 이전 corpus만 carry-forward할 수 있으며 새 release에서 basis가 reachable하고
-  tree/diff/의미가 같음을 직접 확인해야 합니다.
-- 이전 publication처럼 새 release에서 비도달하는 답지는 old immutable learning branch에만 남기고
-  stable ID를 reserved로 기록합니다.
-- Source 결함을 발견하면 문서로 덮지 않습니다. 미공개 release는 source 확정 전으로 돌아가고,
-  공개 immutable release는 새 fix release와 새 ID로 연결합니다.
+- `docs/commits-<release>/**`, `docs/practice-<release>/**`, old corpus archive 또는 duplicate active
+  index를 두지 않습니다.
+- `docs/README.md`는 notes → practice → 실행/실패 → answer → 재구현의 소비 순서와 실제 link만
+  제공합니다. 답지 본문이나 source 운영 문서를 복제하지 않습니다.
+- Notes commit의 `docs/README.md`가 뒤 publication root를 prospective link로 가리킬 수 있지만 final
+  tip에는 prospective path가 0개여야 합니다. Answers/practices commit에서 index를 뒤늦게 고치지
+  않습니다.
+- 문제지는 답지 전체 작성·검토 뒤 공개하지만 독자는 답지를 열기 전에 문제지를 수행합니다.
+- Notes가 없으면 answers commit이 `docs/README.md`를 함께 만들고 practices까지 두 commit으로
+  발행합니다.
+- `learning/current`는 `main`에 merge하지 않습니다. 다른 `learning/*`, supplemental/fixup branch와
+  archive subtree를 만들지 않습니다.
 
-## 11. 검증과 승인
+## 11. Source rewrite와 corpus 재검증
+
+- Hash만 바뀌어도 basis, parent, tree와 diff를 모든 answer에서 다시 대조합니다.
+- 의미가 달라지면 첫 영향 commit부터 답지를 다시 쓰고 전체 answer barrier 뒤 문제지를 재파생합니다.
+- 기존 문장은 같은 저장소의 final source와 일치함을 직접 확인한 경우에만 판단 근거로 사용할 수
+  있습니다. 파일 복사나 release 이름 치환으로 carry-forward하지 않습니다.
+- Final source에서 비도달하는 old stable ID는 active corpus에서 제거하고 disposition ledger에
+  `폐기` 또는 `reserved` 사유를 남깁니다.
+- Source 결함을 발견하면 문서로 덮지 않습니다. Source freeze 전으로 돌아가 수정·검증하고 새 hash로
+  모든 mapping을 다시 시작합니다.
+- Old learning branch 삭제는 `commit-policy.md`의 destructive approval 뒤 수행합니다. Bundle이나
+  preservation tag는 만들지 않으며 remote garbage collection 뒤 복구 불가능할 수 있습니다.
+
+## 12. 검증과 승인
 
 - 각 답지를 metadata의 기준 commit과 tree에서 직접 대조합니다.
 - 문제지 H1, metadata, 작업 순서, H3/책임, 공개 계약과 검증 계약을 답지와 전수 대조합니다.
 - README link, mapping, omission과 수량을 실제 graph·파일과 확인합니다.
-- 기존 corpus subtree의 byte 동일성과 commit별 path allowlist를 확인합니다.
+- Active corpus root가 하나씩이고 versioned duplicate/archive가 없는지 확인합니다.
+- `reachable source commits = answers + exclusions`, `answers = practices + omissions`를 확인합니다.
+- Learning publication commit별 path allowlist와 실제 집필 timestamp를 확인합니다.
 - 저장소가 선언한 lint/typecheck/test/build/E2E를 isolated checkout에서 실행합니다.
-- 최종 담당자는 신규·수정 Central 본문, README, 답지와 문제지를 100% 직접 읽습니다.
+- 최종 담당자는 신규·수정 Central 본문, README, 답지와 문제지를 100% 직접 읽고 disposition마다
+  reviewer 결정을 기록합니다.
 - `git diff --check`와 `commit-policy.md`의 raw metadata/ref/push gate를 통과한 뒤에만 공개합니다.
