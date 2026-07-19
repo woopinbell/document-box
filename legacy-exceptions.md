@@ -60,13 +60,14 @@ source history와 단일 `learning/current` 진입점을 만드는 일회성 승
   허용하지 않습니다.
 - 단일 `docs(learning)` role은 위 exact object의 `format-printer`에만 허용합니다. 이후 새 learning
   publication은 전역의 notes → commits → practice 순서를 따릅니다.
-- `format-printer`, `signal-message-bus`, `thread-dining`, `small-shell`의 current source release에는
-  learner-navigation-only commit을 추가하지 않았습니다. 네 저장소의 main backlink 부재는 명시적
+- `format-printer`, `signal-message-bus`, `thread-dining`, `small-shell`, `stack-sort`의 current source release에는
+  learner-navigation-only commit을 추가하지 않았습니다. 다섯 저장소의 main backlink 부재는 명시적
   예외이며 current ref·학습 진입점은 Document Box 단계 카드가 소유합니다. 이 예외는 각각
   `be4966f3c1d176453a34b609036ef4998fa8b022`/`fe7a0d79cb9733f4f6871e5164a305907cd7b78e`,
   `ed859ce08c0d84154c21be6ffd6cdb1ea1c353c3`/`7563b6325e6c1a31bc63dbf22b935bb155e0e434`,
   `94ccaa4085af3decfd6d7bba2ff0b879954947e5`/`983bb1f4ce52ce33feb68955d9c0788670b12fb4`,
-  `0fb1f6bf4825890f7b657ce5de918aed52a8318d`/`3e7164817b3883783c80c6a1ced90531faf85efe`
+  `0fb1f6bf4825890f7b657ce5de918aed52a8318d`/`3e7164817b3883783c80c6a1ced90531faf85efe`,
+  `51325493a5e0e10f72dcfc04079d3b4f2c96488e`/`dc08a9be3ec27a5096be753ef7f7126ce8b713e9`
   main/tag object 쌍에만 적용하며 어느 object든 이동하면 backlink 검사를 다시 요구합니다.
 
 ### `small-shell` 정렬 실행 원장
@@ -146,6 +147,119 @@ contributing 47, discarded/reserved 37로 disposition했고 동일 blob 12개는
 `e5b66ee99c2b882ee5b7c8e5294ba69b1bc26101`입니다. Fresh clone에서 advertised ref가 `main`,
 `learning/current`, annotated `v1.0.0`뿐임을 확인하고 default/readline build·smoke, 두 reference,
 source provenance, corpus metadata·H3·links와 source drift zero gate를 다시 통과했습니다.
+
+### `stack-sort` 정렬 실행 원장
+
+2026-07-20 KST에 private `woopinbell/stack-sort`의 source와 learning ref를 exact lease로
+전환했습니다. Expected-old `main`은
+`e4ea219cd6bd0709f97837d8c3fd8785a6369b42`이었고 replacement `main`은
+`51325493a5e0e10f72dcfc04079d3b4f2c96488e`(tree
+`1b47a872f322d2e6dbff7989d4ab9ee569879199`)입니다. Annotated `v1.0.0` tag object
+`dc08a9be3ec27a5096be753ef7f7126ce8b713e9`는 replacement `main`으로 peel됩니다.
+
+Source-only rollback bundle은 old `main`과 아래 여섯 source tag만 담았고 learning ref는 포함하지
+않았습니다. Bundle SHA-256은
+`3e8ad03633180cd5c8ea5d20d6380e825b98f7e90a617c3afc930884921b9fd9`이며 bundle verify,
+strict fsck, restore clone과 일곱 ref exact 대조를 통과했습니다. Project와 governance publication 및
+fresh-clone gate가 green이 된 뒤 snapshot, bundle과 restore clone을 폐기하므로 active ref나 offline
+보존본으로 복구할 수 없습니다.
+
+삭제한 source tag의 ref/object/peeled target은 다음과 같습니다.
+
+| ref | old tag object | old peeled target |
+| --- | --- | --- |
+| `codex-5.6` | `ecc65f819d696c5aaaa61e9701be3bec6ceb5182` | `5d848093d7896df1d9525b3994ef07f2420d5255` |
+| `codex-5.6.1` | `66b459110efcf875ac5d2cd2cac770b9f7caf94c` | `10ed0997fc04352b2b8aaf7bcaebe6b8c189b6e1` |
+| `codex-5.7` | `fe8221d4d11599c0fba56abd7afa184ecb41928a` | `e4ea219cd6bd0709f97837d8c3fd8785a6369b42` |
+| `legacy/codex-5.6-monolith` | `328edc606898e6236f7f1555d75e2069670bce57` | `2b3e91d22c9450f1e949ba0c7dfd9f00970e5d79` |
+| `pre-history-clean-codex-5.7` | `822fde027b9229b73be36dccccceeab2208a7b15` | `10ed0997fc04352b2b8aaf7bcaebe6b8c189b6e1` |
+| `pre-learning-split-codex-5.6` | `4d49bb2624aed0f15639de2e9d8813399aed0e94` | `c50d15b58a0a071ca0e1692dacc8e1cbd58199b3` |
+
+Source replay는 old patch 책임 순서와 stable ID를 보존하고 source window
+`2023-10-09`–`2023-11-12` KST에 23개 commit을 배치했습니다. `exact`는 old/new tree와 stable
+patch-id가 모두 같음을 뜻하며, `carry`는 해당 책임 patch는 같지만 앞선 progressive Makefile이
+누적 tree에 포함된 경우입니다.
+
+| source ID | old commit | new commit | old tree → new tree | patch disposition |
+| --- | --- | --- | --- | --- |
+| `000` | `fad4c0630232523490fc28b729abd266f4929821` | `13876678e3139c02cca9ed8fd2da3a2da76ec257` | `e514ea99a6fc3ef3d67e2eccd6553863651ece62` → same | exact |
+| `001` | `9932299e85a775e9e26291bef2c851c2e441b7ea` | `d6e7306047c4851156bba535ee519f04cbfa8694` | `4b3923ff38d14766c899a396efde72e71f86314d` → `91368c69c58c96d397692b8225a725dd0cc9be3a` | progressive Makefile |
+| `002` | `b7b023962b164b6108e24a392e5f8819d792506a` | `5c33077c7edeb386d3d0ea83c9eeb76ee0f8ad13` | `60b74fd23acee0bfcc7eb887be7ff91552d29888` → `c2b113fc55c122c03fc124f5f4846e56a1740f2b` | carry |
+| `003` | `fb15679f8485251d238a9e875dc375c09ffa1792` | `27417c2a1e6a2f07bcb4bbfda0dc70fcf32f34fd` | `dba1fb12ebe6dac3d714d4a2e41c86a7a8bafa4b` → `8e57d1063384b795157cfab6f1c70ba3219693df` | carry |
+| `004` | `384643addd3fea2b0dc846678e06eccf8527d4ad` | `124b3ab5d4b0ef5e315e040da93a35fa77d41d30` | `b5f10d1190c368df74ed5dc53e56bde2ac8ea694` → `67d3013264c9b3901825c75c02013f49a8f9f012` | carry |
+| `005` | `0b9a9ceebd3b4af70dcf849639b8daa567a88ad7` | `204f19a609a9303f9023095ab5724e125aaa58bf` | `ceb2bf19c90d7c657bc3e74da7deed002b70bbcc` → `7b7e21895fef7b9363a9cf1857c102462107fdb2` | carry |
+| `006` | `c7a6f6fd695b4da4748cc06dba9381526a3fefc4` | `524fce413ead8bfc60e40109c2bf66082cded80f` | `3507863db03419f0fff7387d55c726f15d78dd85` → `fb44884777a44687cfa06d7abbb84af7284c373a` | carry |
+| `007` | `ca26c8119c3c0a1ace3209dfbc2891e0fbf9aaf1` | `cab2917d39ac7daa10837b4ccec77aeab69e84f4` | `034982dab7383d9130cd870332559d684953ee60` → `9cf4b7bf7dbee8bf8b1cdbed8175dbd0c1f8bd34` | carry |
+| `008` | `d906d701f9ca2b19c3533772f5f9fd5b8937b595` | `7aa47108ec559560b3a350ce11c22baf2e67cf1e` | `40d5d71bbdb424a9385228944bdff05dc87a8eac` → `369131932a15a6872b70030795087876c25c5a3f` | carry |
+| `009` | `319b98368a88a238746acbbdf2204277400c9b26` | `2ab2adeb49644fa9995ac251fe763936bf91371e` | `1d25d9449128bb876100cd2b023873c3eeafc87e` → `631269f677bab9ef9595e3d07f1e6bb631e9391b` | carry |
+| `010` | `392342dd3d464a43f1ee1a3dcaa3825d2a726b7a` | `4151d76ddbf1a10e69660542a29ded0d541ecbb2` | `f3e45dcfebe482db958a9ea77925b012c4fe879f` → `f00cb605348126382edb5800e409a23fe4731f35` | carry |
+| `011` | `b3d62e9f2868b485980ac508a11b1993d01cb67f` | `1ff025aaea55a4179813452907ee7acce6eaf540` | `1297402641a39b8ba3283f27ef71badc01bffb48` → `aa0f575d7d4bc7f7ce9faf760bc2cc122ab539c4` | carry |
+| `012` | `73916c7c065913bd996bd085dc1727a7309adbd7` | `57e8db3d2f2ed86d43a5852c9a4786b7e01ee9fc` | `c8dbf3d7d5d69510297f5b051a2afde5d4734b36` → `a34272b318164b9e5e0848f60d692373ce77ff15` | carry |
+| `013` | `d654fccca12a15437a983dc711778a16b53e64a7` | `8db2bfaf9aee27c0f8e5220f1a729978a3610b50` | `0491f1d943e896ef9c95e2cdf0eb3679bd83bf9c` → `f4a95bc94a4938c4a41e1aa8d80124cfb10abed0` | carry |
+| `014` | `2f7bd12809ea89f79047b5af597c51b16ddb57b9` | `bc1e0b8e368d46bfb1e6265667bcacd6f718b035` | `add7271d13ed662d3294fa240bd91215ee8e48f2` → `c6758fa5e362a495a86d1230bc695df3a0e3a1ec` | carry |
+| `015` | `a4832a636916573d64a774a8c270f2f181696fed` | `d0eb77c17a82c456aa85b78d7a704a34644a8126` | `9fe42766a77afb5a03e7f9b95e6fe9bbac4fa4e3` → `2b3a1a22bbb6ab3dc0eaa8af74273bdf5cbc02d7` | carry |
+| `016` | `722f378f6d4fa6185edae3143ebb6e055fd372a7` | `79d4206fc808abf64ed057501147d8daf0824112` | `754488282a9e53efff419e02da03645a01b14140` → same | strict Makefile convergence |
+| `017` | `5a9f8c4c7d4e81e0c1176b8393502b7c3ca117a7` | `db718e2f1880fb5fccec3a02c78891d21d5bd561` | `707f4338bfc5d0a468a010992c7dd887ebe484ba` → same | exact |
+| `018` | `f0ccb19173c8610c605cdd66786444d50363fe16` | `fc1f7a5a046aa460f7589975a9aacd4f4104b0e0` | `5f6efdb99d57d3be78298f57b2d42fd4fb747d83` → same | exact |
+| `019` | `6ca5a953ca725d52478901b5abfdbdd51a364276` | `cd9c7bb4d3ab89d7dc83b17af52411477f2c4792` | `5e4516bb3bf5492278abb81291b3987dcad7e618` → same | exact |
+| `020` | `703dcc6a859031ff6c28d302119ef6e8df07c94d` | `09810acbc05dda6515e4271ff5dc8e4151608eb4` | `6c6ba5bd8c1e8070c6268be5c17902874f69c24a` → same | exact |
+| `022` | `e805fd44141307ba62c4e37a7cd768f426c1b587` | `7502b7619da6affd225a6781a4ac5ee8f6aeb2d7` | `d21e3c2c4fe52ea85e375e4f3bc4572a99c51467` → same | exact |
+| `023` | `d031ec5e962c1113ec5b9984b68acb06c58954fb` | `51325493a5e0e10f72dcfc04079d3b4f2c96488e` | `e3cd624647f0210973434f15c63fc28737f2b834` → `1b47a872f322d2e6dbff7989d4ab9ee569879199` | neutral source docs |
+
+ID `001`의 progressive Makefile은 불완전한 역사적 tree도 존재하는 source만 빌드하게 하며 ID
+`002–015`의 원래 책임 patch는 그대로 보존했습니다. ID `016`에서 final strict Makefile로 수렴해
+old/new tree가 다시 같아집니다. ID `023`은 고정된 legacy-learning provenance를 중립 source 문서와
+역사 기간으로 바꿉니다. Expected-old `main`의 마지막
+`e4ea219cd6bd0709f97837d8c3fd8785a6369b42`는 source 기여가 없는 learner-navigation-only
+commit이므로 replay에서 제외하고 ID `024`를 removed 처리했습니다. ID `021`은 과거 mixed
+learning-support 책임이라 current source ID로 재사용하지 않습니다.
+
+Learning 후보는 다음 세 ref였습니다.
+
+| old ref | tip | tree | paths |
+| --- | --- | --- | ---: |
+| `learning/codex-5.6` | `c35154f879b974f09fd6a2ae7e5cfffd7a26e423` | `f4d6d15b0da971d25f083fe2a336534790e044eb` | 115 |
+| `learning/codex-5.6.1` | `c2187fc11369b86d0991cd875c4c423f7efe2c60` | `a497897034de5066c60d0fd610396a3eb3a2443a` | 118 |
+| `learning/codex-5.7` | `9d8d723597883457fe75c773819d708874c93608` | `68b6345c552056aac78332ed5ee21de444744e9c` | 124 |
+
+세 tip은 서로 ancestor가 아니지만 path set은 `5.6 ⊂ 5.6.1 ⊂ 5.7`이고 공통 111개 path의
+blob이 같습니다. Source 호환성, commit coverage, link·metadata와 유효한 고유 내용을 대조해 5.7을
+기준본으로 선택했습니다. 동일한 note/reflection blob은 다시 읽지 않았고 source crosswalk가 달라진
+answer와 고유·충돌 문서만 전담 집필자와 저장소 담당자가 한 번 직접 검토했습니다.
+
+최종 `learning/current`는 source 뒤의 actual-time publication 세 commit으로만 구성됩니다.
+
+| phase | commit | tree | parent | actual KST time |
+| --- | --- | --- | --- | --- |
+| notes | `2a8698752eda41e290a28bf6162b35d106cef884` | `3bb84064fcd8e0e1e47b62ce116d5af04ce8469d` | source `51325493a5e0e10f72dcfc04079d3b4f2c96488e` | `2026-07-20T04:12:57+09:00` |
+| answers | `f37d592b835298c526fe68c618e9b288e5f2e081` | `a8ee843721dfef80844f1d02ff78fa58427e568c` | notes | `2026-07-20T04:13:21+09:00` |
+| practices / tip | `c8d0b2c3670373246cc2756c56b62c90e60909dd` | `decaa25b9024bdba17ffcc6fa1f738abf2ae9ede` | answers | `2026-07-20T04:13:59+09:00` |
+
+Final corpus는 source 23 = answers 23 + exclusions 0, answers 23 = practices 21 + omissions 2
+(`000`, `023`)입니다. Stable ID `021`은 reserved, learner-navigation-only `024`는 removed입니다.
+ID `016`의 answer는 Makefile에서 제거된 cleanup/safeguard까지 reconcile했고, 대응 practice는 내부
+helper·fixture·control-flow를 누설하지 않도록 다시 파생했습니다. Practice 원장의 answer publication
+basis도 최종 answer commit `f37d592b835298c526fe68c618e9b288e5f2e081`로 고정했습니다.
+`docs/README.md`는 notes commit에, `docs/commits/**`는 answers commit에,
+`docs/practice/**`는 practices commit에만 두어 publication role별 허용 path를 분리했습니다.
+
+Replay 저장소의 `origin`이 GitHub가 아니라 local audit mirror였으므로 첫 push 출력의 destination을
+보고 원격 오인을 발견했습니다. 이 transaction은 local mirror만 바꿨고 GitHub ref는 그대로였습니다.
+`/opt/homebrew/bin/gh` API와 explicit HTTPS `ls-remote`로 GitHub expected-old를 다시 확인한 뒤
+`https://github.com/woopinbell/stack-sort.git`에 exact-lease atomic transaction을 실행했습니다.
+첫 fresh clone이 practice 원장의 stale answer basis를 잡아냈고, `learning/current`
+`431ad5bf1ec940fa4ae39db834c945bccc6cd911`만 exact lease로 `7326dc0…`에 교정했습니다.
+Authenticated remote-navigation은 이어 practice commit에 잘못 놓인 `docs/README.md`를 발견했습니다.
+본문을 다시 만들지 않고 그 exact blob을 notes phase로 옮기고 세 publication commit을 다시 연결한 뒤,
+remote `7326dc0a0efa073991e3cc19f876ee7747c42257` lease에서 final tip
+`c8d0b2c3670373246cc2756c56b62c90e60909dd`로 전환했습니다.
+
+최종 advertised project ref는 `main`, `learning/current`, annotated `v1.0.0`뿐입니다. Final fresh clone은
+23개 linear source commit, source identity·timestamp·message·provenance, strict build·test, Python
+reference, annotated tag와 strict fsck를 통과했습니다. Learning은 source 뒤 3개 publication commit,
+23 answer·21 practice의 ID/hash/parent/tree/H3 전수 대조, 상대 link 76개 missing 0, canonical path,
+source/config/test/reference drift 0을 통과했습니다. 삭제한 old learning ref는 별도 bundle이 없고 GitHub
+garbage collection 뒤 복구할 수 없습니다.
 
 ### Execution lane handoff 원장
 

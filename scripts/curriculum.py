@@ -94,6 +94,11 @@ UNCHANGED_NAVIGATION_RELEASES = {
         "main": "0fb1f6bf4825890f7b657ce5de918aed52a8318d",
         "tag": "3e7164817b3883783c80c6a1ced90531faf85efe",
     },
+    "stack-sort": {
+        "release": "v1.0.0",
+        "main": "51325493a5e0e10f72dcfc04079d3b4f2c96488e",
+        "tag": "dc08a9be3ec27a5096be753ef7f7126ce8b713e9",
+    },
     "web-boundary-inspector": {
         "release": "codex-5.7",
         "main": "33a62cf963bb48e55b304f7d80f6a582d9c90f81",
@@ -184,7 +189,13 @@ FRONTEND_APPLICATION_PORTFOLIO = {
     "learning": "learning/portfolio-v3.0.1",
 }
 MIGRATED_42_PROJECTS = frozenset(
-    {"format-printer", "signal-message-bus", "thread-dining", "small-shell"}
+    {
+        "format-printer",
+        "signal-message-bus",
+        "thread-dining",
+        "small-shell",
+        "stack-sort",
+    }
 )
 FROZEN_MONOLITHIC_LEARNING = {
     "format-printer": {
