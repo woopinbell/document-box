@@ -44,7 +44,7 @@ document-box 자체와 `central-notes` 같은 거버넌스 저장소는 dual-for
   함께 읽습니다.
 - 채용 데이터는 [`data/jobs/`](data/jobs/)의 최신 snapshot을 읽고 제출 직전에 원문을 확인합니다.
 
-복합 작업 순서는 다음과 같습니다.
+신규 프로젝트의 복합 작업 순서는 다음과 같습니다.
 
 ```text
 WORKFLOW로 범위·baseline·A/B/C 확정
@@ -56,6 +56,12 @@ WORKFLOW로 범위·baseline·A/B/C 확정
 → commit-policy의 lease·atomic push gate
 → fresh clone 검증 후 로컬 정리
 ```
+
+기존 프로젝트의 승인된 정렬 migration은 source freeze 뒤 기존 learning 후보의 tip·tree·path·blob을
+먼저 비교합니다. 동일 blob은 재독하지 않고 `oid-identical`, `metadata-only`, `direct-content`로
+disposition한 뒤 영향 answer와 대응 practice만 전담 집필자가 보정합니다. Source surface의 AI
+provenance 0건 gate와 저장소별 직렬 publication은 이 최적화의 영향을 받지 않습니다. Learning과
+governance 본문은 AI 식별자 제거 대상이 아닙니다.
 
 ## 권한과 충돌 처리
 

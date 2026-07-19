@@ -118,11 +118,13 @@ historical source implementation / refactor / test / source docs
   supplement 또는 fixup suffix를 붙인 다른 `learning/*` branch를 만들지 않습니다.
 - 학습자는 Document Box 단계 카드가 가리키는 `learning/current/docs/README.md` 하나에서 시작합니다.
   어느 branch가 최신인지 날짜나 이름으로 추측하게 하지 않습니다.
-- `learning/current`는 `main`에 merge하지 않습니다. Source release가 바뀌면 새 고정 basis에서 corpus를
-  전수 재검증한 뒤 승인된 publication으로 갱신합니다.
-- `learning/current`의 non-fast-forward 갱신은 old/new tip·tree, 전체 file disposition, 담당자의 100%
-  직접 검토, 복구 불가 고지와 destructive approval을 요구합니다. Old tip을 branch, tag 또는 bundle로
-  보존하지 않고 exact expected-old lease로만 교체합니다.
+- `learning/current`는 `main`에 merge하지 않습니다. Source release가 바뀌면 새 고정 basis에서 전체
+  corpus의 hash·tree·patch·path·metadata·link를 기계적으로 재검증하고, 신규·변경·고유·충돌 본문만
+  직접 검토한 뒤 승인된 publication으로 갱신합니다.
+- `learning/current`의 non-fast-forward 갱신은 old/new tip·tree, 전체 file disposition, 신규·변경·고유·
+  충돌 파일의 직접 검토, 복구 불가 고지와 destructive approval을 요구합니다. 동일 blob과 final source
+  crosswalk가 증명된 본문은 재독하지 않습니다. Old tip을 branch, tag 또는 bundle로 보존하지 않고 exact
+  expected-old lease로만 교체합니다.
 - 과거 release의 source는 annotated tag가 고정합니다. 과거 집필 branch를 장기 archive로 유지하지
   않으며 active corpus 안에도 versioned duplicate나 archive subtree를 만들지 않습니다.
 - 임시 `feature/*`, `fix/*`, `chore/*`는 local 작업에만 사용하고 publication 뒤 제거합니다. Agent·도구
@@ -172,8 +174,13 @@ neutral implementation / refactor / test
    crosswalk합니다.
 4. Source ref·tag·metadata·tracked path의 금지 provenance만 제거합니다. 제품 기능상 필요한 일치는
    사전 allowlist 없이는 유지하지 않습니다.
-5. 기존 learning branch 중 어느 하나도 자동 정본으로 선택하지 않습니다. 모든 corpus를 final source와
-   파일별로 대조해 `learning/current`를 수작업 재구성하고, 그 뒤 기존 `learning/*`를 모두 삭제합니다.
+5. 기존 learning branch 중 어느 하나도 이름·날짜·tip만으로 자동 정본으로 선택하지 않습니다. 모든
+   후보의 tip·tree·path·blob을 먼저 비교하고 동일 blob은 한 번만 판정합니다. 완전 포함관계면 final
+   source와 호환되는 유효 상위 corpus를 기준본으로 삼고, divergent corpus는 source 호환성, commit
+   coverage, link·metadata 정확성, 유효한 고유 내용 순으로 판정합니다. 전담 집필자는 신규·변경·고유·
+   충돌 blob과 source crosswalk가 달라진 answer·practice만 직접 읽고 `learning/current`를 수작업으로
+   보정합니다. 그 뒤 기존 `learning/*`를 모두 삭제합니다. 이 diff 중심 절차는 source ref·tag·metadata·
+   trailer·tracked path/blob의 금지 provenance 0건 gate를 어떤 경우에도 완화하지 않습니다.
 6. 삭제할 learning branch는 bundle, preservation tag 또는 active archive subtree에 보존하지 않습니다.
    Document Box 원장에는 old tip, path/blob, 채택·대체·폐기 판단과 reviewer만 남깁니다. 삭제는 원격
    garbage collection 뒤 복구할 수 없음을 approval에서 명시합니다.
@@ -204,8 +211,9 @@ learning ref가 임시 독자 정본입니다. 독자에게 여러 branch 비교
   개발과 본문 집필을 병행하지 않습니다.
 - 저장소마다 개발자와 다른 전담 집필자 한 명만 둡니다. 집필자는 source를 수정하거나
   commit/tag/push하지 않습니다.
-- 저장소 담당자가 신규 Central·learning 본문을 100% 직접 읽고 허용 path만 stage한 뒤 publication
-  commit을 만듭니다.
+- 저장소 담당자가 신규 Central·learning 본문은 100% 직접 읽고, 기존 corpus 통합에서는 신규·변경·
+  고유·충돌 본문을 한 번 직접 읽은 뒤 허용 path만 stage하여 publication commit을 만듭니다. 동일 blob과
+  final source crosswalk가 증명된 기존 본문은 file disposition과 기계 gate로 검증합니다.
 
 ## 8. Destructive approval과 push gate
 
@@ -217,7 +225,7 @@ repository / remote
 old main / expected-old SHA / new main
 old source tag object·peeled SHA / new tag object·peeled SHA / 삭제 tag
 old learning refs·tips·trees / new learning/current tip·tree
-corpus path·blob disposition / reviewer
+corpus path·blob disposition / review mode / reviewer
 source-only rollback bundle / SHA-256 / restore 결과
 삭제 뒤 learning corpus가 복구 불가능해질 수 있다는 고지
 ```
