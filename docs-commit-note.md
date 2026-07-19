@@ -4,6 +4,12 @@
 재구성하는 정본입니다. Ref topology, identity와 push는 [`commit-policy.md`](commit-policy.md),
 작업 격리와 검증은 [`WORKFLOW.md`](WORKFLOW.md)를 함께 따릅니다.
 
+집필자와 저장소 담당자는 source freeze 뒤 본문 작업을 시작하기 전에 `document-box/main`의 exact policy
+SHA를 기록하고 이 문서 전체를 직접 읽습니다. Handoff 문서, 기존 answer와 다른 세션의 요약은 이
+규칙을 대신하지 않습니다. 집필 중 policy SHA가 바뀌면 answer→practice barrier 또는 publication 전에
+변경된 hunk를 읽고 review mode, active path, metadata, 수량식과 집필 순서에 미치는 영향만 다시
+판정합니다. 영향 없는 동일 blob을 이 이유만으로 재독하지 않습니다.
+
 ## 1. 핵심 불변식
 
 1. commit object, parent, diff와 **그 commit의 tree**가 사실의 정본입니다.
@@ -34,6 +40,9 @@ source 전체 gate green
 
 - 저장소마다 source 개발자와 다른 전담 집필자 한 명이 Central gap, answers와 practices 본문을
   맡습니다. 경로나 번호를 나눠 다른 본문 작성자를 동시에 투입하지 않습니다.
+- 서로 다른 execution lane의 서로 다른 저장소에는 각각 전담 집필자 한 명이 존재할 수 있습니다. 이
+  병행 허용은 저장소 사이에만 적용하며, 같은 저장소의 source 개발·answer·practice를 여러 세션이나
+  작성자에게 나누는 근거가 아닙니다.
 - Source freeze 전에는 본문을 쓰지 않습니다. 기존 corpus의 blob/tree/diff inventory는 읽기 전용으로
   미리 만들 수 있지만 source 의미 판정과 본문 보정은 final basis freeze 뒤에만 합니다. 신규 트랙
   프로젝트는 현재 저장소의 집필·publication과 fresh-clone gate까지 끝난 뒤 다음 저장소 source 개발로
@@ -48,6 +57,9 @@ source 전체 gate green
   disposition과 기계적 crosswalk로 검증합니다. 허용 path만 stage하며 집필자에게 publication 권한을
   위임하지 않습니다.
 - Learning·Central commit은 실제 집필·검토 시각을 사용합니다. Source window로 backdate하지 않습니다.
+- 집필자는 publication slot을 획득하지 않고 remote ref와 governance를 변경하지 않습니다. 저장소
+  담당자가 검토·stage·commit을 끝낸 뒤 `WORKFLOW.md`의 전역 slot과 destructive approval gate를
+  통과해 공개합니다.
 
 ## 3. 절대 금지
 

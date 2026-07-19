@@ -12,8 +12,18 @@ source history와 단일 `learning/current` 진입점을 만드는 일회성 승
 한해 아래 모든 legacy 표의 source object 불변, learning ref 불변과 corpus byte 보존 선언보다
 우선합니다.
 
-- 실행 순서는 기존 42 10개 → Frontend 5개 → Backend 12개이며 한 저장소의 source, 집필,
-  publication과 fresh-clone을 끝낸 뒤 다음 저장소로 이동합니다. 원격 mutation은 병렬화하지 않습니다.
+- 실행은 두 lane으로 나눕니다. 42 lane은 기존 42 저장소를 현재 순서로 정리한 뒤, 두 lane의 기존 27개
+  정리가 모두 끝났다는 barrier를 확인하고 신규 `c-foundation` → `buffered-line-reader` →
+  `cpp-foundation`을 각각 개발·집필·publication까지 직렬 완료합니다. Delegated lane은 Frontend 5개를
+  순서대로 끝낸 뒤 Backend 12개를 순서대로 처리합니다.
+- 두 lane은 소유 저장소가 겹치지 않는 read-only 감사, 격리 source replay, build/test와 learning diff
+  작업을 병행할 수 있습니다. 한 저장소의 source → freeze → 단일 집필자 → publication → fresh-clone과
+  각 lane의 저장소 순서는 계속 직렬입니다. 모든 project·governance 원격 mutation은
+  `WORKFLOW.md`의 전역 publication slot으로 하나씩만 수행합니다.
+- 42 lane은 신규 세 저장소, 42 단계 순서와 최종 30개 수량·전체 navigation 통합을 소유합니다.
+  Delegated lane은 기존 Frontend·Backend 저장소와 그 track entry·단계 카드만 수정하며 42 저장소,
+  신규 프로젝트, 전체 프로젝트 수와 최종 42 sequence를 변경하지 않습니다. 공유 registry나 governance
+  문서는 slot 획득 뒤 최신 `main`에 담당 entry만 다시 적용합니다.
 - 기존 source는 root부터 patch·parent·책임 순서를 보존해 replay하고 아래 `sourceWindow`로 timestamp를
   다시 배치합니다. Learner navigation-only commit은 source graph에서 제외합니다.
 - 실제 source·test·build·reference 수정은 characterization과 green gate를 거쳐 역사적 책임 위치에
@@ -34,6 +44,23 @@ source history와 단일 `learning/current` 진입점을 만드는 일회성 승
   fresh-clone 검증이 끝나면 삭제합니다.
 - 아래 정확한 원장이 완성되지 않은 저장소에는 이 절이 force-push, tag 이동·삭제 또는 branch 삭제
   권한을 주지 않습니다.
+
+### Execution lane handoff 원장
+
+다른 세션으로 lane을 넘길 때 handoff 문서는 최소한 다음을 고정합니다.
+
+```text
+lane / 담당 track / 저장소 순서 / hard exclude
+정본 policy commit / sourceWindow / release 의미 / branch topology
+완료·진행·미착수 저장소 / remote expected-old / local artifact 위치
+source-only bundle SHA-256 / learning disposition / approval 상태
+publication slot 구현 / governance 허용 path / 최종 통합 소유자
+```
+
+Handoff에는 token, credential, private key와 삭제할 learning 본문 bytes를 복제하지 않습니다. 인수 세션은
+문서에 적힌 SHA를 그대로 신뢰하지 않고 첫 작업에서 `document-box/main`과 대상 remote ref를 다시 읽어
+drift를 확인합니다. 소유권이 겹치거나 publication slot 상태가 불명확하면 remote mutation만 중단하고
+사용자에게 보고합니다.
 
 ### 저장소 실행 원장
 

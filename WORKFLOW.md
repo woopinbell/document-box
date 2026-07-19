@@ -2,10 +2,19 @@
 
 기능 구현, 행동 보존형 refactor, 문서 정리, Git history 재편과 저장공간 정리를 같은 안전 절차로
 수행하는 실행 정본입니다. 대상 저장소마다 독립적으로 적용합니다. 일반 작업에서는 한 저장소의 실패가
-다른 안전한 저장소 진행을 막지 않지만, 승인된 30개 정렬 migration은 현재 저장소의 publication과
-fresh-clone이 끝날 때까지 다음 저장소로 넘어가지 않는 stop-the-line 순서를 따릅니다.
+다른 안전한 저장소 진행을 막지 않습니다. 승인된 30개 정렬 migration은 `legacy-exceptions.md`에 등록한
+execution lane마다 현재 저장소의 publication과 fresh-clone이 끝날 때까지 같은 lane의 다음 저장소로
+넘어가지 않는 stop-the-line 순서를 따릅니다. 서로 다른 lane의 겹치지 않는 로컬 작업은 병행할 수 있지만
+원격 mutation과 governance publication은 전역으로 하나씩만 수행합니다.
 
 ## 1. Preflight
+
+작업을 시작하거나 다른 세션에서 인수할 때 먼저 `document-box/main`의 exact commit SHA를 고정하고
+`commit-policy.md`, `docs-commit-note.md`, 이 문서, `legacy-exceptions.md`, `tracks/curriculum.json`과 담당
+트랙 문서를 현재 object에서 끝까지 읽습니다. 대화 요약, Desktop handoff와 이전 세션의 기억은 범위와
+상태를 전달할 뿐 이 read barrier를 대신하지 않습니다. 작업 중 `document-box/main`이 전진하면 다음
+phase나 publication 전에 old policy SHA와 new policy SHA의 diff를 읽고, 변경된 규칙이 현재 candidate,
+원장과 승인 자료에 반영됐는지 확인합니다. 반영 여부가 불명확하면 remote mutation만 중단합니다.
 
 1. 대상과 제외 대상을 절대경로로 고정합니다. 사용자 변경이 있는 원본, 별도 세션 소유 저장소와
    명시적 hard-exclude 경로는 checkout·restore·clean·reset하지 않습니다.
@@ -36,6 +45,28 @@ fresh-clone이 끝날 때까지 다음 저장소로 넘어가지 않는 stop-the
 - 오케스트레이터는 최종 diff와 신규 문서를 전부 직접 읽습니다. 기존 learning corpus의 동일 blob은
   재독하지 않고 신규·변경·고유·충돌 파일만 직접 읽습니다.
 
+### 다중 세션 execution lane과 publication slot
+
+- 한 저장소는 한 시점에 정확히 한 execution lane과 한 담당 세션만 소유합니다. 다른 lane은 그 저장소의
+  clone, worktree, candidate, bundle, ref와 원장을 수정하지 않습니다.
+- 서로 다른 저장소의 preflight, read-only graph 감사, 격리 candidate replay, build/test와 diff matrix는
+  절대경로가 겹치지 않을 때 lane 사이에서 병행할 수 있습니다. 같은 저장소의 source 개발과 집필,
+  같은 corpus의 여러 집필자, 같은 원격의 mutation은 병행하지 않습니다.
+- `publication slot`은 이번 migration 전체에서 원격 변경 권한을 한 세션에만 주는 전역 배타 lease입니다.
+  Project push, force-with-lease, tag·branch 생성·이동·삭제, private repository 생성, `document-box/main`과
+  `central-notes/main` publication은 slot 소유자만 수행합니다. Slot은 Git ref나 보존 branch가 아니며
+  handoff 문서가 고정한 로컬 원자적 lock 또는 사용자의 명시적 단일 소유권으로 구현합니다.
+- Destructive approval을 기다리는 동안 slot을 점유하지 않습니다. 승인을 받은 세션은 push 직전에 slot을
+  획득하고 모든 remote ref와 governance `main`을 다시 읽습니다. Expected-old가 승인 자료와 다르면 slot을
+  해제하고 새 exact 값으로 approval을 다시 받습니다.
+- Slot이 이미 점유됐으면 원격 명령을 재시도하거나 lock을 임의 제거하지 않습니다. 현재 저장소의 로컬
+  검증 결과를 보존하고 소유자가 publication·fresh-clone 검증을 끝낼 때까지 원격 단계만 멈춥니다.
+- Governance clone이 slot 획득 전 기준보다 뒤처졌으면 stale commit을 force-push하지 않습니다. 최신
+  `main`에서 담당 lane의 허용 path·entry 변경만 다시 적용하고 전체 governance gate를 재실행한 뒤
+  actual-time commit을 만듭니다. 다른 lane의 commit, registry entry, 단계 카드와 원장을 덮지 않습니다.
+- 같은 lane은 현재 저장소의 remote publication, governance pointer와 fresh-clone이 모두 green이어야
+  다음 저장소로 이동합니다. 다른 lane은 자기 소유 저장소의 로컬 작업을 계속할 수 있습니다.
+
 ### Source 개발과 집필 격리
 
 - 신규 프로젝트는 source 전체 gate가 green이고 release tag·basis가 freeze된 뒤에만 Central Notes와
@@ -54,7 +85,7 @@ fresh-clone이 끝날 때까지 다음 저장소로 넘어가지 않는 stop-the
   다음 저장소 source 개발을 시작합니다.
 - 기존 저장소 migration도 source replay → release freeze → learning diff 통합·필요한 본문 보정 →
   `learning/current` → publication → fresh-clone을 한 저장소에서 모두 끝낸 뒤 다음 저장소로 이동합니다.
-  원격 mutation은 병렬화하지 않습니다.
+  이 순서는 lane 내부에서 직렬이며, 모든 lane의 원격 mutation은 위 publication slot으로 직렬화합니다.
 
 ## 3. Baseline과 A/B/C 판정
 

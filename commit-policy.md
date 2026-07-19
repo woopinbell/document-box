@@ -4,6 +4,12 @@
 검증은 [`WORKFLOW.md`](WORKFLOW.md), 답지·문제지 내용은
 [`docs-commit-note.md`](docs-commit-note.md)가 소유합니다.
 
+새 세션과 handoff 인수자는 작업 전에 `document-box/main`의 exact SHA를 기록하고 이 문서 전체와
+`WORKFLOW.md`, `docs-commit-note.md`, `legacy-exceptions.md`, 현재 registry·담당 트랙 문서를 다시
+읽습니다. 일회성 Desktop handoff, 대화 요약과 이전 candidate의 설명은 이 정본을 대체하거나 예외를
+추가하지 않습니다. 작업 중 policy SHA가 바뀌면 push 전에 old↔new policy diff를 읽고 candidate의
+identity, timestamp, topology, provenance, approval 자료를 새 정본에 다시 대조합니다.
+
 ## 1. Canonical commit object
 
 모든 새 commit과 annotated tag에 다음 raw identity를 사용합니다.
@@ -162,7 +168,10 @@ neutral implementation / refactor / test
 ## 6. 전 트랙 source·learning 정렬 migration
 
 2026-07에 승인된 migration은 기존 27개 프로젝트와 신규 3개 프로젝트를 최종 30개 curriculum으로
-정렬하는 일회성 작업입니다. 저장소마다 다음 경계를 모두 지킵니다.
+정렬하는 일회성 작업입니다. `legacy-exceptions.md`의 execution lane 배정은 서로 겹치지 않는 저장소의
+로컬 감사·candidate·검증을 여러 세션에서 병행할 수 있게 합니다. 이 배정은 저장소 내부 직렬 gate,
+source freeze 뒤 단일 집필자 원칙이나 전역 publication slot을 완화하지 않습니다. 저장소마다 다음
+경계를 모두 지킵니다.
 
 1. Remote refs와 expected-old SHA를 고정하고 정확한 source ref만 fetch한 bare snapshot, bundle,
    복원 clone과 SHA-256을 준비합니다. 이 bundle은 rollback용 임시 안전장치이며
@@ -188,8 +197,9 @@ neutral implementation / refactor / test
    rollback bundle은 push와 fresh-clone 검증이 끝난 뒤 삭제합니다.
 8. Old/new commit, parent, tree, patch 또는 blob 근거, timestamp와 제거·통합 내용을 전수
    crosswalk합니다. Patch 순서를 바꾸거나 commit을 합치고 나누면 책임과 검증 근거를 별도로 적습니다.
-9. 저장소별 source, 집필, publication과 fresh-clone gate를 끝낸 뒤 다음 저장소로 이동합니다. 원격
-   mutation은 병렬화하지 않습니다.
+9. 저장소별 source, 집필, publication과 fresh-clone gate를 끝낸 뒤 같은 lane의 다음 저장소로
+   이동합니다. 다른 lane의 겹치지 않는 로컬 작업은 병행할 수 있지만 project와 governance의 원격
+   mutation은 `WORKFLOW.md`의 전역 publication slot 아래 하나씩만 수행합니다.
 
 각 저장소가 전환되기 전에는 기존 `tracks/curriculum.json`과 단계 카드가 가리키는 단 하나의 legacy
 learning ref가 임시 독자 정본입니다. 독자에게 여러 branch 비교를 요구하지 않습니다. 저장소 cutover와
@@ -219,6 +229,12 @@ learning ref가 임시 독자 정본입니다. 독자에게 여러 branch 비교
 
 Force-push, `learning/current` non-FF 갱신, tag 이동·삭제와 branch 삭제 전에는 저장소별로 다음 실제
 값을 다시 제시하고 명시적 승인을 받습니다.
+
+여러 execution lane이 동작 중이면 승인은 publication slot을 대신하지 않습니다. 승인 뒤 slot을 획득한
+세션만 remote ref와 governance `main` expected-old를 다시 읽고 push할 수 있습니다. Slot 획득 뒤 drift가
+발견되면 원격을 변경하지 않고 slot을 해제한 뒤 새 exact 값으로 다시 승인받습니다. `document-box`와
+`central-notes`는 최신 `main` 위에 담당 lane의 허용 변경만 actual-time commit으로 적용하며 다른 lane의
+변경을 rebase·reset·force-push로 제거하지 않습니다.
 
 ```text
 repository / remote
