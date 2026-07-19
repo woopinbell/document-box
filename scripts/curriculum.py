@@ -99,6 +99,11 @@ UNCHANGED_NAVIGATION_RELEASES = {
         "main": "51325493a5e0e10f72dcfc04079d3b4f2c96488e",
         "tag": "dc08a9be3ec27a5096be753ef7f7126ce8b713e9",
     },
+    "stl-container": {
+        "release": "v1.0.0",
+        "main": "6f875e0677674d86145188d8558e3cf56b61c9cb",
+        "tag": "d6ff0b12322c9221d47f308097dc4b4980f3b483",
+    },
     "web-boundary-inspector": {
         "release": "codex-5.7",
         "main": "33a62cf963bb48e55b304f7d80f6a582d9c90f81",
@@ -195,6 +200,7 @@ MIGRATED_42_PROJECTS = frozenset(
         "thread-dining",
         "small-shell",
         "stack-sort",
+        "stl-container",
     }
 )
 FROZEN_MONOLITHIC_LEARNING = {
