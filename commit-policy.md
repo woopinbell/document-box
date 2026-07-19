@@ -18,18 +18,67 @@ seungwoo7050 <seungwoo7050@naver.com>
 - timestamp 중복과 기계적인 정각 배치를 피합니다.
 - annotated tagger도 같은 identity, KST 근무시간과 고유 timestamp를 사용합니다.
 - `.mailmap` 표시 통합은 준수가 아닙니다. raw object를 직접 검사합니다.
-- `Co-authored-by`, AI 도구나 다른 contributor trailer를 넣지 않습니다.
+- `Co-authored-by`, `Generated-by`, AI 도구나 다른 contributor를 표시하는 trailer를 넣지 않습니다.
+
+### Source surface와 도구 provenance
+
+개발 저장소의 **source surface**는 다음 ref와 그 ref에서 도달 가능한 commit·tree 전체입니다.
+
+- `main`과 구현·수정·release 준비를 운반하는 모든 development branch
+- release tag, `template-vN`과 deployable tag의 이름, annotated tag object와 peeled graph
+- 원격에 공개된 source preservation·diagnostic ref와 그 reachable graph
+
+`learning/*`은 집필 surface이며 source surface가 아닙니다. 거버넌스·집필 저장소인 `document-box`와
+`central-notes`의 `main`도 이 절의 source 도구 식별자 금지 대상에서 제외합니다. 이 제외는 정확한
+집필 근거나 migration 기록에 도구 이름을 적을 수 있다는 뜻일 뿐, 새 commit의 raw identity·timestamp,
+`Co-authored-by`·`Generated-by` 금지와 일반 message 품질 규칙을 완화하지 않습니다.
+
+Source surface에는 작업 도구의 provenance를 남기지 않습니다. 대소문자를 구분하지 않고 `codex`,
+`openai`, `chatgpt`, `claude`, `copilot`, `gemini`, `anthropic`, `cursor`와 같은 식별자를 다음 위치에서
+금지합니다.
+
+- branch·tag·preservation·diagnostic ref 이름
+- annotated tag message와 tag metadata
+- commit author/committer metadata, subject, body와 trailer
+- tracked tool-control artifact의 path·파일명·본문: 도구별 instruction, agent 설정, editor rule,
+  prompt와 session control 파일
+
+실제 제품 기능, protocol 또는 fixture가 위 문자열을 필요로 하면 `document-box`의 승인 원장에 저장소,
+정확한 path와 token, 제품상 이유, 검토 근거를 좁게 등록한 allowlist만 인정합니다. Allowlist는 제품
+source·test의 명시 path에만 적용하며 ref/tag 이름, commit metadata·trailer 또는 작업 도구 설정을
+정당화하지 않습니다. 등록되지 않은 일치는 의도 추정 없이 실패로 처리합니다.
 
 ### 실제 시각과 학습 순서
 
 - Author/committer timestamp는 commit object를 실제 작성·재작성한 시각입니다. 트랙의 학습 순서나
-  과거 수행 시기를 연출하려고 backdate하지 않습니다.
+  과거 수행 시기를 연출하려고 backdate하지 않습니다. 단, 아래에 등록된 일회성 source-provenance
+  migration의 replay object와 `legacy-exceptions.md`에 등록된 세 curriculum-insertion 저장소의 최초
+  source release만 각각 승인된 timestamp 규칙을 사용합니다.
 - 새 이력에서는 모든 parent가 child보다 늦지 않아야 하고 미래 시각을 만들지 않습니다. 이미 공개된
   과거 object의 겹침·시각 결함은 예외 원장과 보존 ref로 설명하되 object 자체를 고치지 않습니다.
+  Source-provenance replay는 old timestamp pair를 그대로 보존하고 그 불일치를 crosswalk에 기록합니다.
 - 프로젝트 사이의 curriculum 순서는 commit 날짜 정렬이 아니라 Document Box registry와 단계 카드의
   `prev`/`next` gate가 소유합니다. 같은 기간에 병행된 실제 개발 기록은 그대로 유지합니다.
-- History cleanup이나 clean-root 재설계는 그 유지보수 작업이 일어난 현재 시각을 사용하고, 대체된
-  과거 main은 annotated preservation tag에서 도달 가능하게 둡니다.
+- 일반 history cleanup이나 clean-root 재설계는 그 유지보수 작업이 일어난 현재 시각을 사용하고,
+  대체된 과거 main은 annotated preservation tag에서 도달 가능하게 둡니다. Source-provenance
+  migration에서 정화 전 graph에 금지 식별자가 남으면 원격 preservation tag를 만들지 않고 검증된
+  offline bundle만 복구 경계로 사용합니다.
+
+### 일회성 curriculum-insertion timestamp
+
+트랙의 기존 단계 사이에 새 source history를 삽입하는 `c-foundation`, `buffered-line-reader`,
+`cpp-foundation`의 최초 source commit부터 annotated `v1.0.0` tagger까지만
+[`legacy-exceptions.md`](legacy-exceptions.md)에 등록된 역사적 KST 구간을 사용할 수 있습니다.
+
+- Source commit은 author와 committer timestamp를 동일하게 두고 `+09:00`, 09:00–21:59 KST와 고유한
+  분·초를 사용하며 모든 parent timestamp가 child보다 늦지 않아야 합니다.
+- 기본 구간 안에서 실제 책임 단위와 검증 순서에 따라 배치합니다. 품질 gate를 끝내는 데 필요한
+  경우에만 등록된 최종 연장일까지 사용할 수 있으며 commit 수를 채우기 위한 날짜·변경을 만들지
+  않습니다.
+- 이 예외는 세 저장소의 `v1.0.0` source graph와 해당 annotated tagger에만 적용합니다. 다른 저장소,
+  다른 release, `v1.0.0` 뒤의 fix·maintenance commit에는 재사용하지 않습니다.
+- `learning/v1.0.0`과 Central Notes의 집필·publication commit은 역사적 source 구간을 사용하지 않고
+  실제 집필 시각을 따릅니다.
 
 ## 2. Commit message
 
@@ -101,11 +150,16 @@ implementation / refactor / fix / test
   전자는 원장과 object reachability를 검사하고, 후자는 예외 없이 실패로 처리합니다.
 - 과거 object가 immutable이라는 사실은 현재 `main`, 최신 annotated tag, learning path 경계와 raw
   metadata 검사를 완화하지 않습니다.
+- 이 절의 source object 불변 규칙은 `legacy-exceptions.md`에 등록된 일회성 source-provenance
+  migration 대상에 한해서만 대체됩니다. Learning ref와 corpus 불변 규칙은 그 migration에서도
+  그대로 유지합니다.
 
 ## 4. 임시 branch
 
 `feature/*`, `fix/*`, `chore/*`와 작업용 candidate branch는 구현 중에만 사용합니다.
 
+- Source development branch는 `feature/<기능>`, `fix/<결함>`, `chore/<유지보수>`처럼 변경 책임을
+  드러내는 기능적 이름을 사용합니다. Agent·도구 이름이나 provenance를 branch 이름에 넣지 않습니다.
 - main 반영 여부를 patch/tree로 확인합니다.
 - main에 없는 고유 변경의 가치와 보존 ref를 결정합니다.
 - bundle과 필요한 annotated legacy tag를 검증한 뒤 원격 임시 branch를 삭제합니다.
@@ -157,6 +211,27 @@ neutral implementation / refactor / test
 Bundle은 push와 fresh-clone 검증이 끝날 때까지 보존합니다. 이후 사용자가 원격을 유일한 장기
 보존본으로 선택한 경우에만 삭제합니다.
 
+### 일회성 source-provenance migration
+
+승인된 기존 프로젝트 source 정화는 일반 history rewrite와 분리된 단 한 번의 migration입니다.
+대상 저장소와 ref는 mutation 전에 [`legacy-exceptions.md`](legacy-exceptions.md)에 등록하며 다음 경계를
+모두 지킵니다.
+
+1. 금지된 ref/tag provenance 또는 reachable source provenance 제거에 필요한 object만 교체합니다.
+   새 프로젝트의 개발 기간 연출, 무관한 refactor, message 미화나 commit 재분할에 사용하지 않습니다.
+2. Replay는 root부터 기존 parent topology와 patch 순서를 따릅니다. 각 old commit의 author date와
+   committer date를 서로 합치거나 현재 시각으로 바꾸지 않고 각각 원래 값을 보존합니다.
+3. Old/new commit, parent, tree, patch 또는 blob 근거, 제거한 provenance와 변경 path를 전수
+   crosswalk합니다. 도구-control blob 제거로 tree가 달라지는 경우 그 차이를 별도로 설명합니다.
+4. Mutation 전에 remote ref와 expected-old SHA를 고정하고 mirror, all-refs bundle, `bundle verify`,
+   복원 clone과 bundle SHA-256을 기록합니다. 정화 전 unique graph는 remote tag가 아니라 이 verified
+   offline bundle에서 복구합니다.
+5. `learning/*` ref와 corpus bytes는 이동·재작성·삭제하지 않습니다. Learning ref가 old source
+   graph를 ancestor로 계속 보존하는 것은 이 migration의 명시적 예외이며 정화 실패가 아닙니다.
+6. 저장소별 exact ref, expected-old SHA, 삭제할 tag와 복구 bundle을 다시 제시한 뒤 destructive
+   approval을 받아 lease/atomic gate로 공개합니다. 등록되지 않은 저장소나 후속 신규 object에는 이
+   예외를 재사용하지 않습니다.
+
 ## 7. Commit과 stage
 
 - 검증을 통과한 뒤에만 commit합니다.
@@ -165,6 +240,10 @@ Bundle은 push와 fresh-clone 검증이 끝날 때까지 보존합니다. 이후
 - 전체 `git add -A`를 쓰지 않고 허용 경로만 명시적으로 stage합니다.
 - 서브에이전트는 commit/tag/push하지 않습니다. 저장소 담당 세션이 최종 검토 뒤 한 번 수행합니다.
 - source hash가 바뀌면 corpus basis 갱신을 끝내기 전 release/learning을 공개하지 않습니다.
+- 신규 프로젝트의 learning·Central 집필은 source gate가 green이고 release basis가 고정된 뒤에만
+  시작합니다. Source 개발과 본문 집필을 같은 기간에 병행하지 않습니다.
+- 저장소마다 개발자와 다른 전담 집필자 한 명만 둡니다. 집필자는 source를 수정하거나
+  commit/tag/push하지 않으며, 저장소 담당자가 신규 본문을 전수 검토한 뒤 publication을 수행합니다.
 
 ## 8. Push gate
 
@@ -172,7 +251,11 @@ push 직전에 다음을 직접 읽습니다.
 
 - remote main과 expected-old SHA가 일치하는가
 - 새 tag와 learning branch가 아직 없는가
-- raw author/committer/tagger, `%aI == %cI`, message와 trailer가 맞는가
+- 일반 신규 object의 raw author/committer/tagger와 `%aI == %cI`, message와 trailer가 맞는가;
+  source-provenance replay는 old author/committer date pair와 각각 일치하는가
+- Curriculum-insertion `v1.0.0` source와 tagger는 등록된 저장소별 KST 구간·순서에만 있고,
+  learning·Central publication은 실제 집필 시각인가
+- Source ref/tag 이름, reachable metadata와 tracked tool-control artifact에 금지 provenance가 없는가
 - main/tag/learning graph와 commit별 path allowlist가 맞는가
 - bundle 복원과 clean-clone 전체 검증이 green인가
 

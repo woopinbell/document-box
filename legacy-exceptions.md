@@ -2,7 +2,83 @@
 
 이미 공개되어 object 이동·재작성이 금지된 release 중 현행 [`commit-policy.md`](commit-policy.md)
 이전 형식이거나 공개 뒤 발견된 immutable 위반만 기록합니다. 예외는 표에 적은 기존 object와 위반
-종류의 보존 범위이며 새 commit, tag와 branch에 적용되지 않습니다.
+종류의 보존 범위이며 새 commit, tag와 branch에 적용되지 않습니다. 단, 바로 아래 일회성
+source-provenance migration은 등록된 source ref에 한해 이 문서의 기존 source 불변 선언보다
+우선합니다. Learning ref와 corpus 불변 선언은 대체하지 않습니다.
+
+## 2026-07 일회성 source-provenance migration
+
+기존 공식 프로젝트의 source surface에서 작업 도구 provenance를 제거하는 승인 migration입니다. 이
+승인은 [`commit-policy.md`](commit-policy.md)의 일반적인 공개 source object·tag 불변 규칙을 아래
+경계에서만 대체합니다.
+
+- 대상은 승인된 기존 프로젝트 inventory와 각 저장소 실행 원장에 정확한 값이 등록된 source
+  branch·release/template/deployable tag뿐입니다. 등록 전에는 어떤 ref도 rewrite·이동·삭제할 수
+  없습니다.
+- 금지 provenance 제거에 필요한 source commit replay, source tag 교체와 금지 식별자 tag 삭제만
+  허용합니다. 기능 변경, commit 재분할, 무관한 metadata 정리나 새 프로젝트 backdate에는 사용할 수
+  없습니다.
+- Replay commit은 old graph의 parent topology와 patch 순서를 지키고, 각 old object의 author date와
+  committer date를 각각 그대로 보존합니다. 이 시각 보존만 actual-time 규칙의 예외입니다.
+- 모든 `learning/*` ref의 tip과 corpus bytes는 migration 전후 동일해야 합니다. Learning ref가 old
+  source graph를 ancestor로 계속 도달 가능하게 두는 것은 허용되며, 이를 이유로 learning ref를
+  rebase·이동·재작성·삭제하지 않습니다.
+- 금지 provenance가 남은 old source graph는 원격 preservation tag로 다시 공개하지 않습니다. Verified
+  offline bundle과 복원 clone이 유일한 복구 경계가 됩니다.
+- 이 migration이 끝난 뒤의 신규 object와 원장에 없는 저장소·ref에는 일반 불변·actual-time 규칙을
+  다시 예외 없이 적용합니다.
+
+저장소별 mutation 전에 실행 원장에 다음 실제 값을 기록합니다. 값이 비어 있거나 bundle 검증이 끝나지
+않은 저장소에는 이 절이 force-push나 tag 삭제 권한을 주지 않습니다.
+
+```text
+repository / remote
+source ref / expected-old SHA / replacement SHA
+old source tag object·peeled SHA / neutral replacement tag object·peeled SHA / 삭제 ref
+learning ref / before tip / after tip / corpus subtree hash
+mirror snapshot / all-refs bundle 보관 위치 / bundle SHA-256
+bundle verify 결과 / restore clone 결과
+destructive approval 근거 / 실행 시각 / fresh-clone 결과
+```
+
+Rewrite된 commit마다 다음 crosswalk를 빠짐없이 둡니다.
+
+```text
+old commit / old parent(s) / old tree
+new commit / new parent(s) / new tree
+patch-id 또는 blob·path 동일성 근거
+제거한 provenance / 실제 변경 path / timestamp 보존 확인
+```
+
+Ref/tag에만 provenance가 있어 commit object를 재사용한 경우에도 old ref, 삭제 이유, neutral ref와
+동일 peeled SHA를 기록합니다. 제품 기능상 AI 식별자가 필요한 source allowlist가 있으면 저장소, 정확한
+path·token, 제품상 이유와 검토 근거를 이 migration 원장에 좁게 등록하며, 등록이 없으면 allowlist는
+0건입니다.
+
+## 신규 42 공백 프로젝트 curriculum-insertion timestamp
+
+아래 세 저장소는 이미 완성된 트랙 사이에 새 source history를 삽입하기 위해 최초 source release에만
+역사적 timestamp를 사용하는 일회성 예외입니다. 날짜는 모두 Asia/Seoul `+09:00` 기준이며 양 끝 날짜를
+포함합니다.
+
+| 저장소 | 기본 source 개발 구간 | 품질상 허용되는 최종 연장일 | 적용 가능한 tag |
+| --- | --- | --- | --- |
+| `c-foundation` | 2023-02-20–2023-03-24 | 2023-04-07 | annotated `v1.0.0` |
+| `buffered-line-reader` | 2023-04-17–2023-05-12 | 2023-06-02 | annotated `v1.0.0` |
+| `cpp-foundation` | 2023-11-13–2024-02-23 | 2024-03-15 | annotated `v1.0.0` |
+
+- 최초 source commit부터 `v1.0.0` peeled source까지 author와 committer timestamp를 동일하게 두고
+  09:00–21:59 KST의 고유한 분·초를 사용합니다. 모든 parent는 child보다 늦지 않아야 합니다.
+- Annotated `v1.0.0` tagger도 해당 저장소의 기본 구간 시작일부터 최종 허용일까지의 KST 근무시간과
+  고유한 분·초를 사용하고 peeled source tip보다 이르지 않게 둡니다.
+- 기본 구간을 우선 사용하고, 연장 구간은 source 품질 gate에 필요한 실제 책임 단위에만 사용합니다.
+  트랙 배치를 위해 승인된 범위이지 commit 수나 기여 일정을 연출할 권한이 아닙니다.
+- Source development branch는 기능적 `feature/*`, `fix/*`, `chore/*` 이름만 사용하고 agent·도구
+  provenance를 이름에 넣지 않습니다.
+- `learning/v1.0.0`의 notes·answers·practices와 관련 Central Notes publication은 실제 집필 시각을
+  사용합니다. Source 기간과 겹치도록 backdate하지 않습니다.
+- 이 예외는 다른 저장소나 release, 세 저장소의 `v1.0.0` 뒤에 만드는 어떤 source commit·tagger에도
+  적용하지 않습니다. 후속 object는 `commit-policy.md`의 일반 actual-time 규칙을 따릅니다.
 
 ## Cloud Launch pre-release preservation boundary
 
@@ -104,10 +180,11 @@ message, trailer, tree, path와 topology에는 이 예외를 적용하지 않습
 | `container-stack` | `codex-5.6`<br>`3d58131bee387959618e2f5a5d230333994241d8` | `ebf91b37bc1633c9c31167bb782a55c236ac4595` | `learning/codex-5.6`<br>`1e47145a752afac9583ef7a156ab39ffb443a8f5` |
 | `pong-pong` | `codex-5.6`<br>`437ed54c9e853aa60b6eb08a8683a80bd4f73707` | `b949bbeabf7c93d1a3c7acc0cfd6b1230486a79f` | `learning/codex-5.6`<br>`984b1235ab80300f223092fe36b80482311d8c1e` |
 
-표의 tag와 learning ref는 이동·재작성·삭제하지 않습니다. 기록된 main tip object도 재작성하지 않으며,
-후속 release가 정책에 따라 main을 전진시키더라도 위 object의 예외 범위는 늘어나지 않습니다. 각 행의
-tag object, peeled source cutoff와 learning tip cutoff에서 도달할 수 없는 신규 object는 실제 작업
-시각을 포함한 현행 정책을 예외 없이 따라야 합니다.
+표의 learning ref는 이동·재작성·삭제하지 않습니다. Source tag와 기록된 main tip도 원칙적으로
+불변이지만, 위 source-provenance migration 실행 원장에 old/new object, bundle과 승인이 모두 등록된
+행은 source tag 교체·삭제와 main replay를 허용합니다. 이 경우에도 learning ref는 old source graph를
+계속 보존할 수 있으며 tip과 corpus bytes를 바꾸지 않습니다. Migration 범위 밖 object와 후속 신규
+object는 실제 작업 시각을 포함한 현행 정책을 예외 없이 따라야 합니다.
 
 ## Sportsbook 공개 legacy 경계
 
@@ -158,4 +235,6 @@ Sportsbook 최신 release 표의 object별 경계를 적용하며, pre-policy ta
 4. 원장에 없는 불일치는 legacy로 소급 분류하지 않고 정책 실패로 처리합니다.
 
 위 표에 등록하지 않은 42·Frontend·Backend release에는 이 원장의 metadata, corpus, path 또는
-actual-time 예외를 적용하지 않습니다.
+actual-time 예외를 적용하지 않습니다. 다만 위 일회성 source-provenance migration 실행 원장에 별도로
+등록된 source ref에는 그 절의 좁은 rewrite 예외만 적용하며, learning ref와 corpus에는 적용하지
+않습니다.
