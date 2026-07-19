@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "owner": "woopinbell",
   "entry": "linux-foundation",
   "practice_policy": {
@@ -11,8 +11,29 @@
   },
   "projects": [
     {
+      "id": "c-foundation",
+      "track": "42",
+      "sourceWindow": {"start": "2023-02-20", "end": "2023-03-24"},
+      "extensionEnd": "2023-04-07",
+      "repo": "c-foundation",
+      "release": "v1.0.0",
+      "learning": "learning/current",
+      "main_backlink": false,
+      "doc": "tracks/42.md",
+      "anchor": "stage-c-foundation",
+      "practice": "docs/practice/README.md",
+      "answer": "docs/commits/README.md",
+      "main_paths": [
+        "README.md",
+        "DESIGN.md"
+      ],
+      "prev": "linux-foundation",
+      "next": "format-printer"
+    },
+    {
       "id": "format-printer",
       "track": "42",
+      "sourceWindow": {"start": "2023-03-28", "end": "2023-04-14"},
       "repo": "format-printer",
       "release": "v1.0.0",
       "learning": "learning/current",
@@ -21,12 +42,33 @@
       "anchor": "stage-format-printer",
       "practice": "docs/practice/README.md",
       "answer": "docs/commits/README.md",
-      "prev": "linux-foundation",
+      "prev": "c-foundation",
+      "next": "buffered-line-reader"
+    },
+    {
+      "id": "buffered-line-reader",
+      "track": "42",
+      "sourceWindow": {"start": "2023-04-17", "end": "2023-05-12"},
+      "extensionEnd": "2023-06-02",
+      "repo": "buffered-line-reader",
+      "release": "v1.0.0",
+      "learning": "learning/current",
+      "main_backlink": false,
+      "doc": "tracks/42.md",
+      "anchor": "stage-buffered-line-reader",
+      "practice": "docs/practice/README.md",
+      "answer": "docs/commits/README.md",
+      "main_paths": [
+        "README.md",
+        "DESIGN.md"
+      ],
+      "prev": "format-printer",
       "next": "signal-message-bus"
     },
     {
       "id": "signal-message-bus",
       "track": "42",
+      "sourceWindow": {"start": "2023-07-19", "end": "2023-08-04"},
       "repo": "signal-message-bus",
       "release": "v1.0.0",
       "learning": "learning/current",
@@ -35,12 +77,13 @@
       "anchor": "stage-signal-message-bus",
       "practice": "docs/practice/README.md",
       "answer": "docs/commits/README.md",
-      "prev": "format-printer",
+      "prev": "buffered-line-reader",
       "next": "thread-dining"
     },
     {
       "id": "thread-dining",
       "track": "42",
+      "sourceWindow": {"start": "2023-09-13", "end": "2023-10-07"},
       "repo": "thread-dining",
       "release": "v1.0.0",
       "learning": "learning/current",
@@ -55,6 +98,7 @@
     {
       "id": "small-shell",
       "track": "42",
+      "sourceWindow": {"start": "2023-09-25", "end": "2023-12-27"},
       "repo": "small-shell",
       "release": "v1.0.0",
       "learning": "learning/current",
@@ -69,6 +113,7 @@
     {
       "id": "stack-sort",
       "track": "42",
+      "sourceWindow": {"start": "2023-10-09", "end": "2023-11-12"},
       "repo": "stack-sort",
       "release": "v1.0.0",
       "learning": "learning/current",
@@ -78,11 +123,32 @@
       "answer": "docs/commits/README.md",
       "main_backlink": false,
       "prev": "small-shell",
+      "next": "cpp-foundation"
+    },
+    {
+      "id": "cpp-foundation",
+      "track": "42",
+      "sourceWindow": {"start": "2023-11-13", "end": "2024-02-23"},
+      "extensionEnd": "2024-03-15",
+      "repo": "cpp-foundation",
+      "release": "v1.0.0",
+      "learning": "learning/current",
+      "main_backlink": false,
+      "doc": "tracks/42.md",
+      "anchor": "stage-cpp-foundation",
+      "practice": "docs/practice/README.md",
+      "answer": "docs/commits/README.md",
+      "main_paths": [
+        "README.md",
+        "DESIGN.md"
+      ],
+      "prev": "stack-sort",
       "next": "stl-container"
     },
     {
       "id": "stl-container",
       "track": "42",
+      "sourceWindow": {"start": "2024-02-28", "end": "2024-04-11"},
       "repo": "stl-container",
       "release": "v1.0.0",
       "learning": "learning/current",
@@ -91,12 +157,13 @@
       "practice": "docs/practice/README.md",
       "answer": "docs/commits/README.md",
       "main_backlink": false,
-      "prev": "stack-sort",
+      "prev": "cpp-foundation",
       "next": "irc-relay-server"
     },
     {
       "id": "irc-relay-server",
       "track": "42",
+      "sourceWindow": {"start": "2024-04-08", "end": "2024-07-16"},
       "repo": "irc-relay-server",
       "release": "v1.0.0",
       "learning": "learning/current",
@@ -111,6 +178,7 @@
     {
       "id": "container-stack",
       "track": "42",
+      "sourceWindow": {"start": "2024-07-24", "end": "2024-09-10"},
       "repo": "container-stack",
       "release": "v1.0.0",
       "learning": "learning/current",
@@ -125,6 +193,7 @@
     {
       "id": "web-boundary-inspector",
       "track": "42",
+      "sourceWindow": {"start": "2024-07-29", "end": "2024-08-04"},
       "repo": "web-boundary-inspector",
       "release": "codex-5.7",
       "learning": "learning/codex-5.7",
@@ -139,6 +208,7 @@
     {
       "id": "pong-pong",
       "track": "42",
+      "sourceWindow": {"start": "2024-08-05", "end": "2024-11-13"},
       "repo": "pong-pong",
       "release": "codex-5.7",
       "learning": "learning/codex-5.7",
@@ -152,6 +222,7 @@
     {
       "id": "frontend-foundations-training",
       "track": "frontend",
+      "sourceWindow": {"start": "2025-02-01", "end": "2025-05-03"},
       "repo": "frontend-foundations-training",
       "release": "foundations-v1.0.1",
       "learning": "learning/current",
@@ -165,6 +236,7 @@
     {
       "id": "frontend-delivery-training",
       "track": "frontend",
+      "sourceWindow": {"start": "2025-05-04", "end": "2025-05-09"},
       "repo": "frontend-delivery-training",
       "release": "delivery-v1.0.1",
       "learning": "learning/delivery-v1.0.1",
@@ -178,6 +250,7 @@
     {
       "id": "cloud-launch-training",
       "track": "frontend",
+      "sourceWindow": {"start": "2025-05-10", "end": "2025-05-16"},
       "repo": "cloud-launch-training",
       "release": "cloud-launch-v1.0.1",
       "learning": "learning/cloud-launch-v1.0.1",
@@ -192,6 +265,7 @@
     {
       "id": "frontend-reliability-training",
       "track": "frontend",
+      "sourceWindow": {"start": "2025-05-17", "end": "2026-01-16"},
       "repo": "frontend-reliability-training",
       "release": "reliability-v1.0.1",
       "learning": "learning/reliability-v1.0.1",
@@ -205,6 +279,7 @@
     {
       "id": "portfolio-site",
       "track": "frontend",
+      "sourceWindow": {"start": "2025-10-06", "end": "2025-11-28"},
       "repo": "portfolio-site",
       "release": "portfolio-v3.0.1",
       "template": "template-v3.0.1",
@@ -219,6 +294,7 @@
     {
       "id": "backend-foundations-training",
       "track": "backend",
+      "sourceWindow": {"start": "2024-11-01", "end": "2025-01-31"},
       "repo": "backend-foundations-training",
       "release": "foundations-v2.0.1",
       "learning": "learning/foundations-v2.0.1",
@@ -232,6 +308,7 @@
     {
       "id": "backend-delivery-training",
       "track": "backend",
+      "sourceWindow": {"start": "2025-02-01", "end": "2025-02-14"},
       "repo": "backend-delivery-training",
       "release": "delivery-v1.0.1",
       "learning": "learning/delivery-v1.0.1",
@@ -245,6 +322,7 @@
     {
       "id": "backend-reliability-training",
       "track": "backend",
+      "sourceWindow": {"start": "2025-02-15", "end": "2025-08-15"},
       "repo": "backend-reliability-training",
       "release": "reliability-v2.0.1",
       "learning": "learning/reliability-v2.0.1",
@@ -258,6 +336,7 @@
     {
       "id": "sportsbook-shared-protocol",
       "track": "backend",
+      "sourceWindow": {"start": "2026-02-02", "end": "2026-02-15"},
       "repo": "sportsbook-shared-protocol",
       "release": "shared-v1.0.1",
       "learning": "learning/shared-v1.0.1",
@@ -271,6 +350,7 @@
     {
       "id": "sportsbook-wallet-service",
       "track": "backend",
+      "sourceWindow": {"start": "2026-02-16", "end": "2026-03-01"},
       "repo": "sportsbook-wallet-service",
       "release": "wallet-v1.0.2",
       "learning": "learning/wallet-v1.0.2",
@@ -284,6 +364,7 @@
     {
       "id": "sportsbook-risk-service",
       "track": "backend",
+      "sourceWindow": {"start": "2026-03-02", "end": "2026-04-05"},
       "repo": "sportsbook-risk-service",
       "release": "risk-v1.0.2",
       "learning": "learning/risk-v1.0.2",
@@ -297,6 +378,7 @@
     {
       "id": "sportsbook-odds-feed-service",
       "track": "backend",
+      "sourceWindow": {"start": "2026-03-23", "end": "2026-04-12"},
       "repo": "sportsbook-odds-feed-service",
       "release": "odds-v1.0.1",
       "learning": "learning/odds-v1.0.1",
@@ -310,6 +392,7 @@
     {
       "id": "sportsbook-betting-service",
       "track": "backend",
+      "sourceWindow": {"start": "2026-04-01", "end": "2026-04-26"},
       "repo": "sportsbook-betting-service",
       "release": "betting-v1.0.1",
       "learning": "learning/betting-v1.0.1",
@@ -323,6 +406,7 @@
     {
       "id": "sportsbook-settlement-service",
       "track": "backend",
+      "sourceWindow": {"start": "2026-04-13", "end": "2026-05-03"},
       "repo": "sportsbook-settlement-service",
       "release": "settlement-v1.0.1",
       "learning": "learning/settlement-v1.0.1",
@@ -336,6 +420,7 @@
     {
       "id": "sportsbook-gateway",
       "track": "backend",
+      "sourceWindow": {"start": "2026-04-30", "end": "2026-05-10"},
       "repo": "sportsbook-gateway",
       "release": "gateway-v1.0.1",
       "learning": "learning/gateway-v1.0.1",
@@ -349,6 +434,7 @@
     {
       "id": "sportsbook-admin-api",
       "track": "backend",
+      "sourceWindow": {"start": "2026-05-08", "end": "2026-05-17"},
       "repo": "sportsbook-admin-api",
       "release": "admin-v1.0.1",
       "learning": "learning/admin-v1.0.1",
@@ -362,6 +448,7 @@
     {
       "id": "sportsbook-orchestration",
       "track": "backend",
+      "sourceWindow": {"start": "2026-05-15", "end": "2026-07-14"},
       "repo": "sportsbook-orchestration",
       "release": "orchestration-v1",
       "learning": "learning/orchestration-v1",
@@ -381,7 +468,7 @@
       "doc": "tracks/42.md",
       "anchor": "stage-linux-foundation",
       "prev": null,
-      "next": "format-printer"
+      "next": "c-foundation"
     }
   ],
   "assessments": [

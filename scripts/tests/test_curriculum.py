@@ -1,6 +1,7 @@
 import json
 import base64
 import io
+import re
 import subprocess
 import sys
 import tempfile
@@ -39,11 +40,14 @@ class RegistryFixture:
         self.completions = []
         track_ids = {
             "42": [
+                "c-foundation",
                 "format-printer",
+                "buffered-line-reader",
                 "signal-message-bus",
                 "thread-dining",
                 "small-shell",
                 "stack-sort",
+                "cpp-foundation",
                 "stl-container",
                 "irc-relay-server",
                 "container-stack",
@@ -167,9 +171,18 @@ class RegistryFixture:
                     "anchor": anchor,
                     "practice": practice,
                     "answer": answer,
+                    "sourceWindow": {
+                        "start": "2025-01-01",
+                        "end": "2025-01-31",
+                    },
                     "prev": None,
                     "next": None,
                 }
+                if node_id in curriculum.EXTENDED_SOURCE_WINDOWS:
+                    project["extensionEnd"] = "2025-02-15"
+                    project["main_paths"] = list(
+                        curriculum.REQUIRED_MAIN_PATHS[node_id]
+                    )
                 if node_id in curriculum.UNCHANGED_NAVIGATION_RELEASES:
                     project["main_backlink"] = False
                 if node_id == "portfolio-site":
@@ -350,7 +363,7 @@ class RegistryFixture:
         )
 
         self.data = {
-            "version": 2,
+            "version": 3,
             "owner": "woopinbell",
             "entry": "linux-foundation",
             "practice_policy": dict(curriculum.PRACTICE_POLICY),
@@ -396,10 +409,10 @@ class CurriculumValidationTest(unittest.TestCase):
             curriculum.validate_registry(self.fixture.data, self.root), []
         )
 
-    def test_registry_version_two_is_required(self):
+    def test_registry_version_three_is_required(self):
         self.fixture.data["version"] = 1
         errors = curriculum.validate_registry(self.fixture.data, self.root)
-        self.assertTrue(any("registry version must be 2" in error for error in errors))
+        self.assertTrue(any("registry version must be 3" in error for error in errors))
 
     def test_application_overlay_stays_outside_the_canonical_graph(self):
         canonical_ids = {
@@ -487,6 +500,68 @@ class CurriculumValidationTest(unittest.TestCase):
         )
         self.assertEqual(curriculum.validate_registry(data, repository_root), [])
 
+    def test_registry_source_windows_match_the_approved_ledger(self):
+        repository_root = SCRIPT_DIR.parent
+        data = json.loads(
+            (repository_root / "tracks/curriculum.json").read_text(encoding="utf-8")
+        )
+        ledger = (repository_root / "legacy-exceptions.md").read_text(
+            encoding="utf-8"
+        )
+        rows = re.findall(
+            r"^\| (42|Frontend|Backend) \| `([^`]+)` \| "
+            r"(\d{4}-\d{2}-\d{2})–(\d{4}-\d{2}-\d{2}) \| "
+            r"(—|\d{4}-\d{2}-\d{2}) \|$",
+            ledger,
+            re.MULTILINE,
+        )
+        expected = {
+            project_id: {
+                "track": track.lower(),
+                "sourceWindow": {"start": start, "end": end},
+                **({"extensionEnd": extension} if extension != "—" else {}),
+            }
+            for track, project_id, start, end, extension in rows
+        }
+        actual = {
+            project["id"]: {
+                "track": project["track"],
+                "sourceWindow": project["sourceWindow"],
+                **(
+                    {"extensionEnd": project["extensionEnd"]}
+                    if "extensionEnd" in project
+                    else {}
+                ),
+            }
+            for project in data["projects"]
+        }
+        self.assertEqual(len(rows), 30)
+        self.assertEqual(len(expected), 30)
+        self.assertEqual(actual, expected)
+
+    def test_source_window_shape_order_and_extension_scope_are_enforced(self):
+        project = self.fixture.data["projects"][0]
+        project["sourceWindow"] = {"start": "2025-02-01", "end": "2025-01-01"}
+        project["extensionEnd"] = "2024-12-31"
+        ordinary = next(
+            item
+            for item in self.fixture.data["projects"]
+            if item["id"] == "format-printer"
+        )
+        ordinary["extensionEnd"] = "2025-02-15"
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        self.assertTrue(any("sourceWindow start must not exceed end" in e for e in errors))
+        self.assertTrue(any("extensionEnd must be later" in e for e in errors))
+        self.assertTrue(any("only allowed for the three new" in e for e in errors))
+
+    def test_main_paths_are_safe_and_unique(self):
+        project = self.fixture.data["projects"][0]
+        project["main_paths"] = ["README.md", "README.md", "../DESIGN.md"]
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        self.assertTrue(any("main_paths must not contain duplicates" in e for e in errors))
+        self.assertTrue(any("must be a safe repository-relative path" in e for e in errors))
+        self.assertTrue(any("main_paths must be exactly README.md, DESIGN.md" in e for e in errors))
+
     def test_unchanged_backlink_exception_is_explicit_and_scoped(self):
         by_id = {project["id"]: project for project in self.fixture.data["projects"]}
         del by_id["cloud-launch-training"]["main_backlink"]
@@ -517,7 +592,7 @@ class CurriculumValidationTest(unittest.TestCase):
         ]
         self.fixture.data["projects"].pop()
         errors = curriculum.validate_registry(self.fixture.data, self.root)
-        self.assertTrue(any("exactly 27" in error for error in errors))
+        self.assertTrue(any("exactly 30" in error for error in errors))
         self.assertTrue(any("appears more than once" in error for error in errors))
 
     def test_asymmetric_edge_is_rejected(self):
@@ -544,7 +619,7 @@ class CurriculumValidationTest(unittest.TestCase):
         path = self.root / "tracks/42.md"
         path.write_text(
             path.read_text(encoding="utf-8").replace(
-                "[next](#stage-format-printer)", "next: format-printer", 1
+                "[next](#stage-c-foundation)", "next: c-foundation", 1
             ),
             encoding="utf-8",
         )
@@ -794,6 +869,7 @@ class RemoteContractTest(unittest.TestCase):
         roles=None,
         release_sha=None,
         learning_sha=None,
+        exact_current_paths=False,
     ):
         release = release_sha or "1" * 40
         learning = learning_sha or "4" * 40
@@ -807,8 +883,16 @@ class RemoteContractTest(unittest.TestCase):
         paths = {
             "learning": "docs/README.md",
             "notes": "docs/README.md",
-            "commits": "docs/commits-release-v1/README.md",
-            "practice": "docs/practice-release-v1/README.md",
+            "commits": (
+                "docs/commits/README.md"
+                if exact_current_paths
+                else "docs/commits-release-v1/README.md"
+            ),
+            "practice": (
+                "docs/practice/README.md"
+                if exact_current_paths
+                else "docs/practice-release-v1/README.md"
+            ),
         }
         compare = {
             "status": "ahead",
@@ -821,11 +905,14 @@ class RemoteContractTest(unittest.TestCase):
         details = {}
         parent = release
         for role, sha in zip(roles, shas):
+            files = [{"filename": paths[role]}]
+            if role == "commits" and "notes" not in roles:
+                files.append({"filename": "docs/README.md"})
             details[sha] = {
                 "sha": sha,
                 "parents": [{"sha": parent}],
                 "commit": {"message": f"docs({role}): publish {role}\n"},
-                "files": [{"filename": paths[role]}],
+                "files": files,
             }
             parent = sha
         return release, learning, roles, compare, details
@@ -841,6 +928,10 @@ class RemoteContractTest(unittest.TestCase):
         main_drift=False,
         tag_drift=False,
         learning_drift=False,
+        extra_branch=False,
+        extra_tag=False,
+        missing_learning_index=False,
+        missing_design=False,
     ):
         navigation_freeze = curriculum.UNCHANGED_NAVIGATION_RELEASES.get(
             project["id"]
@@ -868,6 +959,7 @@ class RemoteContractTest(unittest.TestCase):
             fixture_roles,
             release_basis,
             learning_tip,
+            exact_current_paths=(project["learning"] == "learning/current"),
         )
         tag_sha = navigation_freeze["tag"] if navigation_freeze else "a" * 40
         if tag_drift:
@@ -883,6 +975,10 @@ class RemoteContractTest(unittest.TestCase):
             refs.append(
                 f"{'b' * 40}\trefs/heads/{project['learning']}-supplemental"
             )
+        if extra_branch:
+            refs.append(f"{'c' * 40}\trefs/heads/dev")
+        if extra_tag:
+            refs.append(f"{'d' * 40}\trefs/tags/old-release")
         template = project.get("template")
         if template and not missing_template:
             refs.extend(
@@ -911,6 +1007,10 @@ class RemoteContractTest(unittest.TestCase):
                 return self._response(refs_text)
             if command[:2] == ["gh", "api"]:
                 endpoint = command[-1]
+                if missing_learning_index and "/contents/docs/README.md?ref=" in endpoint:
+                    return self._response(returncode=1, stderr="not found")
+                if missing_design and "/contents/DESIGN.md?ref=" in endpoint:
+                    return self._response(returncode=1, stderr="not found")
                 if "/compare/" in endpoint:
                     return self._response(compare)
                 if template and endpoint.endswith(f"/commits/{release_sha}"):
@@ -923,6 +1023,13 @@ class RemoteContractTest(unittest.TestCase):
                         {
                             "encoding": "base64",
                             "content": base64.b64encode(readme.encode()).decode(),
+                        }
+                    )
+                if "/contents/docs/README.md?ref=" in endpoint:
+                    return self._response(
+                        {
+                            "encoding": "base64",
+                            "content": base64.b64encode(b"# learning index\n").decode(),
                         }
                     )
                 return self._response()
@@ -1064,6 +1171,41 @@ class RemoteContractTest(unittest.TestCase):
             self.assertEqual(
                 curriculum._check_remote_project("woopinbell", project), []
             )
+
+    def test_new_project_exact_topology_index_and_source_docs_are_enforced(self):
+        project = {
+            "id": "c-foundation",
+            "repo": "c-foundation",
+            "release": "v1.0.0",
+            "learning": "learning/current",
+            "main_backlink": False,
+            "practice": "docs/practice/README.md",
+            "answer": "docs/commits/README.md",
+            "main_paths": ["README.md", "DESIGN.md"],
+            "doc": "tracks/42.md",
+            "anchor": "stage-c-foundation",
+        }
+        with patch.object(
+            curriculum, "_run", side_effect=self._project_dispatcher(project)
+        ):
+            self.assertEqual(
+                curriculum._check_remote_project("woopinbell", project), []
+            )
+
+        cases = (
+            ({"extra_branch": True}, "branches must be exactly"),
+            ({"extra_tag": True}, "tags must be exactly"),
+            ({"missing_learning_index": True}, "missing learning index"),
+            ({"missing_design": True}, "missing required path DESIGN.md"),
+        )
+        for options, marker in cases:
+            with self.subTest(marker=marker), patch.object(
+                curriculum,
+                "_run",
+                side_effect=self._project_dispatcher(project, **options),
+            ):
+                errors = curriculum._check_remote_project("woopinbell", project)
+            self.assertTrue(any(marker in error for error in errors), errors)
 
     def test_application_overlay_remote_paths_and_portfolio_refs_pass(self):
         overlay, projects = self._application_overlay_fixture()
@@ -1273,6 +1415,89 @@ class RemoteContractTest(unittest.TestCase):
         )
         self.assertTrue(any("subject must start with docs(commits)" in e for e in errors))
         self.assertTrue(any("forbidden path 'src/server.c'" in e for e in errors))
+
+    def test_learning_without_project_notes_publishes_index_with_answers(self):
+        for project_id in (
+            "c-foundation",
+            "buffered-line-reader",
+            "cpp-foundation",
+        ):
+            self.assertEqual(
+                curriculum._learning_roles(project_id),
+                ("commits", "practice"),
+            )
+        self.assertTrue(
+            curriculum._learning_path_allowed(
+                "commits", "docs/README.md", allow_commits_index=True
+            )
+        )
+        self.assertFalse(
+            curriculum._learning_path_allowed("commits", "docs/README.md")
+        )
+        self.assertFalse(
+            curriculum._learning_path_allowed(
+                "commits", "src/library.c", allow_commits_index=True
+            )
+        )
+
+        release, learning, roles, compare, details = self._learning_fixture(
+            False, exact_current_paths=True
+        )
+        self.assertEqual(
+            curriculum._validate_learning_history(
+                "repo",
+                release,
+                learning,
+                roles,
+                compare,
+                details,
+                exact_current_paths=True,
+            ),
+            [],
+        )
+
+        first_sha = compare["commits"][0]["sha"]
+        details[first_sha]["files"] = [
+            file_entry
+            for file_entry in details[first_sha]["files"]
+            if file_entry["filename"] != "docs/README.md"
+        ]
+        errors = curriculum._validate_learning_history(
+            "repo",
+            release,
+            learning,
+            roles,
+            compare,
+            details,
+            exact_current_paths=True,
+        )
+        self.assertTrue(any("must change docs/README.md exactly once" in e for e in errors))
+
+        release, learning, roles, compare, details = self._learning_fixture(
+            False, exact_current_paths=True
+        )
+        first_sha = compare["commits"][0]["sha"]
+        details[first_sha]["files"].append(
+            {"filename": "docs/commits-v1/README.md"}
+        )
+        errors = curriculum._validate_learning_history(
+            "repo",
+            release,
+            learning,
+            roles,
+            compare,
+            details,
+            exact_current_paths=True,
+        )
+        self.assertTrue(any("forbidden path 'docs/commits-v1/README.md'" in e for e in errors))
+
+        release, learning, roles, compare, details = self._learning_fixture(True)
+        commits_sha = compare["commits"][1]["sha"]
+        details[commits_sha]["files"].append({"filename": "docs/README.md"})
+        errors = curriculum._validate_learning_history(
+            "repo", release, learning, roles, compare, details
+        )
+        self.assertTrue(any("forbidden path 'docs/README.md'" in e for e in errors))
 
     def test_format_printer_monolithic_learning_exception_is_path_scoped(self):
         frozen = curriculum.FROZEN_MONOLITHIC_LEARNING["format-printer"]

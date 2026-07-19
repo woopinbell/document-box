@@ -40,17 +40,20 @@ checkpoint까지 통과해야 한다.
 | 순서 | Central 선수 handoff | 정규 단계 카드 | 복습 gate |
 | ---: | --- | --- | --- |
 | 0 | [Linux/Git Foundations](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-linux-foundation) | [Linux/Git](42.md#stage-linux-foundation) | quick probe, self-review와 rollback 설명 |
-| 1 | [format-printer](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-format-printer) | [format-printer](42.md#stage-format-printer) | `make && make test` |
-| 2 | [signal-message-bus](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-signal-message-bus) | [signal-message-bus](42.md#stage-signal-message-bus) | `make && make test`, 긴 메시지와 중도 종료 sender |
-| 3 | [thread-dining](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-thread-dining) | [thread-dining](42.md#stage-thread-dining) | `make && make test`, timing 시나리오 |
-| 4 | [small-shell](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-small-shell) | [small-shell](42.md#stage-small-shell) | `make && make test` |
-| 5 | [stack-sort](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-stack-sort) | [stack-sort](42.md#stage-stack-sort) | `make && make test`, Python oracle |
-| 6 | [stl-container](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-stl-container) | [stl-container](42.md#stage-stl-container) | `make && make test`, strict C++98 compile |
-| 7 | [irc-relay-server](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-irc-relay-server) | [irc-relay-server](42.md#stage-irc-relay-server) | `make && make test && make smoke` |
-| 8 | [container-stack](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-container-stack) | [container-stack](42.md#stage-container-stack) | `make test && make config`, 가능한 환경에서 up/smoke/down |
-| 9 | [web-boundary-inspector](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-web-boundary-inspector) | [web-boundary-inspector](42.md#stage-web-boundary-inspector) | `make check`, request 3개와 browser 21개 |
-| 10 | [pong-pong](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-pong-pong) | [pong-pong](42.md#stage-pong-pong) | install/typecheck/test/build와 가능한 E2E·Compose smoke |
-| 11 | [42 incident](https://github.com/woopinbell/central-notes/blob/main/assessments/42-incident/README.md#assessment-42-incident) | [42 incident](42.md#stage-42-incident) | answerless checker·사람 rubric·즉시 회상 |
+| 1 | [c-foundation](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-c-foundation) | [c-foundation](42.md#stage-c-foundation) | build·C 선수 6개 범위 확인과 `make check` |
+| 2 | [format-printer](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-format-printer) | [format-printer](42.md#stage-format-printer) | `make && make test` |
+| 3 | [buffered-line-reader](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-buffered-line-reader) | [buffered-line-reader](42.md#stage-buffered-line-reader) | buffered read 선수 1개와 `make check` |
+| 4 | [signal-message-bus](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-signal-message-bus) | [signal-message-bus](42.md#stage-signal-message-bus) | `make && make test`, 긴 메시지와 중도 종료 sender |
+| 5 | [thread-dining](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-thread-dining) | [thread-dining](42.md#stage-thread-dining) | `make && make test`, timing 시나리오 |
+| 6 | [small-shell](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-small-shell) | [small-shell](42.md#stage-small-shell) | `make && make test` |
+| 7 | [stack-sort](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-stack-sort) | [stack-sort](42.md#stage-stack-sort) | `make && make test`, Python oracle |
+| 8 | [cpp-foundation](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-cpp-foundation) | [cpp-foundation](42.md#stage-cpp-foundation) | C++98 객체 모델 선수 1개와 `make check` |
+| 9 | [stl-container](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-stl-container) | [stl-container](42.md#stage-stl-container) | `make && make test`, strict C++98 compile |
+| 10 | [irc-relay-server](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-irc-relay-server) | [irc-relay-server](42.md#stage-irc-relay-server) | `make && make test && make smoke` |
+| 11 | [container-stack](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-container-stack) | [container-stack](42.md#stage-container-stack) | `make test && make config`, 가능한 환경에서 up/smoke/down |
+| 12 | [web-boundary-inspector](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-web-boundary-inspector) | [web-boundary-inspector](42.md#stage-web-boundary-inspector) | `make check`, request 3개와 browser 21개 |
+| 13 | [pong-pong](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-pong-pong) | [pong-pong](42.md#stage-pong-pong) | install/typecheck/test/build와 가능한 E2E·Compose smoke |
+| 14 | [42 incident](https://github.com/woopinbell/central-notes/blob/main/assessments/42-incident/README.md#assessment-42-incident) | [42 incident](42.md#stage-42-incident) | answerless checker·사람 rubric·즉시 회상 |
 
 마지막 행을 통과하고 7일·30일 회상을 예약한 시점이 이 overlay의 진입점이다. 회상은 Frontend
 진행과 병행하며, 30일 checkpoint 전에는 42 mastery라고 기록하지 않는다.

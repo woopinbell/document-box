@@ -4,7 +4,7 @@
 README에서 시작했더라도 여기로 돌아와 현재 카드를 찾는다.
 
 ```text
-Central Linux/Git Foundations → 42의 10개 프로젝트
+Central Linux/Git Foundations → 42의 13개 프로젝트
 → 42 통합 incident
 ├─ Frontend 4개 프로젝트 → transfer → Portfolio → production regression → 회상 → 완료
 └─ Backend 12개 프로젝트 → distributed incident → 회상 → 완료
@@ -161,8 +161,9 @@ full-parent 규칙의 구현 대상이 아니다. 실제 commit object의 hash·
 정확한 순서:
 
 ```text
-Linux/Git Foundations → format-printer → signal-message-bus → thread-dining → small-shell
-→ stack-sort → stl-container → irc-relay-server → container-stack
+Linux/Git Foundations → c-foundation → format-printer → buffered-line-reader
+→ signal-message-bus → thread-dining → small-shell → stack-sort → cpp-foundation
+→ stl-container → irc-relay-server → container-stack
 → web-boundary-inspector → pong-pong → 42 incident
 ```
 
@@ -206,8 +207,8 @@ Frontend와 Backend를 병행하면 별도 진행 원장 또는 명확히 분리
 
 ## Release 완료와 학습 완료
 
-- **Project release 완료**: 원격 `main`, annotated release tag, immutable `learning/<release>`와
-  fresh-clone 검증이 게시된 상태다. 활성 27개 공식 프로젝트는 이 상태다. Linux/Git Foundations는
+- **Project release 완료**: 원격 `main`, annotated release tag, registry가 지정한 읽기 전용 learning ref와
+  fresh-clone 검증이 게시된 상태다. 활성 30개 공식 프로젝트는 이 상태다. Linux/Git Foundations는
   Central Notes가 소유하는 선수 과정이므로 프로젝트 수에 포함하지 않는다.
 - **Project 학습 완료**: 한 학습자가 대표 practice 한 개에서 practice-first 시도, 실패 증거, answer
   비교와 무자료 재구현을 마치고 카드의 전체 gate를 통과한 상태다. 나머지 practice는 선택 심화다.
@@ -226,9 +227,9 @@ make check-navigation
 make check-remote-navigation
 ```
 
-첫 명령은 27개 프로젝트와 Linux/Git 선수 과정, prev/next 대칭, 42 이후 분기, anchor와 dead end를
+첫 명령은 30개 프로젝트와 Linux/Git 선수 과정, prev/next 대칭, 42 이후 분기, anchor와 dead end를
 오프라인 검사한다. 두 번째
 명령은 인증된 GitHub에서 각 `main`, annotated tag, learning publication 순서·path와 current
-practice/answer를 고정 SHA로 검사한다. Current navigation README를 가진 23개 프로젝트의 정확한
-카드 역링크도 검사한다. Navigation source가 그대로인 Signal·Web Boundary·Cloud·Orchestration은
-이 문서의 current 카드가 진입점을 소유하며 registry에 명시적인 예외로 고정한다.
+practice/answer를 고정 SHA로 검사한다. `main_backlink=true`인 프로젝트의 정확한 카드 역링크도
+검사한다. Navigation source가 그대로인 신규 3개와 Signal·Web Boundary·Cloud·Orchestration은
+이 문서의 current 카드가 진입점을 소유하며 registry에 exact object 예외로 고정한다.

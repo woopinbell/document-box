@@ -18,22 +18,26 @@ import sys
 import unicodedata
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 from typing import Any, Iterable
 from urllib.parse import quote, unquote
 
 
-TRACK_COUNTS = {"42": 10, "frontend": 5, "backend": 12}
+TRACK_COUNTS = {"42": 13, "frontend": 5, "backend": 12}
 VALID_TRACKS = frozenset(TRACK_COUNTS)
-REGISTRY_VERSION = 2
+REGISTRY_VERSION = 3
 CANONICAL_SEQUENCES = {
     "42": (
         "linux-foundation",
+        "c-foundation",
         "format-printer",
+        "buffered-line-reader",
         "signal-message-bus",
         "thread-dining",
         "small-shell",
         "stack-sort",
+        "cpp-foundation",
         "stl-container",
         "irc-relay-server",
         "container-stack",
@@ -69,11 +73,27 @@ CANONICAL_SEQUENCES = {
     ),
 }
 NO_PROJECT_NOTES = {
+    "c-foundation",
+    "buffered-line-reader",
+    "cpp-foundation",
     "web-boundary-inspector",
     "portfolio-site",
     "sportsbook-shared-protocol",
 }
+EXTENDED_SOURCE_WINDOWS = frozenset(
+    {"c-foundation", "buffered-line-reader", "cpp-foundation"}
+)
+STRICT_TOPOLOGY_PROJECTS = EXTENDED_SOURCE_WINDOWS
+REQUIRED_MAIN_PATHS = {
+    project_id: ("README.md", "DESIGN.md")
+    for project_id in EXTENDED_SOURCE_WINDOWS
+}
 UNCHANGED_NAVIGATION_RELEASES = {
+    "c-foundation": {
+        "release": "v1.0.0",
+        "main": "6ae8f96e9f2617501a4e260a10025a401aee7e41",
+        "tag": "bbb88a11dd7051720be6a5503c40486ac409c3dc",
+    },
     "format-printer": {
         "release": "v1.0.0",
         "main": "be4966f3c1d176453a34b609036ef4998fa8b022",
@@ -94,10 +114,20 @@ UNCHANGED_NAVIGATION_RELEASES = {
         "main": "0fb1f6bf4825890f7b657ce5de918aed52a8318d",
         "tag": "3e7164817b3883783c80c6a1ced90531faf85efe",
     },
+    "buffered-line-reader": {
+        "release": "v1.0.0",
+        "main": "7ec26185957209a0bd2216cd179dc630e1c3297f",
+        "tag": "3924afef984ca0d7424721a2835264577efcc2e0",
+    },
     "stack-sort": {
         "release": "v1.0.0",
         "main": "51325493a5e0e10f72dcfc04079d3b4f2c96488e",
         "tag": "dc08a9be3ec27a5096be753ef7f7126ce8b713e9",
+    },
+    "cpp-foundation": {
+        "release": "v1.0.0",
+        "main": "13e353061f5c4a95b4a2d89b69fc62ef7c405e47",
+        "tag": "062f666f25a07a5d264d00590c15fbe5b657e669",
     },
     "stl-container": {
         "release": "v1.0.0",
@@ -140,6 +170,7 @@ PROJECT_FIELDS = (
     "anchor",
     "practice",
     "answer",
+    "sourceWindow",
     "prev",
     "next",
 )
@@ -205,11 +236,14 @@ FRONTEND_APPLICATION_PORTFOLIO = {
 }
 MIGRATED_42_PROJECTS = frozenset(
     {
+        "c-foundation",
         "format-printer",
+        "buffered-line-reader",
         "signal-message-bus",
         "thread-dining",
         "small-shell",
         "stack-sort",
+        "cpp-foundation",
         "stl-container",
         "irc-relay-server",
         "container-stack",
@@ -233,11 +267,14 @@ LEGACY_42_LEARNING = "learning/codex-5.7"
 LEGACY_42_PRACTICE = "docs/practice-codex-5.7/README.md"
 LEGACY_42_ANSWER = "docs/commits-codex-5.7/README.md"
 PROJECT_SETUP = {
+    "c-foundation": "make check",
     "format-printer": "make && make test",
+    "buffered-line-reader": "make check",
     "signal-message-bus": "make && make test (repeat; include long/abandoned sender cases)",
     "thread-dining": "make && make test (repeat the timing scenarios)",
     "small-shell": "make && make test",
     "stack-sort": "make && make test",
+    "cpp-foundation": "make check",
     "stl-container": "make && make test (also run the strict C++98 compile gate)",
     "irc-relay-server": "make && make test && make smoke",
     "container-stack": "make test && make ENV_FILE=.env.example config; then prepare secret files and run make ENV_FILE=.env.example up && make smoke && make ENV_FILE=.env.example down",
@@ -733,8 +770,8 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
     projects = data.get("projects", [])
     if not isinstance(projects, list):
         return ["projects must be a list"]
-    if len(projects) != 27:
-        errors.append(f"projects must contain exactly 27 entries, found {len(projects)}")
+    if len(projects) != 30:
+        errors.append(f"projects must contain exactly 30 entries, found {len(projects)}")
 
     nodes_with_kind: list[tuple[str, dict[str, Any]]] = []
     try:
@@ -822,6 +859,66 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
                         _safe_relative_path(value, f"{node_id}.{field}")
                 except CurriculumError as exc:
                     errors.append(str(exc))
+            try:
+                main_paths = _paths(
+                    node.get("main_paths", ["README.md"]),
+                    f"{node_id}.main_paths",
+                )
+                if len(main_paths) != len(set(main_paths)):
+                    errors.append(f"{node_id}: main_paths must not contain duplicates")
+                required_main_paths = REQUIRED_MAIN_PATHS.get(node_id)
+                if required_main_paths and tuple(main_paths) != required_main_paths:
+                    errors.append(
+                        f"{node_id}: main_paths must be exactly "
+                        f"{', '.join(required_main_paths)}"
+                    )
+                for value in main_paths:
+                    _safe_relative_path(value, f"{node_id}.main_paths")
+            except CurriculumError as exc:
+                errors.append(str(exc))
+
+            window = node.get("sourceWindow")
+            window_dates: dict[str, date] = {}
+            if not isinstance(window, dict) or set(window) != {"start", "end"}:
+                errors.append(
+                    f"{node_id}: sourceWindow must contain exactly start and end"
+                )
+            else:
+                for boundary in ("start", "end"):
+                    value = window.get(boundary)
+                    try:
+                        if not isinstance(value, str) or not re.fullmatch(
+                            r"\d{4}-\d{2}-\d{2}", value
+                        ):
+                            raise ValueError
+                        window_dates[boundary] = date.fromisoformat(value)
+                    except ValueError:
+                        errors.append(
+                            f"{node_id}: sourceWindow.{boundary} must be an ISO date"
+                        )
+                if set(window_dates) == {"start", "end"} and (
+                    window_dates["start"] > window_dates["end"]
+                ):
+                    errors.append(f"{node_id}: sourceWindow start must not exceed end")
+
+            extension = node.get("extensionEnd")
+            if node_id in EXTENDED_SOURCE_WINDOWS:
+                try:
+                    if not isinstance(extension, str) or not re.fullmatch(
+                        r"\d{4}-\d{2}-\d{2}", extension
+                    ):
+                        raise ValueError
+                    extension_date = date.fromisoformat(extension)
+                    if "end" in window_dates and extension_date <= window_dates["end"]:
+                        errors.append(
+                            f"{node_id}: extensionEnd must be later than sourceWindow.end"
+                        )
+                except ValueError:
+                    errors.append(f"{node_id}: extensionEnd must be an ISO date")
+            elif extension is not None:
+                errors.append(
+                    f"{node_id}: extensionEnd is only allowed for the three new projects"
+                )
             if node.get("track") == "42":
                 if node_id in MIGRATED_42_PROJECTS:
                     expected_42 = {
@@ -1513,7 +1610,13 @@ def _learning_roles(
     return ("notes", "commits", "practice")
 
 
-def _learning_path_allowed(role: str, path: str) -> bool:
+def _learning_path_allowed(
+    role: str,
+    path: str,
+    *,
+    allow_commits_index: bool = False,
+    exact_current_paths: bool = False,
+) -> bool:
     if role == "learning":
         return (
             path == "docs/README.md"
@@ -1530,9 +1633,18 @@ def _learning_path_allowed(role: str, path: str) -> bool:
             or path.startswith("notes-")
         )
     if role == "commits":
-        return re.match(r"^docs/commits(?:-[^/]+)?/", path) is not None
+        commits_path = (
+            path.startswith("docs/commits/")
+            if exact_current_paths
+            else re.match(r"^docs/commits(?:-[^/]+)?/", path) is not None
+        )
+        return (allow_commits_index and path == "docs/README.md") or commits_path
     if role == "practice":
-        return re.match(r"^docs/practice(?:-[^/]+)?/", path) is not None
+        return (
+            path.startswith("docs/practice/")
+            if exact_current_paths
+            else re.match(r"^docs/practice(?:-[^/]+)?/", path) is not None
+        )
     return False
 
 
@@ -1543,6 +1655,8 @@ def _validate_learning_history(
     roles: tuple[str, ...],
     compare: dict[str, Any],
     details: dict[str, dict[str, Any]],
+    *,
+    exact_current_paths: bool = False,
 ) -> list[str]:
     """Validate the immutable release-to-learning publication as a pure contract."""
 
@@ -1571,6 +1685,14 @@ def _validate_learning_history(
         return errors
 
     expected_parent = release_sha
+    index_owner = (
+        "learning"
+        if roles == ("learning",)
+        else "notes"
+        if "notes" in roles
+        else "commits"
+    )
+    index_change_count = 0
     for index, (role, summary) in enumerate(zip(roles, commits)):
         sha = summary.get("sha") if isinstance(summary, dict) else None
         if not isinstance(sha, str):
@@ -1610,12 +1732,23 @@ def _validate_learning_history(
                 paths = [file_entry.get("filename")]
                 if file_entry.get("previous_filename"):
                     paths.append(file_entry.get("previous_filename"))
+                if role == index_owner and "docs/README.md" in paths:
+                    index_change_count += 1
                 for path in paths:
-                    if not isinstance(path, str) or not _learning_path_allowed(role, path):
+                    if not isinstance(path, str) or not _learning_path_allowed(
+                        role,
+                        path,
+                        allow_commits_index=(role == "commits" and "notes" not in roles),
+                        exact_current_paths=exact_current_paths,
+                    ):
                         errors.append(
                             f"{label}: {role} publication changes forbidden path {path!r}"
                         )
         expected_parent = sha
+    if index_change_count != 1:
+        errors.append(
+            f"{label}: {index_owner} publication must change docs/README.md exactly once"
+        )
     final_sha = commits[-1].get("sha") if isinstance(commits[-1], dict) else None
     if final_sha != learning_sha:
         errors.append(f"{label}: final publication commit is not the learning branch tip")
@@ -1675,6 +1808,8 @@ def _check_remote_project(owner: str, project: dict[str, Any]) -> list[str]:
         f"refs/tags/{release}^{{}}",
         f"refs/heads/{learning}*",
     ]
+    if project_id in STRICT_TOPOLOGY_PROJECTS:
+        patterns.extend(("refs/heads/*", "refs/tags/*"))
     template = project.get("template")
     if template:
         patterns.extend((f"refs/tags/{template}", f"refs/tags/{template}^{{}}"))
@@ -1698,6 +1833,28 @@ def _check_remote_project(owner: str, project: dict[str, Any]) -> list[str]:
         errors.append(f"{label}: {release} does not peel to main")
     if not learning_sha:
         errors.append(f"{label}: learning branch {learning} is missing")
+
+    if project_id in STRICT_TOPOLOGY_PROJECTS:
+        actual_heads = {
+            ref.removeprefix("refs/heads/")
+            for ref in refs
+            if ref.startswith("refs/heads/")
+        }
+        expected_heads = {"main", learning}
+        if actual_heads != expected_heads:
+            errors.append(
+                f"{label}: branches must be exactly {sorted(expected_heads)}, "
+                f"found {sorted(actual_heads)}"
+            )
+        actual_tags = {
+            ref.removeprefix("refs/tags/")
+            for ref in refs
+            if ref.startswith("refs/tags/") and not ref.endswith("^{}")
+        }
+        if actual_tags != {release}:
+            errors.append(
+                f"{label}: tags must be exactly {[release]}, found {sorted(actual_tags)}"
+            )
 
     expected_learning_ref = f"refs/heads/{learning}"
     supplemental = sorted(
@@ -1797,7 +1954,16 @@ def _check_remote_project(owner: str, project: dict[str, Any]) -> list[str]:
                     _learning_roles(project_id, peeled_sha, learning_sha),
                     compare,
                     details,
+                    exact_current_paths=(learning == "learning/current"),
                 )
+            )
+
+    if learning_sha:
+        _, index_error = _remote_text(owner, repo, "docs/README.md", learning_sha)
+        if index_error:
+            errors.append(
+                f"{label}@{learning_sha}: missing learning index docs/README.md: "
+                f"{index_error}"
             )
 
     for field in ("practice", "answer"):
