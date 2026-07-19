@@ -109,6 +109,11 @@ UNCHANGED_NAVIGATION_RELEASES = {
         "main": "b69347797e81c803397ced1ba23042216caa74fd",
         "tag": "7c8fe460cd8e4e01ac5c82a5e6e987be7cce58fb",
     },
+    "container-stack": {
+        "release": "v1.0.0",
+        "main": "bd498c17f255681cbc57e598e09a876abb2c0a2e",
+        "tag": "dd878d65945e32c9a499b175643a1ae39880cb3a",
+    },
     "web-boundary-inspector": {
         "release": "codex-5.7",
         "main": "33a62cf963bb48e55b304f7d80f6a582d9c90f81",
@@ -207,6 +212,7 @@ MIGRATED_42_PROJECTS = frozenset(
         "stack-sort",
         "stl-container",
         "irc-relay-server",
+        "container-stack",
     }
 )
 FROZEN_MONOLITHIC_LEARNING = {
@@ -234,7 +240,7 @@ PROJECT_SETUP = {
     "stack-sort": "make && make test",
     "stl-container": "make && make test (also run the strict C++98 compile gate)",
     "irc-relay-server": "make && make test && make smoke",
-    "container-stack": "make test && make config; then make up && make smoke && make down",
+    "container-stack": "make test && make ENV_FILE=.env.example config; then prepare secret files and run make ENV_FILE=.env.example up && make smoke && make ENV_FILE=.env.example down",
     "web-boundary-inspector": "npm ci; npx playwright install; make check",
     "pong-pong": "pnpm install --frozen-lockfile; make typecheck && make test && make build && make e2e",
     "frontend-foundations-training": "pnpm install --frozen-lockfile; pnpm exec playwright install chromium; make check-repo && make build && make test-e2e",
