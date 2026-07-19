@@ -89,6 +89,11 @@ class RegistryFixture:
                     if track == "42"
                     else "docs/commits/README.md"
                 )
+                if node_id in curriculum.MIGRATED_42_PROJECTS:
+                    release = curriculum.CURRENT_42_RELEASE
+                    learning = curriculum.CURRENT_42_LEARNING
+                    practice = curriculum.CURRENT_42_PRACTICE
+                    answer = curriculum.CURRENT_42_ANSWER
                 if node_id == "sportsbook-risk-service":
                     release = "risk-v1.0.2"
                     learning = "learning/risk-v1.0.2"
@@ -485,7 +490,7 @@ class CurriculumValidationTest(unittest.TestCase):
     def test_unchanged_backlink_exception_is_explicit_and_scoped(self):
         by_id = {project["id"]: project for project in self.fixture.data["projects"]}
         del by_id["cloud-launch-training"]["main_backlink"]
-        by_id["format-printer"]["main_backlink"] = False
+        by_id["small-shell"]["main_backlink"] = False
         errors = curriculum.validate_registry(self.fixture.data, self.root)
         self.assertTrue(
             any(
@@ -494,7 +499,7 @@ class CurriculumValidationTest(unittest.TestCase):
             )
         )
         self.assertTrue(
-            any("format-printer: only an explicitly unchanged" in error for error in errors)
+            any("small-shell: only an explicitly unchanged" in error for error in errors)
         )
 
     def test_github_slug_preserves_meaningful_hyphens(self):
@@ -567,13 +572,13 @@ class CurriculumValidationTest(unittest.TestCase):
             1,
         )
         text = text.replace(
-            "docs/practice-codex-5.7/README.md)",
-            "docs/practice-codex-5.7/README.md-wrong)",
+            "docs/practice/README.md)",
+            "docs/practice/README.md-wrong)",
             1,
         )
         text = text.replace(
-            "docs/commits-codex-5.7/README.md)",
-            "docs/commits-codex-5.7/README.md-wrong)",
+            "docs/commits/README.md)",
+            "docs/commits/README.md-wrong)",
             1,
         )
         path.write_text(text, encoding="utf-8")
@@ -584,8 +589,8 @@ class CurriculumValidationTest(unittest.TestCase):
     def test_project_card_requires_exact_ref_tokens(self):
         path = self.root / "tracks/42.md"
         text = path.read_text(encoding="utf-8")
-        text = text.replace("`codex-5.7`", "codex-5.7", 1)
-        text = text.replace("`learning/codex-5.7`", "learning/codex-5.7", 1)
+        text = text.replace("`v1.0.0`", "v1.0.0", 1)
+        text = text.replace("`learning/current`", "learning/current", 1)
         path.write_text(text, encoding="utf-8")
         errors = curriculum.validate_registry(self.fixture.data, self.root)
         exact_ref_errors = [error for error in errors if "missing exact ref" in error]
@@ -732,7 +737,7 @@ class CurriculumValidationTest(unittest.TestCase):
         by_id["format-printer"]["release"] = "codex-5.6.1"
         by_id["sportsbook-risk-service"]["learning"] = "learning/risk-v1.0.1"
         errors = curriculum.validate_registry(self.fixture.data, self.root)
-        self.assertTrue(any("current 42 release must be codex-5.7" in error for error in errors))
+        self.assertTrue(any("current 42 release must be v1.0.0" in error for error in errors))
         self.assertTrue(
             any(
                 "sportsbook-risk-service: current learning must be learning/risk-v1.0.2"
@@ -781,16 +786,23 @@ class RemoteContractTest(unittest.TestCase):
         return subprocess.CompletedProcess([], returncode, stdout, stderr)
 
     @staticmethod
-    def _learning_fixture(with_notes=True):
-        release = "1" * 40
-        learning = "4" * 40
-        roles = ("notes", "commits", "practice") if with_notes else (
-            "commits",
-            "practice",
-        )
+    def _learning_fixture(
+        with_notes=True,
+        roles=None,
+        release_sha=None,
+        learning_sha=None,
+    ):
+        release = release_sha or "1" * 40
+        learning = learning_sha or "4" * 40
+        if roles is None:
+            roles = ("notes", "commits", "practice") if with_notes else (
+                "commits",
+                "practice",
+            )
         shas = [str(index + 2) * 40 for index in range(len(roles))]
         shas[-1] = learning
         paths = {
+            "learning": "docs/README.md",
             "notes": "docs/README.md",
             "commits": "docs/commits-release-v1/README.md",
             "practice": "docs/practice-release-v1/README.md",
@@ -823,11 +835,40 @@ class RemoteContractTest(unittest.TestCase):
         supplemental=False,
         backlink=True,
         missing_template=False,
+        main_drift=False,
+        tag_drift=False,
+        learning_drift=False,
     ):
-        release_sha, learning_sha, roles, compare, details = self._learning_fixture(
-            project["id"] not in curriculum.NO_PROJECT_NOTES
+        navigation_freeze = curriculum.UNCHANGED_NAVIGATION_RELEASES.get(
+            project["id"]
         )
-        tag_sha = "a" * 40
+        frozen_learning = curriculum.FROZEN_MONOLITHIC_LEARNING.get(project["id"])
+        release_basis = (
+            navigation_freeze["main"] if navigation_freeze else "1" * 40
+        )
+        learning_tip = (
+            frozen_learning["learning"] if frozen_learning else "4" * 40
+        )
+        if main_drift:
+            release_basis = "9" * 40
+        if learning_drift:
+            learning_tip = "8" * 40
+        fixture_roles = (
+            ("learning",)
+            if frozen_learning
+            else curriculum._learning_roles(
+                project["id"], release_basis, learning_tip
+            )
+        )
+        release_sha, learning_sha, roles, compare, details = self._learning_fixture(
+            project["id"] not in curriculum.NO_PROJECT_NOTES,
+            fixture_roles,
+            release_basis,
+            learning_tip,
+        )
+        tag_sha = navigation_freeze["tag"] if navigation_freeze else "a" * 40
+        if tag_drift:
+            tag_sha = "7" * 40
         refs = [
             f"{release_sha}\trefs/heads/main",
             f"{tag_sha if not lightweight else release_sha}\trefs/tags/{project['release']}",
@@ -1006,10 +1047,11 @@ class RemoteContractTest(unittest.TestCase):
         project = {
             "id": "format-printer",
             "repo": "format-printer",
-            "release": "codex-5.7",
-            "learning": "learning/codex-5.7",
-            "practice": "docs/practice-codex-5.7/README.md",
-            "answer": "docs/commits-codex-5.7/README.md",
+            "release": "v1.0.0",
+            "learning": "learning/current",
+            "main_backlink": False,
+            "practice": "docs/practice/README.md",
+            "answer": "docs/commits/README.md",
             "doc": "tracks/42.md",
             "anchor": "stage-format-printer",
         }
@@ -1106,8 +1148,8 @@ class RemoteContractTest(unittest.TestCase):
         project = {
             "id": "format-printer",
             "repo": "format-printer",
-            "release": "codex-5.7",
-            "learning": "learning/codex-5.7",
+            "release": "v1.0.0",
+            "learning": "learning/current",
             "practice": "docs/practice/README.md",
             "answer": "docs/commits/README.md",
             "doc": "tracks/42.md",
@@ -1124,6 +1166,54 @@ class RemoteContractTest(unittest.TestCase):
         self.assertTrue(any("not an annotated tag" in error for error in errors))
         self.assertTrue(any("supplemental current-release" in error for error in errors))
         self.assertTrue(any("lacks exact card backlink" in error for error in errors))
+
+    def test_frozen_monolithic_learning_tip_drift_is_rejected(self):
+        project = {
+            "id": "format-printer",
+            "repo": "format-printer",
+            "release": "v1.0.0",
+            "learning": "learning/current",
+            "main_backlink": False,
+            "practice": "docs/practice/README.md",
+            "answer": "docs/commits/README.md",
+            "doc": "tracks/42.md",
+            "anchor": "stage-format-printer",
+        }
+        with patch.object(
+            curriculum,
+            "_run",
+            side_effect=self._project_dispatcher(project, learning_drift=True),
+        ):
+            errors = curriculum._check_remote_project("woopinbell", project)
+        self.assertTrue(
+            any(
+                "monolithic learning exception requires the exact frozen" in e
+                for e in errors
+            )
+        )
+
+    def test_unchanged_navigation_object_drift_is_rejected(self):
+        project = {
+            "id": "signal-message-bus",
+            "repo": "signal-message-bus",
+            "release": "v1.0.0",
+            "learning": "learning/current",
+            "main_backlink": False,
+            "practice": "docs/practice/README.md",
+            "answer": "docs/commits/README.md",
+            "doc": "tracks/42.md",
+            "anchor": "stage-signal-message-bus",
+        }
+        for drift in ({"main_drift": True}, {"tag_drift": True}):
+            with self.subTest(drift=drift), patch.object(
+                curriculum,
+                "_run",
+                side_effect=self._project_dispatcher(project, **drift),
+            ):
+                errors = curriculum._check_remote_project("woopinbell", project)
+            self.assertTrue(
+                any("unchanged navigation exception requires exact" in e for e in errors)
+            )
 
     def test_portfolio_template_must_be_annotated(self):
         project = {
@@ -1180,6 +1270,40 @@ class RemoteContractTest(unittest.TestCase):
         )
         self.assertTrue(any("subject must start with docs(commits)" in e for e in errors))
         self.assertTrue(any("forbidden path 'src/server.c'" in e for e in errors))
+
+    def test_format_printer_monolithic_learning_exception_is_path_scoped(self):
+        frozen = curriculum.FROZEN_MONOLITHIC_LEARNING["format-printer"]
+        self.assertEqual(
+            curriculum._learning_roles(
+                "format-printer", frozen["main"], frozen["learning"]
+            ),
+            ("learning",),
+        )
+        self.assertEqual(
+            curriculum._learning_roles("format-printer"),
+            ("notes", "commits", "practice"),
+        )
+        self.assertEqual(
+            curriculum._learning_roles("thread-dining"),
+            ("notes", "commits", "practice"),
+        )
+        for path in (
+            "docs/README.md",
+            "docs/commits/001.md",
+            "docs/practice/001.md",
+            "notes/ar.md",
+        ):
+            self.assertTrue(curriculum._learning_path_allowed("learning", path))
+        for path in (
+            "Makefile",
+            "docs/commits-v1/001.md",
+            "docs/notes/index.md",
+            "include/format.h",
+            "notes-index.md",
+            "src/format.c",
+            "tests/test.c",
+        ):
+            self.assertFalse(curriculum._learning_path_allowed("learning", path))
 
     def test_learning_merge_and_wrong_tip_are_rejected(self):
         release, learning, roles, compare, details = self._learning_fixture(False)

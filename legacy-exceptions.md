@@ -45,6 +45,29 @@ source history와 단일 `learning/current` 진입점을 만드는 일회성 승
 - 아래 정확한 원장이 완성되지 않은 저장소에는 이 절이 force-push, tag 이동·삭제 또는 branch 삭제
   권한을 주지 않습니다.
 
+### 동결된 format-printer learning publication과 navigation 예외
+
+`format-printer`는 전수 집필·검토를 거쳐 이미 동결됐으므로 learning history를 다시 분할하지 않습니다.
+정확한 source 기준은 `main` `be4966f3c1d176453a34b609036ef4998fa8b022`(tree
+`359bd26b61fdbb72489deb3f71bc4f67e5a5316c`)이고, annotated `v1.0.0` tag object
+`fe7a0d79cb9733f4f6871e5164a305907cd7b78e`는 그 commit을 가리킵니다. `learning/current` tip
+`7a271026d6afbec22e8e32c6cfeaf7ac5ae1d777`(tree
+`458d900fb3793b6e61cce0121961560c8a4ae08a`)은 source 바로 뒤의 단일
+`docs(learning): publish v1.0.0 corpus` commit입니다.
+
+- 이 단일 commit은 실제 frozen tree에 존재하는 `docs/README.md`, `docs/commits/**`,
+  `docs/practice/**`, `notes/**`만 변경할 수 있습니다. Versioned duplicate와 source·config·test path는
+  허용하지 않습니다.
+- 단일 `docs(learning)` role은 위 exact object의 `format-printer`에만 허용합니다. 이후 새 learning
+  publication은 전역의 notes → commits → practice 순서를 따릅니다.
+- `format-printer`, `signal-message-bus`, `thread-dining`의 current source release에는
+  learner-navigation-only commit을 추가하지 않았습니다. 세 저장소의 main backlink 부재는 명시적
+  예외이며 current ref·학습 진입점은 Document Box 단계 카드가 소유합니다. 이 예외는 각각
+  `be4966f3c1d176453a34b609036ef4998fa8b022`/`fe7a0d79cb9733f4f6871e5164a305907cd7b78e`,
+  `ed859ce08c0d84154c21be6ffd6cdb1ea1c353c3`/`7563b6325e6c1a31bc63dbf22b935bb155e0e434`,
+  `94ccaa4085af3decfd6d7bba2ff0b879954947e5`/`983bb1f4ce52ce33feb68955d9c0788670b12fb4`
+  main/tag object 쌍에만 적용하며 어느 object든 이동하면 backlink 검사를 다시 요구합니다.
+
 ### Execution lane handoff 원장
 
 다른 세션으로 lane을 넘길 때 handoff 문서는 최소한 다음을 고정합니다.

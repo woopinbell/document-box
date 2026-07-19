@@ -20,7 +20,9 @@ seungwoo7050 <seungwoo7050@naver.com>
 
 - author와 committer의 name/email을 모두 위 값으로 고정합니다.
 - `%aI == %cI`: 초와 UTC offset까지 같은 timestamp를 사용합니다.
-- Asia/Seoul `+09:00`, 09:00–21:59 KST와 고유한 분·초를 사용합니다.
+- Source commit과 source tagger는 Asia/Seoul `+09:00`, 09:00–21:59 KST와 고유한 분·초를
+  사용합니다. Learning·governance commit과 tagger는 시각대와 고유한 분·초는 유지하되 실제
+  작성·publication 시각을 사용하므로 이 시간대 제한에서 제외합니다.
 - 같은 저장소의 parent timestamp는 child보다 늦을 수 없습니다.
 - annotated tagger도 같은 identity와 해당 surface의 timestamp 규칙을 따릅니다.
 - `.mailmap` 표시 통합은 준수가 아닙니다. raw object를 직접 검사합니다.

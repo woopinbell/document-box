@@ -74,10 +74,36 @@ NO_PROJECT_NOTES = {
     "sportsbook-shared-protocol",
 }
 UNCHANGED_NAVIGATION_RELEASES = {
-    "signal-message-bus",
-    "web-boundary-inspector",
-    "cloud-launch-training",
-    "sportsbook-orchestration",
+    "format-printer": {
+        "release": "v1.0.0",
+        "main": "be4966f3c1d176453a34b609036ef4998fa8b022",
+        "tag": "fe7a0d79cb9733f4f6871e5164a305907cd7b78e",
+    },
+    "signal-message-bus": {
+        "release": "v1.0.0",
+        "main": "ed859ce08c0d84154c21be6ffd6cdb1ea1c353c3",
+        "tag": "7563b6325e6c1a31bc63dbf22b935bb155e0e434",
+    },
+    "thread-dining": {
+        "release": "v1.0.0",
+        "main": "94ccaa4085af3decfd6d7bba2ff0b879954947e5",
+        "tag": "983bb1f4ce52ce33feb68955d9c0788670b12fb4",
+    },
+    "web-boundary-inspector": {
+        "release": "codex-5.7",
+        "main": "33a62cf963bb48e55b304f7d80f6a582d9c90f81",
+        "tag": "8eea6c54810886d974334683d8b4d8a5e491ddb7",
+    },
+    "cloud-launch-training": {
+        "release": "cloud-launch-v1.0.1",
+        "main": "480e18b5b47cccf5fe0f38e6c5811fde567bdfe4",
+        "tag": "20857ee56df971d3a1b5eb7a8cf181377dd971ef",
+    },
+    "sportsbook-orchestration": {
+        "release": "orchestration-v1",
+        "main": "564a83a57bd834870303688adb96450639c13bd2",
+        "tag": "51f8698a2123e9b5ce8052edad42a17405e8b3bb",
+    },
 }
 PROJECT_FIELDS = (
     "id",
@@ -152,10 +178,26 @@ FRONTEND_APPLICATION_PORTFOLIO = {
     "release": "portfolio-v3.0.1",
     "learning": "learning/portfolio-v3.0.1",
 }
-CURRENT_42_RELEASE = "codex-5.7"
-CURRENT_42_LEARNING = "learning/codex-5.7"
-CURRENT_42_PRACTICE = "docs/practice-codex-5.7/README.md"
-CURRENT_42_ANSWER = "docs/commits-codex-5.7/README.md"
+MIGRATED_42_PROJECTS = frozenset(
+    {"format-printer", "signal-message-bus", "thread-dining"}
+)
+FROZEN_MONOLITHIC_LEARNING = {
+    "format-printer": {
+        "release": "v1.0.0",
+        "main": "be4966f3c1d176453a34b609036ef4998fa8b022",
+        "tag": "fe7a0d79cb9733f4f6871e5164a305907cd7b78e",
+        "learning_ref": "learning/current",
+        "learning": "7a271026d6afbec22e8e32c6cfeaf7ac5ae1d777",
+    }
+}
+CURRENT_42_RELEASE = "v1.0.0"
+CURRENT_42_LEARNING = "learning/current"
+CURRENT_42_PRACTICE = "docs/practice/README.md"
+CURRENT_42_ANSWER = "docs/commits/README.md"
+LEGACY_42_RELEASE = "codex-5.7"
+LEGACY_42_LEARNING = "learning/codex-5.7"
+LEGACY_42_PRACTICE = "docs/practice-codex-5.7/README.md"
+LEGACY_42_ANSWER = "docs/commits-codex-5.7/README.md"
 PROJECT_SETUP = {
     "format-printer": "make && make test",
     "signal-message-bus": "make && make test (repeat; include long/abandoned sender cases)",
@@ -747,12 +789,20 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
                 except CurriculumError as exc:
                     errors.append(str(exc))
             if node.get("track") == "42":
-                expected_42 = {
-                    "release": CURRENT_42_RELEASE,
-                    "learning": CURRENT_42_LEARNING,
-                    "practice": CURRENT_42_PRACTICE,
-                    "answer": CURRENT_42_ANSWER,
-                }
+                if node_id in MIGRATED_42_PROJECTS:
+                    expected_42 = {
+                        "release": CURRENT_42_RELEASE,
+                        "learning": CURRENT_42_LEARNING,
+                        "practice": CURRENT_42_PRACTICE,
+                        "answer": CURRENT_42_ANSWER,
+                    }
+                else:
+                    expected_42 = {
+                        "release": LEGACY_42_RELEASE,
+                        "learning": LEGACY_42_LEARNING,
+                        "practice": LEGACY_42_PRACTICE,
+                        "answer": LEGACY_42_ANSWER,
+                    }
                 for field, expected in expected_42.items():
                     if node.get(field) != expected:
                         errors.append(
@@ -1414,13 +1464,29 @@ def _json_payload(result: subprocess.CompletedProcess[str]) -> Any | None:
         return None
 
 
-def _learning_roles(project_id: str) -> tuple[str, ...]:
+def _learning_roles(
+    project_id: str,
+    release_sha: str | None = None,
+    learning_sha: str | None = None,
+) -> tuple[str, ...]:
+    frozen = FROZEN_MONOLITHIC_LEARNING.get(project_id)
+    if frozen and (
+        release_sha == frozen["main"] and learning_sha == frozen["learning"]
+    ):
+        return ("learning",)
     if project_id in NO_PROJECT_NOTES:
         return ("commits", "practice")
     return ("notes", "commits", "practice")
 
 
 def _learning_path_allowed(role: str, path: str) -> bool:
+    if role == "learning":
+        return (
+            path == "docs/README.md"
+            or path.startswith("notes/")
+            or path.startswith("docs/commits/")
+            or path.startswith("docs/practice/")
+        )
     if role == "notes":
         return (
             path == "docs/README.md"
@@ -1540,6 +1606,7 @@ def _remote_text(
 
 
 def _check_remote_project(owner: str, project: dict[str, Any]) -> list[str]:
+    project_id = str(project["id"])
     repo = project["repo"]
     release = project["release"]
     learning = project["learning"]
@@ -1612,6 +1679,34 @@ def _check_remote_project(owner: str, project: dict[str, Any]) -> list[str]:
     for ref in supplemental:
         errors.append(f"{label}: supplemental current-release branch is forbidden: {ref}")
 
+    navigation_freeze = UNCHANGED_NAVIGATION_RELEASES.get(project_id)
+    if navigation_freeze and not project.get("main_backlink", True):
+        actual_navigation = {
+            "release": release,
+            "main": main_sha,
+            "tag": tag_sha,
+        }
+        if actual_navigation != navigation_freeze:
+            errors.append(
+                f"{label}: unchanged navigation exception requires exact "
+                "release, main, and annotated tag objects"
+            )
+
+    frozen_learning = FROZEN_MONOLITHIC_LEARNING.get(project_id)
+    if frozen_learning:
+        actual_learning = {
+            "release": release,
+            "main": peeled_sha,
+            "tag": tag_sha,
+            "learning_ref": learning,
+            "learning": learning_sha,
+        }
+        if actual_learning != frozen_learning:
+            errors.append(
+                f"{label}: monolithic learning exception requires the exact frozen "
+                "release and learning objects"
+            )
+
     if template:
         template_tag = refs.get(f"refs/tags/{template}")
         template_peeled = refs.get(f"refs/tags/{template}^{{}}")
@@ -1665,7 +1760,7 @@ def _check_remote_project(owner: str, project: dict[str, Any]) -> list[str]:
                     label,
                     peeled_sha,
                     learning_sha,
-                    _learning_roles(str(project["id"])),
+                    _learning_roles(project_id, peeled_sha, learning_sha),
                     compare,
                     details,
                 )
