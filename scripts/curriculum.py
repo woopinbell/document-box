@@ -104,6 +104,11 @@ UNCHANGED_NAVIGATION_RELEASES = {
         "main": "6f875e0677674d86145188d8558e3cf56b61c9cb",
         "tag": "d6ff0b12322c9221d47f308097dc4b4980f3b483",
     },
+    "irc-relay-server": {
+        "release": "v1.0.0",
+        "main": "b69347797e81c803397ced1ba23042216caa74fd",
+        "tag": "7c8fe460cd8e4e01ac5c82a5e6e987be7cce58fb",
+    },
     "web-boundary-inspector": {
         "release": "codex-5.7",
         "main": "33a62cf963bb48e55b304f7d80f6a582d9c90f81",
@@ -201,6 +206,7 @@ MIGRATED_42_PROJECTS = frozenset(
         "small-shell",
         "stack-sort",
         "stl-container",
+        "irc-relay-server",
     }
 )
 FROZEN_MONOLITHIC_LEARNING = {

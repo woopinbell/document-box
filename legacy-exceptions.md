@@ -60,8 +60,9 @@ source history와 단일 `learning/current` 진입점을 만드는 일회성 승
   허용하지 않습니다.
 - 단일 `docs(learning)` role은 위 exact object의 `format-printer`에만 허용합니다. 이후 새 learning
   publication은 전역의 notes → commits → practice 순서를 따릅니다.
-- `format-printer`, `signal-message-bus`, `thread-dining`, `small-shell`, `stack-sort`, `stl-container`의
-  current source release에는 learner-navigation-only commit을 추가하지 않았습니다. 여섯 저장소의
+- `format-printer`, `signal-message-bus`, `thread-dining`, `small-shell`, `stack-sort`, `stl-container`,
+  `irc-relay-server`의 current source release에는 learner-navigation-only commit을 추가하지 않았습니다.
+  일곱 저장소의
   main backlink 부재는 명시적
   예외이며 current ref·학습 진입점은 Document Box 단계 카드가 소유합니다. 이 예외는 각각
   `be4966f3c1d176453a34b609036ef4998fa8b022`/`fe7a0d79cb9733f4f6871e5164a305907cd7b78e`,
@@ -69,7 +70,8 @@ source history와 단일 `learning/current` 진입점을 만드는 일회성 승
   `94ccaa4085af3decfd6d7bba2ff0b879954947e5`/`983bb1f4ce52ce33feb68955d9c0788670b12fb4`,
   `0fb1f6bf4825890f7b657ce5de918aed52a8318d`/`3e7164817b3883783c80c6a1ced90531faf85efe`,
   `51325493a5e0e10f72dcfc04079d3b4f2c96488e`/`dc08a9be3ec27a5096be753ef7f7126ce8b713e9`,
-  `6f875e0677674d86145188d8558e3cf56b61c9cb`/`d6ff0b12322c9221d47f308097dc4b4980f3b483`
+  `6f875e0677674d86145188d8558e3cf56b61c9cb`/`d6ff0b12322c9221d47f308097dc4b4980f3b483`,
+  `b69347797e81c803397ced1ba23042216caa74fd`/`7c8fe460cd8e4e01ac5c82a5e6e987be7cce58fb`
   main/tag object 쌍에만 적용하며 어느 object든 이동하면 backlink 검사를 다시 요구합니다.
 
 ### `small-shell` 정렬 실행 원장
@@ -336,6 +338,92 @@ Final fresh clone은 advertised ref가 `main`, `learning/current`, annotated `v1
 C++98 root/reference tests, UBSan, native `leaks` 0 bytes, source provenance, publication path role,
 ID/hash/tree/parent/ordinal/H3, 상대 link 90개 missing 0, source drift 0과 strict fsck를 통과했습니다. ASan은
 project `main` 전에 Apple clang runtime shadow-memory 초기화에서 교착해 `ENV-LIMIT`로 분리했습니다.
+
+### `irc-relay-server` 정렬 실행 원장
+
+2026-07-20 KST에 private `woopinbell/irc-relay-server`의 source와 learning ref를 exact lease의 단일
+atomic push로 전환했습니다. Expected-old `main`은
+`0367c17d77f94253347275ca3c755311061ba88f`이었고 replacement `main`은
+`b69347797e81c803397ced1ba23042216caa74fd`(tree
+`d08375e09c8a044d907dbfdc15103c27582e85c7`)입니다. Annotated `v1.0.0` tag object
+`7c8fe460cd8e4e01ac5c82a5e6e987be7cce58fb`는 replacement `main`으로 peel됩니다.
+
+Source-only rollback bundle은 old `main`과 아래 여섯 source tag만 담았고 learning ref는 포함하지
+않았습니다. Bundle SHA-256은
+`942fe329ed05ca7307187f521e415dfc1121075f63190c6c01d3e10f17923a12`이며 bundle verify, strict fsck,
+restore clone과 main·tag·HEAD ref exact 대조를 통과했습니다. Project와 governance publication 및
+fresh-clone gate가 green이 된 뒤 snapshot, bundle과 restore clone을 폐기하므로 active ref나 offline
+보존본으로 복구할 수 없습니다. Old learning ref는 별도 bundle·tag·archive를 만들지 않았으며 remote
+garbage collection 뒤 복구할 수 없습니다.
+
+삭제한 source tag의 ref/object/peeled target은 다음과 같습니다.
+
+| ref | old tag object | old peeled target |
+| --- | --- | --- |
+| `codex-5.6` | `b11e067747ea8c2b835af4b5cf428fd098aba4b9` | `6c76d8456a1acbd187904d2d0d5b4776ea70e93a` |
+| `codex-5.6.1` | `83bdc36a26f0c9116c806e477a1c58f8b4fb5de5` | `812b2312ebe45b50e3dcaf1a746ff6101d05def8` |
+| `codex-5.7` | `905d1303f59f73bcd668cd82290bd45d765f7ede` | `0367c17d77f94253347275ca3c755311061ba88f` |
+| `legacy/codex-5.6-monolith` | `419a7cac2c76b219fdf5d7ac2477ea2c0cce59f5` | `d760aad5a122045b041017bdbd8be9557838a433` |
+| `pre-history-clean-codex-5.7` | `2b52f59e1114d492f1ab024f97217073ffe3d31f` | `812b2312ebe45b50e3dcaf1a746ff6101d05def8` |
+| `pre-learning-split-codex-5.6` | `9ccece0b30099c765dab4a21bb1d82bf392af66a` | `85ec9d47a21f4b1688a7a473a4e13bcba441f02f` |
+
+Source window `2024-04-08`–`2024-07-16` KST 안에 37개 linear commit을 고정했습니다. Root
+`30b90c77d22976aa5b0bdb0324dd2d57f0d39f43`부터
+`cd817cd4de1bc81c6759a56db2af30e3a42661b9`까지의 첫 29개 commit은 object·tree·patch·timestamp가
+exact입니다. 나머지 source disposition은 다음과 같습니다.
+
+| stable ID | old commit / tree / patch-id | new commit / tree / patch-id | disposition |
+| --- | --- | --- | --- |
+| `036` | `6bb1257cb1cd604de4934bc5c545b4c72263e5cb` / `030a7cf60efdf002c0c2aee79624c1d34478b47f` / `4b151b8e7320c51a011bf82971ff9b7eb810162d` | `1105974a93ac20cbe18d3461fe193579d9fce6ba` / same / same | executable-reference 책임과 patch를 보존하고 active ordinal 29에 배치 |
+| `030` | `2a6f4e2d33a33515072f8209d697be5825ebaa83` / `43720d535e969a0b848a1caddc57a7891c177e92` / `fa78b3b8a2cc57adde67955f804126e872e32b71` | `a58e683f74b93922db82e76e2c0c4209f7ae66c5` / same / same | timestamp replay |
+| `031` | `fcfb9931f7cfe9f5942e53078048b973afe1a06a` / `fcc224efb73a823e0088027bb73a185792b16626` / `8a3e7fa624d0dfc822d06bc8441661bb12940aab` | `8323d80de47210fb8fd9e128befa085a848095d0` / same / same | timestamp replay |
+| `032` | `61f5ef00357c33414c2cdc0e2931461684757e79` / `8c66d7277af153647f18e4f424b05011c074b37c` / `296ac0d66a2d9d89286f1c1f8c3d71b40f0d6995` | `506a97e81ccbeeaba889347caf75724b2760222d` / same / same | timestamp replay |
+| `033` | `f7de072c6ba062cac67e2a034bd05db49f197d76` / `81166901c98b93ef866c67768b70e16a3191a41b` / `dfeec8f6fd96bd520162b3b722cec419e2242017` | `070f3e9121b64e5a7e89f25c07815f212dff8d70` / same / same | timestamp replay |
+| `034` | `61f5ba2470fa572fc053fc92652b1df4f4959f3f` / `994da50897a18ef777a65e3b90b1e348be0ab842` / `13331591c5485eb5b54d186b41f0a0161fdb292f` | `aaae9e5cf2cf029a49ec6bed6c2f45c2be4d5434` / same / same | timestamp replay |
+| `035` | `3b008e1c85b3985dac62b1bb7c7f95ace7929739` / `1dc8fcbdff781f66738283bca3713099266f70ea` / `e21253bdbd65a66ff514c71f5f70fadf9d54f9d3` | `77636de54539f40b4ce1365ca79c5f210a9e99a0` / same / same | timestamp replay |
+| `037` | `cc5f31812f5dbcfd418cac739711136837651727` / `7d441c287e9ba59c78ab638d08bb0c8b3ee58030` / `2647d95b5c84fb9572fbd48b431ea5fb84c9fd5e` | `b69347797e81c803397ced1ba23042216caa74fd` / `d08375e09c8a044d907dbfdc15103c27582e85c7` / `4b4cd2ff35863a970038dbed9b270bdea753f006` | source 문서의 versioned provenance를 중립화하고 실제 root·책임 순서로 DESIGN을 교정 |
+
+위 old suffix의 timestamp는 순서대로 `2026-07-16T09:08:13+09:00`부터
+`2026-07-16T09:08:20+09:00`까지였고, new suffix는 같은 patch 순서로
+`2024-07-16T16:18:13+09:00`, `16:42:14`, `17:05:15`, `17:31:16`, `18:02:17`, `18:37:18`,
+`19:11:19`, `20:03:20` KST에 배치했습니다. 각 commit의 author/committer timestamp는 같습니다.
+
+Old final `0367c17d77f94253347275ca3c755311061ba88f`는 learner-navigation-only라 source에서 제외하고 stable
+ID `038`을 reserved 처리했습니다. 그 commit의 실제 DESIGN 문법 교정만 source-doc 책임 `037`에
+통합했습니다. 첫 candidate `9e1e8efeac9c6d61f61ed6c601d39b938563b936`에서 발견한 잘못된 DESIGN root hash와
+책임 범위는 같은 `037`에서 교정한 뒤 freeze를 다시 고정했습니다. Old main과 replacement main의
+source, config, tests와 executable reference 구현 diff는 0입니다.
+
+Learning 후보와 선택 근거는 다음과 같습니다.
+
+| old ref | tip | tree | paths / commits |
+| --- | --- | --- | ---: |
+| `learning/codex-5.6` | `307d67bb354f891466c5065e1c8d54896ba51efb` | `ff12a721e12aea1a19e65a8a196ece11253d6a0e` | 209 / 40 |
+| `learning/codex-5.6.1` | `50706544b0a4fb8ee8fdfc4635267e08cd3e945d` | `b45173c02c365bd7172fca360ced58cebd7553c7` | 212 / 41 |
+| `learning/codex-5.7` | `cbcce4df187e51ed064bd49cb1c0decdab077d7d` | `c24bac95edbb2fe4d5c038c0bb7567ba21707f94` | 230 / 41 |
+
+세 tip은 ancestor 관계가 아니고 공통 path blob도 일부 diverge하므로 source 호환성, commit coverage,
+link·metadata와 유효한 고유 내용을 대조했습니다. `5.7`을 inventory basis로 삼되 그 branch의 잘못된
+030–036 renumbering은 채택하지 않고, 안에 보존된 `5.6` stable corpus를 canonical answer/practice
+본문으로 선택했습니다. Answer `000`–`028`과 18개 note body, 합계 47개 blob은 OID-identical입니다.
+Practice `002`–`028`, `030`–`035`의 33개는 canonical answer link와 final hash/parent만 정규화했고,
+executable-reference `036`과 current index는 직접 검토했습니다. Old mixed publication `029`와
+learner-navigation-only `038`은 active corpus에서 제외했습니다.
+
+최종 `learning/current`는 source 뒤의 actual-time publication 세 commit으로만 구성됩니다.
+
+| phase | commit | tree | parent | actual KST time |
+| --- | --- | --- | --- | --- |
+| notes | `4658d952a43d466207b7c1003c2495f12a5b6528` | `52bdaf6c415bdb161ba06ebd1a09b444415180a7` | source `b69347797e81c803397ced1ba23042216caa74fd` | `2026-07-20T06:06:22+09:00` |
+| answers | `48be54bbdba103d5a03c9cf9b92e7ac5320e29fd` | `a3ba369919ebc6e94024624abcacaec72c07a93d` | notes | `2026-07-20T06:06:43+09:00` |
+| practices / tip | `46bf45dcacb3875ffe093fb40c8e6bb208867ea5` | `b1fb8804c55446008776174ba3ff620e7e5402c7` | answers | `2026-07-20T06:16:01+09:00` |
+
+Final corpus는 source 37 = answers 37 + exclusions 0, answers 37 = practices 34 + omissions 3
+(`000`, `001`, `037`)입니다. Stable `029`, `038`은 reserved라 식에 넣지 않습니다. Final fresh clone은
+advertised ref가 `main`, `learning/current`, annotated `v1.0.0`뿐임을 확인했고 strict C++17 root build와
+TCP smoke, 네 Darwin standalone reference, source provenance, 37 answer·34 practice의
+ID/hash/tree/parent/ordinal/H3·책임, canonical link, source drift 0과 clean status를 통과했습니다.
+격리 sandbox의 socket bind `PermissionError`는 host에서 재현되지 않아 `ENV-LIMIT`로 분리했습니다.
 
 ### Execution lane handoff 원장
 
