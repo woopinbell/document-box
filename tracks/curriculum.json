@@ -278,11 +278,11 @@
       "sourceWindow": {"start": "2025-05-17", "end": "2026-01-16"},
       "repo": "frontend-reliability-training",
       "release": "reliability-v1.0.1",
-      "learning": "learning/reliability-v1.0.1",
+      "learning": "learning/current",
       "doc": "tracks/frontend.md",
       "anchor": "stage-frontend-reliability-training",
-      "practice": "docs/practice-reliability-v1.0.1/README.md",
-      "answer": "docs/commits-reliability-v1.0.1/README.md",
+      "practice": "docs/practice/README.md",
+      "answer": "docs/commits/README.md",
       "prev": "cloud-launch-training",
       "next": "frontend-transfer"
     },
@@ -570,7 +570,7 @@
         },
         {
           "project": "frontend-reliability-training",
-          "learning": "learning/reliability-v1.0.1",
+          "learning": "learning/current",
           "practice_paths": [
             "docs/practice/010.md",
             "docs/practice/011.md",

@@ -62,7 +62,7 @@ canonical_resume: frontend-delivery-training
 2. 다음 고정 버전을 사용한다.
 
    - Foundations `foundations-v1.0.1`, `learning/current`
-   - Reliability `reliability-v1.0.1`, `learning/reliability-v1.0.1`
+   - Reliability `reliability-v1.0.1`, `learning/current`
    - Portfolio `template-v3.0.1`, `portfolio-v3.0.1`, `learning/portfolio-v3.0.1`
 
 3. `learning/*`는 읽기 전용으로 두고 개인 구현은 문제에서 지정한 시작 커밋의 `study/*` branch에
@@ -89,15 +89,15 @@ canonical_resume: frontend-delivery-training
 
 아래 네 묶음은 실제 구현 문제다. 각 링크를 순서대로 열어 문제에서 지정한 시작 커밋에 개인 branch를
 만들고 실제 실패를 기록한다. 자기 시도 뒤
-[Reliability 해설 목록](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/commits-reliability-v1.0.1/README.md)과
+[Reliability 해설 목록](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/commits/README.md)과
 비교한 다음 같은 시작점에서 다시 구현한다.
 
 | 묶음 | 연습문제 | 확인할 내용 |
 | --- | --- | --- |
-| Form | [`010`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/practice/010.md), [`011`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/practice/011.md), [`013`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/practice/013.md) | client/server error, 중복 제출 방지, 접근 가능한 오류·초기화. `pnpm --filter react-main test form-validation`, `pnpm --filter react-main typecheck` |
-| Table | [`036`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/practice/036.md), [`037`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/practice/037.md), [`039`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/practice/039.md) | URL 기준 상태, history 복원, loading·error·retry. `pnpm --filter react-main test table-pagination`, `pnpm --filter react-main typecheck` |
-| Optimistic update | [`043`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/practice/043.md), [`044`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/practice/044.md), [`046`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/practice/046.md), [`047`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/practice/047.md) | rollback, mutation 구분, 순서가 바뀐 callback과 오래된 응답 거부. `pnpm --filter react-main test optimistic-update`, `pnpm --filter react-main typecheck` |
-| Server/client | [`108`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/practice/108.md), [`109`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/practice/109.md), [`110`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/practice/110.md), [`112`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/practice/112.md) | 공개 가능한 props, server-only module과 private field 비노출. `pnpm --filter next-sub test server-client-boundary`, `pnpm --filter next-sub typecheck`, `pnpm --filter next-sub test:e2e server-client-boundary` |
+| Form | [`010`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/practice/010.md), [`011`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/practice/011.md), [`013`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/practice/013.md) | client/server error, 중복 제출 방지, 접근 가능한 오류·초기화. `pnpm --filter react-main test form-validation`, `pnpm --filter react-main typecheck` |
+| Table | [`036`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/practice/036.md), [`037`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/practice/037.md), [`039`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/practice/039.md) | URL 기준 상태, history 복원, loading·error·retry. `pnpm --filter react-main test table-pagination`, `pnpm --filter react-main typecheck` |
+| Optimistic update | [`043`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/practice/043.md), [`044`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/practice/044.md), [`046`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/practice/046.md), [`047`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/practice/047.md) | rollback, mutation 구분, 순서가 바뀐 callback과 오래된 응답 거부. `pnpm --filter react-main test optimistic-update`, `pnpm --filter react-main typecheck` |
+| Server/client | [`108`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/practice/108.md), [`109`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/practice/109.md), [`110`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/practice/110.md), [`112`](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/practice/112.md) | 공개 가능한 props, server-only module과 private field 비노출. `pnpm --filter next-sub test server-client-boundary`, `pnpm --filter next-sub typecheck`, `pnpm --filter next-sub test:e2e server-client-boundary` |
 
 현재 완성본에서는 다음을 모두 실행한다.
 

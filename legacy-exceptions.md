@@ -1176,6 +1176,115 @@ status도 확인했습니다. Authenticated remote-navigation의 Cloud project, 
 Central links는 PASS입니다. 같은 전체 검사에서 아직 migration 전인 `frontend-reliability-training`,
 `portfolio-site`, `sportsbook-shared-protocol`의 다섯 오류만 별도로 남았으며 Cloud completion과 분리합니다.
 
+### `frontend-reliability-training` source product-token allowlist
+
+`frontend-reliability-training`의 final source에는 AI 작업 provenance가 아니라 제품 동작을 뜻하는 소문자
+`cursor`만 남습니다. 허용 범위는 아래 exact path, blob, occurrence와 그 blob을 처음 도입한 replay
+commit으로 한정합니다.
+
+| exact path | exact blob | occurrence | 책임 commit | 제품상 이유 |
+| --- | --- | ---: | --- | --- |
+| `react-main/src/shared/components/Button.tsx` | `41cf3fd9e828be04169398edb0faf4e214de4ab4` | 1 | `04396f821ce7046d018f04ed6b64c4b6e5f3e875` | Tailwind `cursor-not-allowed` disabled styling |
+| `react-main/src/advanced/design-system/components.tsx` | `01bfa80d89db584f2a6fe5c436f533b0ffa7e15e` | 1 | `1d5c69694ec470b53e2e11cf61f702786872a690` | Tailwind `cursor-not-allowed` disabled styling의 최초 blob |
+| `react-main/src/advanced/design-system/components.tsx` | `086c6995f27afd681dd93d2daba6f521f2189b82` | 1 | `365eda6f3739e3d6a46fb5eab3c0dc1ed0c9f4b9` | 같은 제품 styling의 후속·final blob |
+| `react-main/src/advanced/complex-filtering/Exercise.tsx` | `a1cb838a8f346ed8eafccf13ef23969bb14e099e` | 2 | `7926f775df06539d69b4863fc3959d2655afc616` | 두 disabled control의 Tailwind `cursor-not-allowed` styling |
+| `react-main/src/advanced/realtime-dashboard/README.md` | `bd09642e103732777ffb5d5832f4d714ede5f642` | 1 | `372cf5cbc517cf9854a94324f23d308b8edede3b` | reconnect replay의 per-topic sequence cursor 설명 |
+| `react-main/src/advanced/realtime-dashboard/README.md` | `863ab411daa390aeff8b92837499c36fc4094d0c` | 1 | `b159e0487638a5be344cdd3e3b00620b784461fe` | 같은 제품 개념의 후속 blob |
+| `react-main/src/advanced/realtime-dashboard/README.md` | `1bd96d224924b5e2f7119066548d4238fb9cee4d` | 1 | `900754d9b89afde00d0e66ecdbacb816856c247c` | 같은 제품 개념의 final blob |
+| `react-main/src/advanced/realtime-dashboard/Exercise.tsx` | `a196af77c8fbad83a8cef8536735e32c5408075d` | 4 | `275448e09e11d2ef1c4a5b52ae335ec1a582ae02` | event stream의 현재 sequence 위치 state와 갱신 로직 |
+
+Historical source graph 전체에서는 8개 blob의 12 occurrence이고 final tree에서는 5개 path의 9
+occurrence입니다. 다른 path·blob의 `cursor`, 대소문자 변형, ref·tag 이름, commit·tag
+metadata·trailer 또는 tool-control artifact에는 이 allowlist를 적용하지 않습니다. Final source의 ref,
+path, commit metadata·본문·trailer와 blob을 전수 검사했을 때 이 제품 token 외 금지 provenance는
+0건입니다.
+
+### `frontend-reliability-training` 전환 승인 원장
+
+2026-07-20 KST에 private `woopinbell/frontend-reliability-training`의 source와 단일 learning publication을
+로컬에서 고정했습니다. 이 절의 첫 publication 시점에는 원격 destructive 전환 전이며, 아래 expected-old
+object와 source-only 복구 수단을 사용한 별도 사용자 승인 뒤에만 원격을 바꿉니다. Expected-old `main`은
+`1e340a517e6e0f2961bb49ea4a351a98b64532f4`(tree
+`a5d2fbd988b3dd38449192f8c4bc33d122061ffd`)이고 replacement `main`은
+`a8516228a4c04456c309af267ba72af0fa4acab2`(tree
+`f4026f392f3c73445db9e88cbc9b676a48d6ad98`)입니다. Final source는 root
+`fed83e4b2e08eb186f8275175107c26d86e10860`부터 140개 commit이며 merge는 23개입니다. Annotated
+`reliability-v1.0.1` tag object `725b363abf4171e4a1ac737d0d765989cfee3a39`는 replacement
+`main`으로 peel됩니다.
+
+삭제하거나 교체할 source tag의 exact object와 peeled target은 다음과 같습니다.
+
+| ref | old tag object | old peeled target | disposition |
+| --- | --- | --- | --- |
+| `legacy-feature-graph-v1` | `5d94f63540204338fd58cbc0ab102ee08ee30bda` | `b4904bdb3c795458d56b2b7a19d83a31e6dffef2` | 삭제 |
+| `pre-codex-5.6` | `b290decd03f4c3c7096240a1b161c9d7e14a8525` | `7e08ddf6d43690b5bb451840ef5a7dbd09d673c7` | 삭제 |
+| `reliability-v1` | `4eb88e7b3056e349df1e1cf0702c68bd0d33aec1` | `1988796e6d246bf58430934edc85305bab0eaddf` | 삭제 |
+| `reliability-v1.0.1` | `ac87ae51d63b2a12206fd97f36b831b5b5e02133` | `1e340a517e6e0f2961bb49ea4a351a98b64532f4` | final annotated object로 교체 |
+
+141개 old source disposition은
+[`data/migrations/frontend-reliability-training-source-crosswalk.tsv`](data/migrations/frontend-reliability-training-source-crosswalk.tsv)에
+고정합니다. 파일은 header 포함 142줄이며 SHA-256은
+`9730fdb1c765ac7f4a92c9eeb2589b3216b0520d583f664e7b80b1c96d95e5a9`입니다. 140개 책임은 원래
+topology와 patch 순서를 유지해 승인된 `2025-05-17`–`2026-01-16` KST window에 배치했고, old final
+`1e340a517e6e0f2961bb49ea4a351a98b64532f4`는 source 기여가 없는 learner-navigation-only commit이라
+제외했습니다. Old와 replacement main의 tree 차이는 `README.md`, `docs/DESIGN.md`, `docs/README.md`
+세 source-owned 문서뿐이며 application source, config와 test는 byte-identical합니다. Source identity,
+author/committer timestamp 일치, 책임 순서, three-section message, trailer와 등록되지 않은 금지
+provenance 검사는 모두 통과했습니다.
+
+원격 전환 전 source-only rollback bundle은 다음 값으로 검증해 보존 중입니다.
+
+- 경로:
+  `/Users/woopinbell/Documents/Codex/2026-07-19/1/work/frontend-lane/frontend-reliability-training/frontend-reliability-training-1e340a51-source.bundle`
+- SHA-256: `9f08785feb0b126647b48ba56c6adce155df308ab151c087098ae570f954b6e6`
+- 범위: old `main`과 old source tag 4개, learning ref 0개
+- 복원 검증: bundle verify, 여섯 advertised ref exact 대조, restore clone의 strict fsck 통과
+
+두 legacy learning ref까지 담았던 all-refs bundle
+`frontend-reliability-training-1e340a51.bundle`(SHA-256
+`4256bbda8a7cec8196debefbf9bfcfa7cf59ce730be0dea4666a5090656918fa`)은 사용자 결정에 따라 원격
+publication 전에 폐기했습니다. Learning branch는 bundle, archive ref 또는 보존 tag를 만들지 않습니다.
+위 source-only bundle, snapshot과 restore clone은 원격 publication과 별도 fresh-clone 전체 gate가 green이
+된 뒤 폐기하고 closure commit에 그 사실을 기록합니다.
+
+Learning 후보와 단일화 근거는 다음과 같습니다.
+
+| old ref | tip | tree | total paths |
+| --- | --- | --- | ---: |
+| `learning/reliability-v1` | `b93d990d21447b03cfea416ea2de16e00b62deb4` | `c63ca7b1bd81cddc452e0db962a33181ce7dc583` | 699 |
+| `learning/reliability-v1.0.1` | `4be1f7741030818e723351162618ee94e2c47e80` | `c11737f9d9b1a4acdcf9b14c3eb14c94abaaa9ab` | 702 |
+
+두 tip은 ancestor 관계가 아닙니다. 699개 공통 path 중 source-owned `README.md`, `docs/DESIGN.md`,
+`docs/README.md` 세 blob만 다르고 696개는 identical이며, v1.0.1에는 release-specific answer/practice
+index와 navigation answer 143의 세 path가 추가됩니다. Current source 호환성, commit coverage와 metadata를
+대조해 v1.0.1을 canonical legacy basis로 선택했습니다. 두 branch의 동일 blob은 재독하지 않았고,
+고유·충돌 blob과 final source patch의 영향을 받는 answer/practice만 직접 검토했습니다.
+
+Canonical basis의 513개 path disposition은
+[`data/migrations/frontend-reliability-training-learning-disposition.tsv`](data/migrations/frontend-reliability-training-learning-disposition.tsv)에
+고정합니다. 파일은 header 포함 514줄이며 SHA-256은
+`e6295422f00f3ce3efd1d489b4a950f8ce2eff3ce316d1cb6793781af5f8e0dc`입니다. Disposition은
+`adopted 328 / corrected 177 / replaced 3 / discarded 5`, review mode는
+`oid-identical 328 / metadata-only 174 / direct-content 11`이고 `PENDING`은 0입니다. 원장의
+`reviewed_at` `2026-07-20T19:39:37+09:00`은 과거 content-review 시각을 재구성한 값이 아니라 repository
+owner가 disposition, source crosswalk와 object를 최종 대조한 governance 검증 시각입니다.
+
+Final `learning/current`는 final source 뒤의 actual-time publication 세 commit으로만 구성됩니다.
+
+| phase | commit | tree | parent |
+| --- | --- | --- | --- |
+| notes | `09fce2f8a54343970a57db12920b47739237eb39` | `d4319c5360d51d5b529a56dae805cfdc666b1748` | source `a8516228a4c04456c309af267ba72af0fa4acab2` |
+| answers | `a4dbce445ca2bd954b481f2ed195e2e44720d2ed` | `1cf0499cc91d2fa32d42b477ed6a59c08e222943` | notes |
+| practices / tip | `43ff06851c55b2eb299fb1b36d9de2b2e25afe50` | `509fcb1185bdf8e9a8f7369196da06fb5a9c2cc4` | answers |
+
+Final 수량은 `140 reachable source commits = 115 answers + 25 exclusions`,
+`115 answers = 61 practices + 54 omissions`입니다. Exclusion은 source merge 23개와 source-owned document
+책임 2개입니다. Local `learning/current`에서 Node 22, pnpm 10.32.1 frozen install, repository guard,
+lint, typecheck, React·Next unit 80개, 두 production build, Playwright 6개와 corpus audit 47개를
+통과했습니다. Exact ref·tree, annotated tag, strict fsck, source drift 0과 clean status도 확인했습니다.
+원격 topology, authenticated navigation과 별도 private fresh-clone 결과는 destructive publication 뒤
+closure commit에서 확정합니다.
+
 ### 승인된 source window
 
 날짜는 모두 Asia/Seoul `+09:00` 기준이며 양 끝 날짜를 포함합니다. `extensionEnd`가 있는 신규 프로젝트는

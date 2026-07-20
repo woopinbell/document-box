@@ -276,7 +276,7 @@ FRONTEND_APPLICATION_PRACTICES = {
 }
 FRONTEND_APPLICATION_ANSWER_MAPPINGS = {
     "frontend-foundations-training": "docs/commits/README.md",
-    "frontend-reliability-training": "docs/commits-codex-5.6/README.md",
+    "frontend-reliability-training": "docs/commits/README.md",
 }
 FRONTEND_APPLICATION_PORTFOLIO = {
     "project": "portfolio-site",
@@ -306,6 +306,7 @@ MIGRATED_FRONTEND_PROJECTS = frozenset(
         "frontend-foundations-training",
         "frontend-delivery-training",
         "cloud-launch-training",
+        "frontend-reliability-training",
     }
 )
 STRICT_TOPOLOGY_PROJECTS = (
@@ -345,7 +346,7 @@ PROJECT_SETUP = {
     "frontend-foundations-training": "pnpm install --frozen-lockfile; pnpm exec playwright install chromium; make check-repo && make build && make test-e2e",
     "frontend-delivery-training": "pnpm install --frozen-lockfile; pnpm exec playwright install chromium; make check",
     "cloud-launch-training": "npm ci; npx playwright install; make check",
-    "frontend-reliability-training": "pnpm install --frozen-lockfile; pnpm exec playwright install chromium; make lint && make typecheck && make test && make build && make test-e2e",
+    "frontend-reliability-training": "pnpm install --frozen-lockfile; pnpm exec playwright install chromium; pnpm check:repo && make lint && make typecheck && make test && make build && make test-e2e",
     "portfolio-site": "npm ci; npx playwright install; npm test && npm run lint && npm run typecheck && npm run build && npm run test:e2e",
     "backend-foundations-training": "make check",
     "backend-delivery-training": "make test && make build-spring && make build-go && make check-docs",

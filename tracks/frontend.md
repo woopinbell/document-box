@@ -52,9 +52,9 @@
 
 - **시작 조건:** [F3. Cloud](#stage-cloud-launch-training)를 완료한다.
 - **먼저 읽을 것:** [Frontend 안정성 읽는 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-frontend-reliability-training)의 RSC·router·query·form·접근성·test 범위를 읽는다.
-- **저장소와 학습 자료:** [`frontend-reliability-training`](https://github.com/woopinbell/frontend-reliability-training), 완성본 `reliability-v1.0.1`, 읽기 전용 자료 `learning/reliability-v1.0.1`; [학습 자료 목차](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/README.md), [연습문제 목록](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/practice-reliability-v1.0.1/README.md), [해설 목록](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/commits-reliability-v1.0.1/README.md).
+- **저장소와 학습 자료:** [`frontend-reliability-training`](https://github.com/woopinbell/frontend-reliability-training), 완성본 `reliability-v1.0.1`, 읽기 전용 자료 `learning/current`; [학습 자료 목차](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/README.md), [연습문제 목록](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/practice/README.md), [해설 목록](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/commits/README.md).
 - **직접 해볼 것:** [필수 학습 범위](README.md#공식-수행-범위)에 따라 문제 한 개를 고른다. 지정된 시작 커밋에 `study/frontend-reliability-<ID>`를 만들고 오래된 응답, rollback, URL state, focus와 reconnect 실패를 재현한다. 실패 test를 만든 뒤 해설과 비교하고 다시 구현한다.
-- **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 Node·pnpm과 Playwright를 확인하고 `make lint && make typecheck && make test && make build && make test-e2e`를 실행한다.
+- **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 Node·pnpm과 Playwright를 확인하고 `pnpm check:repo && make lint && make typecheck && make test && make build && make test-e2e`를 실행한다.
 - **완료 조건:** 비동기 응답과 UI 상태의 권위, 실패 rollback과 접근성 focus 복구를 설명한다.
 - **다음 과제:** [F5. 낯선 API 평가](#stage-frontend-transfer).
 

@@ -121,9 +121,9 @@ class RegistryFixture:
                     answer = "docs/commits/README.md"
                 if node_id == "frontend-reliability-training":
                     release = "reliability-v1.0.1"
-                    learning = "learning/reliability-v1.0.1"
-                    practice = "docs/practice-reliability-v1.0.1/README.md"
-                    answer = "docs/commits-reliability-v1.0.1/README.md"
+                    learning = "learning/current"
+                    practice = "docs/practice/README.md"
+                    answer = "docs/commits/README.md"
                 if node_id == "portfolio-site":
                     release = "portfolio-v3.0.1"
                     learning = "learning/portfolio-v3.0.1"
@@ -1137,7 +1137,7 @@ class RemoteContractTest(unittest.TestCase):
             "frontend-reliability-training": {
                 "id": "frontend-reliability-training",
                 "repo": "frontend-reliability-training",
-                "learning": "learning/reliability-v1.0.1",
+                "learning": "learning/current",
             },
             "portfolio-site": {
                 "id": "portfolio-site",
@@ -1232,10 +1232,7 @@ class RemoteContractTest(unittest.TestCase):
                 endpoint = command[-1]
                 if missing_path and missing_path in endpoint:
                     return self._response(returncode=1, stderr="not found")
-                if (
-                    "docs/commits/README.md" in endpoint
-                    or "docs/commits-codex-5.6/README.md" in endpoint
-                ):
+                if "docs/commits/README.md" in endpoint:
                     return self._response(mapping_payload)
                 return self._response()
             raise AssertionError(f"unexpected command: {command}")
@@ -1350,6 +1347,37 @@ class RemoteContractTest(unittest.TestCase):
             "answer": "docs/commits/README.md",
             "doc": "tracks/frontend.md",
             "anchor": "stage-cloud-launch-training",
+        }
+        with patch.object(
+            curriculum, "_run", side_effect=self._project_dispatcher(project)
+        ):
+            self.assertEqual(
+                curriculum._check_remote_project("woopinbell", project), []
+            )
+
+        cases = (
+            ({"extra_branch": True}, "branches must be exactly"),
+            ({"extra_tag": True}, "tags must be exactly"),
+        )
+        for options, marker in cases:
+            with self.subTest(marker=marker), patch.object(
+                curriculum,
+                "_run",
+                side_effect=self._project_dispatcher(project, **options),
+            ):
+                errors = curriculum._check_remote_project("woopinbell", project)
+            self.assertTrue(any(marker in error for error in errors), errors)
+
+    def test_migrated_frontend_reliability_rejects_extra_refs(self):
+        project = {
+            "id": "frontend-reliability-training",
+            "repo": "frontend-reliability-training",
+            "release": "reliability-v1.0.1",
+            "learning": "learning/current",
+            "practice": "docs/practice/README.md",
+            "answer": "docs/commits/README.md",
+            "doc": "tracks/frontend.md",
+            "anchor": "stage-frontend-reliability-training",
         }
         with patch.object(
             curriculum, "_run", side_effect=self._project_dispatcher(project)
