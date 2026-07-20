@@ -1673,6 +1673,83 @@ learning 전체 gate, exact branch·tag topology와 clean status를 확인했습
 검사에서 Backend Reliability와 Central links는 PASS했고 남은 두 오류는 다음 작업 대상인
 `sportsbook-shared-protocol`에만 속합니다.
 
+### `sportsbook-shared-protocol` 실행 원장
+
+2026-07-21 KST에 private `woopinbell/sportsbook-shared-protocol`의 source와 learning ref를 모든 ref의
+exact lease를 사용한 단일 atomic push로 전환했습니다. Expected-old `main`
+`4b7cd85bfac75c9339302507514ccac77337f4f3`은 replacement `main`
+`b0305168e6d340bc1b73c999649fbd526f964663`(tree
+`0e40d4d9b265ac9379690bfb2791648cf372e06a`)로 이동했습니다. Final source는 20개 linear commit,
+merge 0이며 승인된 `2026-02-02`–`2026-02-15` KST window, canonical identity,
+author/committer timestamp 일치, parent chronology, three-section message와 trailer gate를 통과했습니다.
+첫 17개 책임은 원래 in-window timestamp를 보존했고 마지막 세 책임은 마지막 개발 구간 안에서 patch
+순서대로 배치했습니다. Old final learner-navigation-only 책임은 source graph에서 제외하고 정확한 release
+상태와 canonical Document Box backlink를 final source guide에 통합했습니다. Old `main`과 final source의
+tree diff는 `.gitignore`, `README.md` 두 path뿐입니다.
+
+45개 old advertised source commit의 disposition은
+[`data/migrations/sportsbook-shared-protocol-source-crosswalk.tsv`](data/migrations/sportsbook-shared-protocol-source-crosswalk.tsv)에
+고정합니다. Header 포함 46줄, SHA-256
+`17c9d126ba062c2581c0d9de7aecd867198208714dceb2a1d640dfc7bac73083`이며 old/new commit, parent,
+tree, stable patch-id, timestamp, subject와 disposition을 모두 닫습니다. Final source ref·tag·commit
+metadata·trailer·path·historical reachable blob의 금지 provenance는 0건이며 제품 기능상 허용할 token도
+0건입니다.
+
+Current annotated release `shared-v1.0.1`은 old object
+`bcd451127a37747d2ab5824902943007dfed1b65`에서 final object
+`5acf10a9bab01f3151f1371f1012c5687e79a55b`으로 교체했으며 final `main`으로 peel됩니다. 다음 legacy
+source tag는 exact old object에서 삭제했습니다.
+
+| ref | old tag object | old peeled target |
+| --- | --- | --- |
+| `pre-shared-v1` | `5f1c07eafd1d81445e35df96334c5d1f7a4c051d` | `91e33340f8650fc48d6ab4b3f84e70d64ceb6c8c` |
+| `shared-v1` | `bd3ab9cb9df9ddce51aecd32008b8844781a184c` | `e0754c3a68ddce4f9ddef00e3dfb26b3ce53adbb` |
+| `v0.1.0` | `1e43d18430cada6d7bbb2468d430ffa9c7a231b5` | `ee28c65b761faea0923ce6a7fa1f1f509911b2be` |
+
+원격 전환 전 source-only rollback bundle은 다음 값으로 검증했으며 learning ref를 담지 않았습니다.
+
+- 경로: `/Users/woopinbell/Documents/Codex/2026-07-19/1/work/backend-lane/sportsbook-shared-protocol/source-audit/sportsbook-shared-protocol-4b7cd85b-source.bundle`
+- SHA-256: `5d608387b858178308caa3ee6e3362eda404e94c284d794cbe7e6ac06d059e55`
+- 범위: old `main`, source tag 네 개와 `HEAD`; learning ref와 learning-only 보존 object 0개
+- 복원 검증: `git bundle verify`, complete history, restore clone exact refs와 `git fsck --strict` 통과
+- lifecycle: project source·learning fresh-clone gate는 통과했습니다. Document Box·Central Notes pointer와
+  authenticated Shared Protocol remote-navigation이 통과할 때까지 보존한 뒤 삭제하며, learning bundle이나
+  대체 offline artifact는 만들지 않습니다.
+
+Learning 입력은 다음 두 ref였습니다. Ancestor 우열로 간주하지 않고 path·blob·tree matrix, source
+호환성, commit coverage, link·metadata와 고유 내용을 비교해 최종 corpus를 단일화했습니다.
+
+| old ref | tip | tree | disposition |
+| --- | --- | --- | --- |
+| `learning/shared-v1` | `415bd8165e66fe8a83a32b4855f43038577a6eac` | `e20ef8469894183db1b8bf40f1d996777c58e353` | 유효 blob 대조 뒤 삭제 |
+| `learning/shared-v1.0.1` | `90b81d9d49472673a85fb740ef425173119125d7` | `29dd20ca56fdb15739703938604daf8978a9a03e` | source-split canonical donor; 단일화 뒤 삭제 |
+
+134개 union path 판정은
+[`data/migrations/sportsbook-shared-protocol-learning-disposition.tsv`](data/migrations/sportsbook-shared-protocol-learning-disposition.tsv)에
+고정합니다. Header 포함 135줄, SHA-256
+`c8c3086875c06ee1d89c4cf534ff236eb191e025679f18196cbb360150e4dcc3`입니다. Final disposition은
+adopted 44, replaced 30, discarded 60이며 review mode는 `oid-identical` 44, `metadata-only` 23,
+`direct-content` 7, discard 60입니다. 동일 OID는 재독하지 않고 고유·충돌·source 영향 본문만 2026-07-21
+03:41:05 KST에 한 번 검토했습니다. Learning bundle, archive ref와 보존 tag는 만들지 않았습니다.
+
+Final `learning/current`는 source freeze 뒤 actual-time publication 두 commit으로만 구성됩니다. 별도
+repository-local concept notes가 없으므로 notes phase는 만들지 않았습니다.
+
+| phase | commit | tree | parent | actual KST time |
+| --- | --- | --- | --- | --- |
+| answers | `86ee2af2913a6fb9c2af88fa56a41a8d0ac484a9` | `9117d012cbb34c8638bdae957519078d8ce581ec` | source `b0305168e6d340bc1b73c999649fbd526f964663` | `2026-07-21T03:47:08+09:00` |
+| practices / tip | `63c5639cec295d83e5bc47671e1d1d02641a8537` | `cc3c9240d7ef85c96ac2d9abbf1d5999f74804aa` | answers | `2026-07-21T03:47:15+09:00` |
+
+Final 수량은 `20 source = 19 answers + 1 marker-only exclusion`,
+`19 answers = 7 practices + 12 omissions`입니다. Answer 전체 barrier와 검토 뒤 practice를 수작업으로
+파생했으며 final source와 learning 사이 source/config/test diff는 0입니다. 별도 HTTPS fresh clone에서
+source와 learning exact tip·tree, strict fsck, active root·link·metadata·path role, source provenance 0과
+`./mvnw verify`의 Avro Java 생성, handwritten/generated compile, 89 tests, Spotless, Checkstyle, package를
+다시 통과했습니다. Avro 1.12.0은 `dateTimeLogicalTypeImplementation`을 unknown parameter로 경고하며 이
+저장소에는 명시적 schema compatibility test gate가 없습니다. 이 migration은 그 호환성을 검증했다고
+기록하지 않습니다. Remote는 branch `main`, `learning/current`와 annotated `shared-v1.0.1`만
+advertise합니다.
+
 ### 승인된 source window
 
 날짜는 모두 Asia/Seoul `+09:00` 기준이며 양 끝 날짜를 포함합니다. `extensionEnd`가 있는 신규 프로젝트는

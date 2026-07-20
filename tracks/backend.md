@@ -51,9 +51,9 @@
 
 - **시작 조건:** [B3. Backend 안정성](#stage-backend-reliability-training)을 완료한다.
 - **먼저 읽을 것:** [공통 규약 읽는 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-sportsbook-shared-protocol)에서 새로 읽을 범위와 다시 볼 범위를 확인한다.
-- **저장소와 학습 자료:** [`sportsbook-shared-protocol`](https://github.com/woopinbell/sportsbook-shared-protocol), 완성본 `shared-v1.0.1`, 읽기 전용 자료 `learning/shared-v1.0.1`; [연습문제 목록](https://github.com/woopinbell/sportsbook-shared-protocol/blob/learning/shared-v1.0.1/docs/practice-shared-v1.0.1/README.md), [해설 목록](https://github.com/woopinbell/sportsbook-shared-protocol/blob/learning/shared-v1.0.1/docs/commits-shared-v1.0.1/README.md).
+- **저장소와 학습 자료:** [`sportsbook-shared-protocol`](https://github.com/woopinbell/sportsbook-shared-protocol), annotated 완성본 `shared-v1.0.1`, 유일한 읽기 전용 자료 `learning/current`; [학습 자료 목차](https://github.com/woopinbell/sportsbook-shared-protocol/blob/learning/current/docs/README.md), [연습문제 목록](https://github.com/woopinbell/sportsbook-shared-protocol/blob/learning/current/docs/practice/README.md), [해설 목록](https://github.com/woopinbell/sportsbook-shared-protocol/blob/learning/current/docs/commits/README.md).
 - **직접 해볼 것:** [필수 학습 범위](README.md#공식-수행-범위)에 따라 문제 한 개를 고른다. 지정된 시작 커밋에 `study/shared-protocol-<ID>`를 만들고 event·error 규약과 호환성 실패를 consumer 관점에서 기록한다. 해설과 비교한 뒤 다시 구현한다.
-- **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 Java·Maven으로 `./mvnw verify`를 실행해 schema와 호환성을 확인한다.
+- **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 Java 17·Maven으로 `./mvnw verify`를 실행해 Avro Java 생성, handwritten/generated source compile, 89 tests, Spotless, Checkstyle과 package를 확인한다. 이 저장소에는 명시적 schema compatibility gate가 없으므로 호환성 검증을 통과했다고 간주하지 않는다.
 - **완료 조건:** schema·error·event 변경이 downstream을 깨뜨리는 경우와 호환 가능한 변경을 설명한다.
 - **다음 과제:** [B5. sportsbook-wallet-service](#stage-sportsbook-wallet-service).
 

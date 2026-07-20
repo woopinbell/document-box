@@ -332,6 +332,7 @@ MIGRATED_BACKEND_PROJECTS = frozenset(
         "backend-foundations-training",
         "backend-delivery-training",
         "backend-reliability-training",
+        "sportsbook-shared-protocol",
     }
 )
 STRICT_TOPOLOGY_PROJECTS = (
