@@ -26,8 +26,8 @@ from urllib.parse import quote, unquote
 
 TRACK_COUNTS = {"42": 13, "frontend": 5, "backend": 12}
 VALID_TRACKS = frozenset(TRACK_COUNTS)
-REGISTRY_VERSION = 3
-CANONICAL_SEQUENCES = {
+REGISTRY_VERSION = 4
+DISPLAY_SEQUENCES = {
     "42": (
         "linux-foundation",
         "c-foundation",
@@ -72,6 +72,57 @@ CANONICAL_SEQUENCES = {
         "backend-complete",
     ),
 }
+
+
+def _linear_edges(
+    sequence: tuple[str, ...], first_prev: tuple[str, ...]
+) -> dict[str, tuple[tuple[str, ...], tuple[str, ...]]]:
+    edges: dict[str, tuple[tuple[str, ...], tuple[str, ...]]] = {}
+    for index, node_id in enumerate(sequence):
+        prev_ids = first_prev if index == 0 else (sequence[index - 1],)
+        next_ids = () if index == len(sequence) - 1 else (sequence[index + 1],)
+        edges[node_id] = (prev_ids, next_ids)
+    return edges
+
+
+CANONICAL_EDGES = {
+    "linux-foundation": (
+        (),
+        ("c-foundation", "cpp-foundation", "container-stack"),
+    ),
+    "c-foundation": (("linux-foundation",), ("format-printer",)),
+    "format-printer": (("c-foundation",), ("buffered-line-reader",)),
+    "buffered-line-reader": (("format-printer",), ("signal-message-bus",)),
+    "signal-message-bus": (("buffered-line-reader",), ("thread-dining",)),
+    "thread-dining": (("signal-message-bus",), ("small-shell",)),
+    "small-shell": (("thread-dining",), ("stack-sort",)),
+    "stack-sort": (("small-shell",), ("web-boundary-inspector",)),
+    "cpp-foundation": (("linux-foundation",), ("stl-container",)),
+    "stl-container": (("cpp-foundation",), ("irc-relay-server",)),
+    "irc-relay-server": (("stl-container",), ("web-boundary-inspector",)),
+    "container-stack": (("linux-foundation",), ("web-boundary-inspector",)),
+    "web-boundary-inspector": (
+        ("stack-sort", "irc-relay-server", "container-stack"),
+        ("pong-pong",),
+    ),
+    "pong-pong": (("web-boundary-inspector",), ("42-incident",)),
+    "42-incident": (
+        ("pong-pong",),
+        ("frontend-foundations-training", "backend-foundations-training"),
+    ),
+}
+CANONICAL_EDGES.update(
+    _linear_edges(
+        DISPLAY_SEQUENCES["frontend"],
+        ("42-incident",),
+    )
+)
+CANONICAL_EDGES.update(
+    _linear_edges(
+        DISPLAY_SEQUENCES["backend"],
+        ("42-incident",),
+    )
+)
 NO_PROJECT_NOTES = {
     "c-foundation",
     "buffered-line-reader",
@@ -676,7 +727,7 @@ def _validate_overlays(
         required_markers = (
             "`frontend-application-readiness`",
             "`grants_mastery=false`",
-            "`make preflight ROUTE=frontend-application-bridge`",
+            "make preflight ROUTE=frontend-application-bridge",
             "](42.md#stage-42-incident)",
             "](frontend.md#stage-frontend-delivery-training)",
         )
@@ -685,7 +736,7 @@ def _validate_overlays(
                 errors.append(
                     "frontend application overlay document is missing marker " + marker
                 )
-        for stage in CANONICAL_SEQUENCES["42"]:
+        for stage in DISPLAY_SEQUENCES["42"]:
             card_marker = f"](42.md#stage-{stage})"
             if card_marker not in section:
                 errors.append(
@@ -832,6 +883,23 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
                                 f"{node_id}: anchor #{anchor} must appear exactly once "
                                 f"in {doc}, found {anchor_count}"
                             )
+                        elif kind != "completion":
+                            section = _anchor_section(doc_text, anchor)
+                            card_markers = (
+                                "**시작 조건:**",
+                                "**먼저 읽을 것:**",
+                                "**저장소와 학습 자료:**",
+                                "**직접 해볼 것:**",
+                                "**현재 완성본 확인:**",
+                                "**완료 조건:**",
+                                "**다음 과제:**",
+                            )
+                            for marker in card_markers:
+                                if marker not in section:
+                                    errors.append(
+                                        f"{node_id}: current stage card is missing the "
+                                        f"learner action marker {marker}"
+                                    )
             except CurriculumError as exc:
                 errors.append(str(exc))
 
@@ -994,17 +1062,6 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
                         f"{node_id}: current stage card is missing canonical "
                         "practice scope handoff"
                     )
-                gate_markers = (
-                    "Clean release gate: annotated release의 별도 clean",
-                    "Historical 무자료 gate: 현재 practice 파일이 명시한 시작 tree",
-                    "연결 설명:",
-                )
-                for marker in gate_markers:
-                    if marker not in section:
-                        errors.append(
-                            f"{node_id}: current stage card is missing the two-tree "
-                            f"gate marker {marker}"
-                        )
                 if node_id == "sportsbook-odds-feed-service":
                     if "Spring/Kafka 관련 index" in section:
                         errors.append(
@@ -1057,7 +1114,7 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
                 f"{track} must contain exactly {expected} projects, found {counts[track]}"
             )
 
-    for track, sequence in CANONICAL_SEQUENCES.items():
+    for track, sequence in DISPLAY_SEQUENCES.items():
         expected_projects = [
             node_id for node_id in sequence if kind_by_id.get(node_id) == "project"
         ]
@@ -1107,25 +1164,14 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
         if next_ids and kind_by_id.get(node_id) == "completion":
             errors.append(f"{node_id}: completion must be a terminal node")
 
-    branch_choices = [
-        "frontend-foundations-training",
-        "backend-foundations-training",
-    ]
-    for track, sequence in CANONICAL_SEQUENCES.items():
-        for index, node_id in enumerate(sequence):
+    for track, sequence in DISPLAY_SEQUENCES.items():
+        for node_id in sequence:
             node = node_by_id.get(node_id)
             if node is None:
                 continue
-            if index == 0:
-                expected_prev = [] if track == "42" else ["42-incident"]
-            else:
-                expected_prev = [sequence[index - 1]]
-            if node_id == "42-incident":
-                expected_next = branch_choices
-            elif index == len(sequence) - 1:
-                expected_next = []
-            else:
-                expected_next = [sequence[index + 1]]
+            expected_prev_raw, expected_next_raw = CANONICAL_EDGES[node_id]
+            expected_prev = list(expected_prev_raw)
+            expected_next = list(expected_next_raw)
             if _ids(node.get("prev")) != expected_prev:
                 errors.append(
                     f"{node_id}: canonical prev must be {expected_prev or 'empty'}"
@@ -1157,6 +1203,35 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
                     if target_link not in section:
                         errors.append(
                             f"{node_id}: stage card is missing next link {target_link[2:-1]}"
+                        )
+            if len(expected_prev) > 1:
+                doc_path = root / str(node.get("doc"))
+                section = (
+                    _anchor_section(
+                        doc_path.read_text(encoding="utf-8"), str(node.get("anchor"))
+                    )
+                    if doc_path.is_file()
+                    else ""
+                )
+                if "세 갈래를 모두 완료" not in section:
+                    errors.append(
+                        f"{node_id}: join card must explain that every prior lane is required"
+                    )
+                for prev_id in expected_prev:
+                    source = node_by_id.get(prev_id)
+                    if source is None:
+                        continue
+                    if source.get("doc") == node.get("doc"):
+                        source_link = f"](#{source.get('anchor')})"
+                    else:
+                        source_link = (
+                            f"]({Path(str(source.get('doc'))).name}#"
+                            f"{source.get('anchor')})"
+                        )
+                    if source_link not in section:
+                        errors.append(
+                            f"{node_id}: join card is missing required prior link "
+                            f"{source_link[2:-1]}"
                         )
 
     if entry in node_by_id:
@@ -1238,30 +1313,64 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
             )
 
     branches = data.get("branches", [])
+    expected_branches = {
+        "linux-foundation": {
+            "choices": {"c-foundation", "cpp-foundation", "container-stack"},
+            "join": "web-boundary-inspector",
+            "requires": {"stack-sort", "irc-relay-server", "container-stack"},
+        },
+        "42-incident": {
+            "choices": {
+                "frontend-foundations-training",
+                "backend-foundations-training",
+            },
+            "join": None,
+            "requires": set(),
+        },
+    }
     if not isinstance(branches, list):
         errors.append("branches must be a list")
     else:
-        incident_branches = [
-            item
-            for item in branches
-            if isinstance(item, dict) and item.get("from") == "42-incident"
+        actual_from = [
+            item.get("from") for item in branches if isinstance(item, dict)
         ]
-        expected_choices = {
-            "frontend-foundations-training",
-            "backend-foundations-training",
-        }
-        if len(incident_branches) != 1:
-            errors.append("branches must define 42-incident exactly once")
-        else:
-            choices = set(_ids(incident_branches[0].get("choices")))
-            if choices != expected_choices:
+        if set(actual_from) != set(expected_branches) or len(actual_from) != 2:
+            errors.append(
+                "branches must define linux-foundation and 42-incident exactly once"
+            )
+        for source_id, expected in expected_branches.items():
+            matches = [
+                item
+                for item in branches
+                if isinstance(item, dict) and item.get("from") == source_id
+            ]
+            if len(matches) != 1:
+                continue
+            branch = matches[0]
+            choices = set(_ids(branch.get("choices")))
+            if choices != expected["choices"]:
                 errors.append(
-                    "42-incident choices must be frontend-foundations-training and "
-                    "backend-foundations-training"
+                    f"{source_id}: branch choices must be {sorted(expected['choices'])}"
                 )
-            incident = node_by_id.get("42-incident")
-            if incident and not choices.issubset(set(_ids(incident.get("next")))):
-                errors.append("42-incident next edges do not contain both branch choices")
+            source = node_by_id.get(source_id)
+            if source and choices != set(_ids(source.get("next"))):
+                errors.append(f"{source_id}: branch choices must equal its next edges")
+            if branch.get("join") != expected["join"]:
+                errors.append(
+                    f"{source_id}: branch join must be {expected['join']!r}"
+                )
+            requires = set(_ids(branch.get("requires")))
+            if requires != expected["requires"]:
+                errors.append(
+                    f"{source_id}: branch requirements must be "
+                    f"{sorted(expected['requires'])}"
+                )
+            join_id = expected["join"]
+            join = node_by_id.get(str(join_id)) if join_id else None
+            if join and requires != set(_ids(join.get("prev"))):
+                errors.append(
+                    f"{source_id}: branch requirements must equal {join_id}.prev"
+                )
 
     incident_id = "42-incident"
     if entry in node_by_id and incident_id in node_by_id:
@@ -1314,18 +1423,46 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
     if track_readme.is_file():
         track_text = track_readme.read_text(encoding="utf-8")
         scope_markers = (
-            "### 공식 수행 범위",
-            "대표 practice 한 개",
-            "나머지 practice는 release 전체를 더 깊게 재구성하려는 선택 심화",
-            "Historical practice tree",
-            "Clean release tree",
-            "현행 필수 범위에는 이 Document Box 규칙이 우선",
+            '<a id="공식-수행-범위"></a>',
+            "프로젝트마다 연습문제 한 개만 필수",
+            "나머지 연습문제는 선택 심화",
+            "문제가 만들어졌던 시점의 코드",
+            "현재 완성본",
+            "Document Box의 이 규칙이 우선",
         )
         for marker in scope_markers:
             if marker not in track_text:
                 errors.append(
                     "tracks/README.md is missing the canonical practice scope "
                     f"marker: {marker}"
+                )
+
+    simple_learning_docs = (
+        root / "tracks/README.md",
+        root / "tracks/42.md",
+        root / "tracks/frontend.md",
+        root / "tracks/backend.md",
+        root / "tracks/frontend-fast-track.md",
+        root / "tracks/PROGRESS_TEMPLATE.md",
+    )
+    forbidden_jargon = (
+        "current learning index",
+        "practice ledger",
+        "answer ledger",
+        "Clean release gate",
+        "Historical 무자료 gate",
+        "full `부모 commit`",
+        "연결 설명:",
+    )
+    for learning_doc in simple_learning_docs:
+        if not learning_doc.is_file():
+            continue
+        learning_text = learning_doc.read_text(encoding="utf-8")
+        for phrase in forbidden_jargon:
+            if phrase in learning_text:
+                errors.append(
+                    f"{learning_doc.relative_to(root)} uses learner-facing jargon: "
+                    f"{phrase}"
                 )
 
     return errors

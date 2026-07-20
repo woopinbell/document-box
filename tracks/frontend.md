@@ -1,148 +1,108 @@
-# Frontend 확장 트랙
+# Frontend 학습 경로
 
-42 통합 incident의 즉시 checkpoint 뒤 선택하는 확장 트랙이다. 아래 순서를 유지한다.
+42 통합 평가를 마친 뒤 시작한다. 이 트랙은 아래 순서를 지킨다.
 
 ```text
-Foundations → Delivery → Cloud → Reliability → unfamiliar-API transfer
-→ Portfolio → Web production regression → 회상 → 완료
+기초 → 배포 → Cloud → 안정성 → 낯선 API 평가
+→ Portfolio → production 장애 평가 → 복습 → 완료
 ```
 
-시작 전에 `make preflight TRACK=frontend`를 실행한다. `learning/*`는 읽기 전용이고 release tag는
-baseline에만 사용한다. 실제 구현은 [Basis 안내의 우선순위](README.md#basis-안내의-우선순위)에
-따라 practice 또는 current ledger crosswalk에서 해소한 historical parent의 `study/*` branch에
-둔다. 아래 카드의 “현재 practice의 full 부모 commit”도 이 해소 규칙을 줄여 쓴 표현이다. 대표
-항목의 결정 규칙과 선택 심화의 경계는
-[공식 수행 범위](README.md#공식-수행-범위)를 따른다. Portfolio의 통합 content
-publication 과제만 neutral template tag에서 시작한다.
+먼저 `make preflight TRACK=frontend`를 실행한다. 공통 진행법과 연습문제 선택법은
+[학습 시작](README.md), Git 세부 절차는 [기술 안내](TECHNICAL_GUIDE.md)를 따른다.
 
-42를 이미 직접 구현했고 지원 자료를 먼저 준비해야 한다면
-[Frontend 지원 준비 브리지](frontend-fast-track.md#route-frontend-application-bridge)를 선택할 수 있다.
-Foundations 4개 review, Reliability 4개 hands-on과 Portfolio 병행 범위를 정확히 제한한 경로이며
-`grants_mastery=false`다. 지원 gate 뒤에는 이 문서의
-[Delivery 카드](#stage-frontend-delivery-training)로 복귀한다. 아래 정규 카드와 prev/next 순서는
-그대로 유지된다.
+이미 42를 구현했고 지원 준비가 급하면 [Frontend 지원 준비 경로](frontend-fast-track.md#route-frontend-application-bridge)를
+사용할 수 있다. 이 경로는 Frontend 완료가 아니며 끝난 뒤 [배포 단계](#stage-frontend-delivery-training)로
+돌아온다.
 
 <a id="stage-frontend-foundations-training"></a>
-## 1. frontend-foundations-training
+## F1. frontend-foundations-training
 
-- 이전 gate: [42 통합 incident](42.md#stage-42-incident)의 자동·사람 gate와 즉시 회상 통과.
-- 저장소·ref: [`frontend-foundations-training`](https://github.com/woopinbell/frontend-foundations-training), release `foundations-v1.0.1`, learning `learning/current`.
-- Central 상세 목록: [frontend-foundations-training 전체 읽기 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-frontend-foundations-training). 이 목록이 language·React·build·state·test 선수 범위를 확정한다.
-- 빠른 노트: [Frontend Language and Runtime](https://github.com/woopinbell/central-notes/blob/main/frontend-react/README.md#language-and-runtime), [React, Build, Routing](https://github.com/woopinbell/central-notes/blob/main/frontend-react/README.md#react-build-routing).
-- 수행 범위: [대표 practice 한 개와 카드 전체 gate](README.md#공식-수행-범위). 나머지는 선택 심화다.
-- 프로젝트 노트: [current learning index](https://github.com/woopinbell/frontend-foundations-training/blob/learning/current/docs/README.md)에서 notes를 읽고 practice로 이동한다.
-- Clean release gate: annotated release의 별도 clean worktree에서 Node/pnpm과 browser를 확인하고 `make check-repo && make build && make test-e2e`를 기록한다.
-- 문제지: [current practice ledger](https://github.com/woopinbell/frontend-foundations-training/blob/learning/current/docs/practice/README.md).
-- 구현: 현재 practice의 full `부모 commit`에서 `study/frontend-foundations-<ID>`를 만들고 route, server/client boundary, form/data/UI state 실패를 원장에 남긴다.
-- 답지 개방: 자기 구현·expected/actual·검증 근거 뒤 [answer ledger](https://github.com/woopinbell/frontend-foundations-training/blob/learning/current/docs/commits/README.md)를 연다.
-- Historical 무자료 gate: 현재 practice 파일이 명시한 시작 tree의 새 branch에서 그 파일의 구현 범위와 당시 검증 계약만 통과한다.
-- 연결 설명: 선택한 UI 변경이 current release의 route·server/client·form·data/UI state 경계로 이어지는 근거를 설명한다.
-- 다음: [frontend-delivery-training](#stage-frontend-delivery-training).
+- **시작 조건:** [42 통합 평가](42.md#stage-42-incident)를 통과하고 완료 직후 복습을 기록한다.
+- **먼저 읽을 것:** [Frontend 기초 읽는 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-frontend-foundations-training)의 language·React·build·state·test 범위를 읽는다.
+- **저장소와 학습 자료:** [`frontend-foundations-training`](https://github.com/woopinbell/frontend-foundations-training), 완성본 `foundations-v1.0.1`, 읽기 전용 자료 `learning/current`; [학습 자료 목차](https://github.com/woopinbell/frontend-foundations-training/blob/learning/current/docs/README.md), [연습문제 목록](https://github.com/woopinbell/frontend-foundations-training/blob/learning/current/docs/practice/README.md), [해설 목록](https://github.com/woopinbell/frontend-foundations-training/blob/learning/current/docs/commits/README.md).
+- **직접 해볼 것:** [필수 학습 범위](README.md#공식-수행-범위)에 따라 문제 한 개를 고른다. 지정된 시작 커밋에 `study/frontend-foundations-<ID>`를 만들고 route, server/client 경계, form·data·UI state 실패를 기록한다. 자기 시도 뒤 해설과 비교하고 다시 구현한다.
+- **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 Node·pnpm과 browser를 확인하고 `make check-repo && make build && make test-e2e`를 실행한다.
+- **완료 조건:** route와 server/client 경계, form·data·UI 상태 흐름을 설명하고 선택한 문제를 해설 없이 다시 통과한다.
+- **다음 과제:** [F2. frontend-delivery-training](#stage-frontend-delivery-training).
 
 <a id="stage-frontend-delivery-training"></a>
-## 2. frontend-delivery-training
+## F2. frontend-delivery-training
 
-- 이전 gate: Foundations 무자료 gate와 App Router/data contract 설명 완료.
-- 저장소·ref: [`frontend-delivery-training`](https://github.com/woopinbell/frontend-delivery-training), release `delivery-v1.0.1`, learning `learning/current`.
-- Central 상세 목록: [frontend-delivery-training 전체 읽기 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-frontend-delivery-training). 이 목록이 Central과 프로젝트 delivery 노트 범위를 확정한다.
-- 빠른 노트: [Frontend Delivery](https://github.com/woopinbell/central-notes/blob/main/frontend-react/README.md#delivery).
-- 수행 범위: [대표 practice 한 개와 카드 전체 gate](README.md#공식-수행-범위). 나머지는 선택 심화다.
-- 프로젝트 노트: [current learning index](https://github.com/woopinbell/frontend-delivery-training/blob/learning/current/docs/README.md).
-- Clean release gate: annotated release의 별도 clean worktree에서 Node/pnpm, image와 Chromium 도구를 확인하고 `make check`를 기록한다. 실제 DNS/Search Console 변경은 하지 않는다.
-- 문제지: [current practice ledger](https://github.com/woopinbell/frontend-delivery-training/blob/learning/current/docs/practice/README.md).
-- 구현: 현재 practice의 full `부모 commit`에서 `study/frontend-delivery-<ID>`를 만들고 route·asset budget·SEO/build 실패와 release checklist를 남긴다.
-- 답지 개방: 공개 surface와 검증 근거가 생긴 뒤 [answer ledger](https://github.com/woopinbell/frontend-delivery-training/blob/learning/current/docs/commits/README.md)를 연다.
-- Historical 무자료 gate: 현재 practice 파일이 명시한 시작 tree의 새 branch에서 그 파일의 구현 범위와 당시 검증 계약만 통과한다.
-- 연결 설명: 선택한 delivery 변경이 current release의 route·asset budget·SEO·build·release checklist로 이어지는 근거를 설명한다.
-- 다음: [cloud-launch-training](#stage-cloud-launch-training).
+- **시작 조건:** [F1. Frontend 기초](#stage-frontend-foundations-training)를 완료한다.
+- **먼저 읽을 것:** [Frontend 배포 읽는 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-frontend-delivery-training)의 Central·프로젝트 delivery 노트를 읽는다.
+- **저장소와 학습 자료:** [`frontend-delivery-training`](https://github.com/woopinbell/frontend-delivery-training), 완성본 `delivery-v1.0.1`, 읽기 전용 자료 `learning/current`; [학습 자료 목차](https://github.com/woopinbell/frontend-delivery-training/blob/learning/current/docs/README.md), [연습문제 목록](https://github.com/woopinbell/frontend-delivery-training/blob/learning/current/docs/practice/README.md), [해설 목록](https://github.com/woopinbell/frontend-delivery-training/blob/learning/current/docs/commits/README.md).
+- **직접 해볼 것:** [필수 학습 범위](README.md#공식-수행-범위)에 따라 문제 한 개를 고른다. 지정된 시작 커밋에 `study/frontend-delivery-<ID>`를 만들고 route, asset budget, SEO·build와 release checklist 실패를 기록한다. 해설과 비교한 뒤 다시 구현한다.
+- **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 Node·pnpm, image와 Chromium 도구를 확인하고 `make check`를 실행한다. 실제 DNS나 Search Console은 변경하지 않는다.
+- **완료 조건:** 배포 가능한 산출물, route·asset·SEO·build 확인 순서를 자기 말로 설명한다.
+- **다음 과제:** [F3. cloud-launch-training](#stage-cloud-launch-training).
 
 <a id="stage-cloud-launch-training"></a>
-## 3. cloud-launch-training
+## F3. cloud-launch-training
 
-- 이전 gate: Delivery의 deployable artifact·SEO·release surface 완료.
-- 저장소·ref: [`cloud-launch-training`](https://github.com/woopinbell/cloud-launch-training), release `cloud-launch-v1.0.1`, learning `learning/cloud-launch-v1.0.1`.
-- Central 상세 목록: [cloud-launch-training 전체 읽기 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-cloud-launch-training). 이 목록이 request lifecycle·browser security·Next·Playwright와 프로젝트 Cloud 노트 범위를 확정한다.
-- 빠른 노트: [Request lifecycle](https://github.com/woopinbell/central-notes/blob/main/web-foundations/request-lifecycle.md), [Browser runtime·security](https://github.com/woopinbell/central-notes/blob/main/web-foundations/browser-runtime-security.md).
-- 수행 범위: [대표 practice 한 개와 카드 전체 gate](README.md#공식-수행-범위). 나머지는 선택 심화다.
-- 프로젝트 노트: [current learning index](https://github.com/woopinbell/cloud-launch-training/blob/learning/cloud-launch-v1.0.1/docs/README.md).
-- Clean release gate: annotated release의 별도 clean worktree에서 Node/pnpm, Java, Firebase Emulator와 세 browser를 확인하고 `make check`를 기록한다. 실제 credential·비용·DNS는 필수 gate가 아니다.
-- 문제지: [current practice ledger](https://github.com/woopinbell/cloud-launch-training/blob/learning/cloud-launch-v1.0.1/docs/practice/README.md).
-- 구현: 현재 practice의 full `부모 commit`에서 `study/cloud-launch-<ID>`를 만들고 Rules allow/deny, Functions trust, Cloudflare perimeter 실패를 남긴다.
-- 답지 개방: emulator와 config 증거가 생긴 뒤 [answer ledger](https://github.com/woopinbell/cloud-launch-training/blob/learning/cloud-launch-v1.0.1/docs/commits/README.md)를 연다.
-- Historical 무자료 gate: 현재 practice 파일이 명시한 시작 tree의 새 branch에서 그 파일의 구현 범위와 당시 검증 계약만 통과한다.
-- 연결 설명: 선택한 Cloud 변경이 current release의 Rules·Functions·Cloudflare trust boundary로 이어지는 근거와 client claim/authority 차이를 설명한다.
-- 다음: [frontend-reliability-training](#stage-frontend-reliability-training).
+- **시작 조건:** [F2. Frontend 배포](#stage-frontend-delivery-training)를 완료한다.
+- **먼저 읽을 것:** [Cloud 읽는 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-cloud-launch-training)의 request lifecycle·browser security·Next·Playwright와 프로젝트 Cloud 노트를 읽는다.
+- **저장소와 학습 자료:** [`cloud-launch-training`](https://github.com/woopinbell/cloud-launch-training), 완성본 `cloud-launch-v1.0.1`, 읽기 전용 자료 `learning/cloud-launch-v1.0.1`; [학습 자료 목차](https://github.com/woopinbell/cloud-launch-training/blob/learning/cloud-launch-v1.0.1/docs/README.md), [연습문제 목록](https://github.com/woopinbell/cloud-launch-training/blob/learning/cloud-launch-v1.0.1/docs/practice/README.md), [해설 목록](https://github.com/woopinbell/cloud-launch-training/blob/learning/cloud-launch-v1.0.1/docs/commits/README.md).
+- **직접 해볼 것:** [필수 학습 범위](README.md#공식-수행-범위)에 따라 문제 한 개를 고른다. 지정된 시작 커밋에 `study/cloud-launch-<ID>`를 만들고 Rules 허용·거부, Functions 신뢰와 Cloudflare 경계 실패를 기록한다. emulator에서 확인한 뒤 해설과 비교하고 다시 구현한다.
+- **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 Node·pnpm, Java, Firebase Emulator와 세 browser를 확인하고 `make check`를 실행한다. 실제 credential·비용·DNS 변경은 필수가 아니다.
+- **완료 조건:** client의 주장과 서버 권한을 구분하고 Rules·Functions·edge 경계를 설명한다.
+- **다음 과제:** [F4. frontend-reliability-training](#stage-frontend-reliability-training).
 
 <a id="stage-frontend-reliability-training"></a>
-## 4. frontend-reliability-training
+## F4. frontend-reliability-training
 
-- 이전 gate: managed BaaS·Rules·edge perimeter trust boundary 완료.
-- 저장소·ref: [`frontend-reliability-training`](https://github.com/woopinbell/frontend-reliability-training), release `reliability-v1.0.1`, learning `learning/reliability-v1.0.1`.
-- Central 상세 목록: [frontend-reliability-training 전체 읽기 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-frontend-reliability-training). 이 목록이 RSC·router·query·form·a11y·test·quality 범위를 확정한다.
-- 빠른 노트: [Frontend Testing and Quality](https://github.com/woopinbell/central-notes/blob/main/frontend-react/README.md#testing-and-quality).
-- 수행 범위: [대표 practice 한 개와 카드 전체 gate](README.md#공식-수행-범위). 나머지는 선택 심화다.
-- 프로젝트 노트: [current learning index](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/README.md).
-- Clean release gate: annotated release의 별도 clean worktree에서 Node/pnpm과 Playwright를 확인하고 `make lint && make typecheck && make test && make build && make test-e2e`를 기록한다.
-- 문제지: [current practice ledger](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/practice-reliability-v1.0.1/README.md).
-- 구현: 현재 practice의 full `부모 commit`에서 `study/frontend-reliability-<ID>`를 만들고 stale response, rollback, URL state, focus/reconnect 실패를 남긴다.
-- 답지 개방: deterministic failing test와 자기 수정 뒤 [answer ledger](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/commits-reliability-v1.0.1/README.md)를 연다.
-- Historical 무자료 gate: 현재 practice 파일이 명시한 시작 tree의 새 branch에서 그 파일의 구현 범위와 당시 검증 계약만 통과한다.
-- 연결 설명: 선택한 reliability 변경이 current release의 stale response·rollback·URL state·focus/reconnect 경계로 이어지는 근거를 설명한다.
-- 다음: [unfamiliar-API transfer](#stage-frontend-transfer).
+- **시작 조건:** [F3. Cloud](#stage-cloud-launch-training)를 완료한다.
+- **먼저 읽을 것:** [Frontend 안정성 읽는 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-frontend-reliability-training)의 RSC·router·query·form·접근성·test 범위를 읽는다.
+- **저장소와 학습 자료:** [`frontend-reliability-training`](https://github.com/woopinbell/frontend-reliability-training), 완성본 `reliability-v1.0.1`, 읽기 전용 자료 `learning/reliability-v1.0.1`; [학습 자료 목차](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/README.md), [연습문제 목록](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/practice-reliability-v1.0.1/README.md), [해설 목록](https://github.com/woopinbell/frontend-reliability-training/blob/learning/reliability-v1.0.1/docs/commits-reliability-v1.0.1/README.md).
+- **직접 해볼 것:** [필수 학습 범위](README.md#공식-수행-범위)에 따라 문제 한 개를 고른다. 지정된 시작 커밋에 `study/frontend-reliability-<ID>`를 만들고 오래된 응답, rollback, URL state, focus와 reconnect 실패를 재현한다. 실패 test를 만든 뒤 해설과 비교하고 다시 구현한다.
+- **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 Node·pnpm과 Playwright를 확인하고 `make lint && make typecheck && make test && make build && make test-e2e`를 실행한다.
+- **완료 조건:** 비동기 응답과 UI 상태의 권위, 실패 rollback과 접근성 focus 복구를 설명한다.
+- **다음 과제:** [F5. 낯선 API 평가](#stage-frontend-transfer).
 
 <a id="stage-frontend-transfer"></a>
-## 5. unfamiliar-API transfer 평가
+## F5. 낯선 API 평가
 
-- 이전 gate: Reliability의 async/state/accessibility 실패 모드 무자료 재구현 완료.
-- 평가: [answerless Frontend transfer](https://github.com/woopinbell/central-notes/blob/main/assessments/frontend-transfer/README.md).
-- 환경·baseline: 평가 디렉터리에서 `npm ci`, `npx playwright install chromium firefox webkit`, `npm run check`, `npm run test:starter-red`를 실행한다. starter의 21개 assertion red가 정상이다.
-- 구현: source·답지 없이 별도 복사본에서 URL source-of-truth, validation, abort/stale response, optimistic rollback, loading/error/empty와 focus/ARIA를 구현한다.
-- 실패 artifact: browser·test title·마지막 URL·request/DOM budget과 수정 근거를 진행 원장에 남긴다.
-- 완료 gate: Chromium·Firefox·WebKit acceptance와 사람 rubric을 통과한다. 정답 구현은 Central에 commit하지 않는다.
-- 회상: [Frontend transfer clock](https://github.com/woopinbell/central-notes/blob/main/assessments/recall-checkpoints.md#frontend-transfer-clock)을 시작한다.
-- 다음: 즉시 회상 뒤 [portfolio-site](#stage-portfolio-site); 7일·30일 회상은 병행한다.
+- **시작 조건:** [F4. Frontend 안정성](#stage-frontend-reliability-training)을 완료한다.
+- **먼저 읽을 것:** [답지 없는 Frontend 평가](https://github.com/woopinbell/central-notes/blob/main/assessments/frontend-transfer/README.md)의 contract와 금지 사항을 읽는다.
+- **저장소와 학습 자료:** 별도 해설은 없다. 평가 문서가 지정한 starter·contract·evidence만 새 복사본에 준비한다.
+- **직접 해볼 것:** `npm ci`, `npx playwright install chromium firefox webkit`, `npm run check`, `npm run test:starter-red`를 실행한다. 처음 21개 assertion이 실패하는 것이 정상이다. URL, validation, 취소된 요청, 오래된 응답, optimistic rollback과 focus·ARIA를 직접 구현한다.
+- **현재 완성본 확인:** Chromium·Firefox·WebKit acceptance 결과와 사람 평가 기록이 같은 구현을 가리키는지 확인한다.
+- **완료 조건:** Chromium·Firefox·WebKit 검사와 사람 평가를 통과하고 완료 직후 복습을 기록한다. 정답 구현은 Central Notes에 commit하지 않는다.
+- **다음 과제:** [F6. portfolio-site](#stage-portfolio-site). 7일·30일 복습은 다음 프로젝트와 함께 진행한다.
 
 <a id="stage-portfolio-site"></a>
-## 6. portfolio-site
+## F6. portfolio-site
 
-- 이전 gate: unfamiliar-API transfer의 세 browser gate와 즉시 회상 완료.
-- 저장소·ref: [`portfolio-site`](https://github.com/woopinbell/portfolio-site), neutral `template-v3.0.1`, deployable release `portfolio-v3.0.1` (`== main`), learning `learning/portfolio-v3.0.1`.
-- Central 상세 목록: [portfolio-site 전체 읽기 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-portfolio-site). 이 목록이 production CSS·asset·build 선수 범위를 확정한다.
-- 빠른 노트: [Frontend CSS and Build](https://github.com/woopinbell/central-notes/blob/main/frontend-react/README.md#css-and-build), [Testing and Quality](https://github.com/woopinbell/central-notes/blob/main/frontend-react/README.md#testing-and-quality).
-- 수행 범위: [대표 practice 한 개와 카드 전체 gate](README.md#공식-수행-범위). 나머지는 선택 심화다.
-- 프로젝트 노트: 별도 notes가 없으므로 Central 선수 노트 뒤 바로 current practice로 이동한다.
-- Clean release gate: annotated release의 별도 clean worktree에서 Node/npm과 Playwright로 `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`, `npm run test:e2e`를 기록한다.
-- 문제지: [current practice ledger](https://github.com/woopinbell/portfolio-site/blob/learning/portfolio-v3.0.1/docs/practice-portfolio-v3.0.1/README.md).
-- 구현: 개별 commit practice는 그 파일의 full `부모 commit`에서 시작한다. 통합 content publication 과제만 개인 content가 아닌 neutral tag에서 `git switch -c study/portfolio template-v3.0.1`로 시작해 content/schema/render, five-design, responsive/accessibility 실패를 남긴다.
-- 답지 개방: neutral template 검증과 자기 publication diff 뒤 [answer ledger](https://github.com/woopinbell/portfolio-site/blob/learning/portfolio-v3.0.1/docs/commits-portfolio-v3.0.1/README.md)를 연다.
-- Historical 무자료 gate: 현재 practice 파일이 명시한 시작 tree의 새 branch에서 그 파일의 구현 범위와 당시 검증 계약만 통과한다. 통합 content publication이면 지정된 neutral template가 시작 tree다.
-- 연결 설명: 선택한 publication 변경이 current release의 neutral/content topology·allowlist·responsive/accessibility 경계로 이어지는 근거를 설명한다.
-- 다음: [Web production regression](#stage-web-production-regression).
+- **시작 조건:** [F5. 낯선 API 평가](#stage-frontend-transfer)와 완료 직후 복습을 마친다.
+- **먼저 읽을 것:** [Portfolio 읽는 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-portfolio-site)의 production CSS·asset·build 범위를 읽는다.
+- **저장소와 학습 자료:** [`portfolio-site`](https://github.com/woopinbell/portfolio-site), 시작 template `template-v3.0.1`, 완성본 `portfolio-v3.0.1`, 읽기 전용 자료 `learning/portfolio-v3.0.1`; [연습문제 목록](https://github.com/woopinbell/portfolio-site/blob/learning/portfolio-v3.0.1/docs/practice-portfolio-v3.0.1/README.md), [해설 목록](https://github.com/woopinbell/portfolio-site/blob/learning/portfolio-v3.0.1/docs/commits-portfolio-v3.0.1/README.md).
+- **직접 해볼 것:** [필수 학습 범위](README.md#공식-수행-범위)에 따라 문제 한 개를 고른다. 일반 문제는 지정된 시작 커밋에서 진행한다. 통합 content publication 문제만 `git switch -c study/portfolio template-v3.0.1`로 시작한다. content·schema·render, five-design, 반응형과 접근성 실패를 기록한 뒤 해설과 비교하고 다시 구현한다.
+- **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`, `npm run test:e2e`를 실행한다.
+- **완료 조건:** neutral template와 개인 content를 구분하고, content 허용 경로와 반응형·접근성 결과를 설명한다.
+- **다음 과제:** [F7. Web production 장애 평가](#stage-web-production-regression).
 
 <a id="stage-web-production-regression"></a>
-## 7. Web production regression 평가
+## F7. Web production 장애 평가
 
-- 이전 gate: Portfolio neutral/content topology와 browser gate 완료.
-- 평가: [answerless Web production regression](https://github.com/woopinbell/central-notes/blob/main/assessments/web-production-regression/README.md).
-- 시작: 답지와 이전 제출을 닫고 starter·contract·evidence fixture만 사용한다.
-- 실행: bundle/network/main-thread/render와 DNS/TLS/proxy/header, XSS·CSRF·CORS·CSP를 하나의 causal chain으로 진단한다.
-- 실패 artifact: 측정 → 원인 격리 → 최소 변경 → 검증 → rollback 결과와 외부 review evidence를 남긴다.
-- 완료 gate: checker, 사람 rubric, 실제 수정·staged deployment 폐루프와 외부 review를 모두 통과한다.
-- 회상: [Web production regression clock](https://github.com/woopinbell/central-notes/blob/main/assessments/recall-checkpoints.md#web-production-regression-clock)을 시작한다. transfer clock과 날짜를 합치지 않는다.
-- 다음: 두 평가의 7일·30일 checkpoint 뒤 [Frontend 완료](#stage-frontend-complete).
+- **시작 조건:** [F6. Portfolio](#stage-portfolio-site)를 완료한다.
+- **먼저 읽을 것:** [답지 없는 Web production 평가](https://github.com/woopinbell/central-notes/blob/main/assessments/web-production-regression/README.md)의 contract와 금지 사항을 읽는다.
+- **저장소와 학습 자료:** 별도 해설은 없다. starter·contract·evidence fixture와 staged deployment만 사용한다.
+- **직접 해볼 것:** 답지와 이전 제출을 닫고 bundle·network·main thread·render, DNS·TLS·proxy·header와 XSS·CSRF·CORS·CSP를 하나의 원인 사슬로 진단한다.
+- **현재 완성본 확인:** 측정, 최소 수정, 재검사, rollback과 외부 검토 기록이 한 실행 흐름으로 이어지는지 확인한다.
+- **완료 조건:** 자동 검사, 사람 평가, 실제 수정·staged deployment·rollback과 외부 검토를 모두 통과한다. transfer 복습과 별도로 완료 직후·7일·30일 복습을 기록한다.
+- **다음 과제:** 두 평가의 30일 복습 뒤 [Frontend 완료](#stage-frontend-complete).
 
 <a id="stage-frontend-complete"></a>
 ## Frontend 완료
 
-다음 artifact가 모두 개인 진행 원장에 있으면 Frontend curriculum mastery를 확정한다.
+다음 기록이 모두 있으면 완료다.
 
-- 5개 프로젝트의 baseline, 대표 practice ID·선택 근거, 실패 근거, answer 확인 시각, 무자료 재구현과 최종 gate
-- unfamiliar-API transfer와 Web production regression의 자동·사람 gate
-- 서로 독립적인 두 회상 clock의 완료 직후·7일·30일 결과
-- 병행한 42 incident 회상 clock의 30일 checkpoint
-- Portfolio의 neutral template와 개인 publication을 구분한 검증 결과
+- 5개 프로젝트의 선택 문제, 실제 실패, 해설 확인 시각, 다시 구현한 결과와 현재 완성본 검사
+- 두 답지 없는 평가의 자동·사람 검사
+- 두 평가의 완료 직후·7일·30일 복습
+- 42 통합 평가의 30일 복습
+- Portfolio의 neutral template와 개인 content를 구분한 결과
 
-취업 지원 자료를 고를 때만 [Frontend 공고 데이터](../data/jobs/frontend/)로 이동한다. 공고 데이터는
-학습 완료 gate가 아니며 제출 직전에 원문을 다시 확인한다.
+취업 지원 자료가 필요할 때만 [Frontend 공고 데이터](../data/jobs/frontend/)를 사용한다. 공고 데이터는
+학습 완료 조건이 아니며 지원 직전에 원문을 다시 확인한다.
 
-[전체 지도](README.md#분기와-완료)로 돌아가 Backend를 선택하거나 과정을 종료한다.
+[전체 학습 시작](README.md#트랙-선택)으로 돌아가 Backend를 선택하거나 과정을 종료한다.

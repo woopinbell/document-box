@@ -16,23 +16,20 @@ document-box 자체와 `central-notes` 같은 거버넌스 저장소는 dual-for
 | [`docs-commit-note.md`](docs-commit-note.md) | 답지 선집필, 문제지 수작업 파생, stable ID, mapping과 수량 reconciliation |
 | [`legacy-exceptions.md`](legacy-exceptions.md) | pre-migration object evidence, 30개 source window와 전환 승인 경계 |
 | [`tracks/README.md`](tracks/README.md) | 공통 기반에서 Frontend/Backend로 갈라지는 전체 과정 지도와 현재 상태 |
-| [`tracks/42.md`](tracks/42.md) | Linux/Git Foundations와 42 트랙 13개 프로젝트의 공식 순서·완료 gate |
+| [`tracks/42.md`](tracks/42.md) | Linux/Git Foundations와 42 트랙 13개 프로젝트의 공식 순서·완료 조건 |
 | [`tracks/backend.md`](tracks/backend.md) | Backend 3개 훈련 저장소와 Sportsbook 9개 하위 저장소의 공식 순서 |
 | [`tracks/frontend.md`](tracks/frontend.md) | Frontend 4개 훈련 저장소와 5-design Portfolio의 공식 순서 |
-| [`tracks/frontend-fast-track.md`](tracks/frontend-fast-track.md) | 42 복습자의 지원 준비를 위한 비정규 Frontend 브리지와 정규 사슬 복귀 gate |
+| [`tracks/frontend-fast-track.md`](tracks/frontend-fast-track.md) | 42 복습자의 지원 준비를 위한 선택 Frontend 경로와 정규 과정 복귀 조건 |
 | [`data/README.md`](data/README.md) | 날짜가 붙는 공고·시장 관측과 지원 증거처럼 변동하는 운영 데이터의 색인·갱신 규칙 |
 
 이 README는 권한 지도와 색인만 담당합니다. 세부 규칙을 복제하지 않습니다.
 
 ## 학습 시작
 
-[**42 → Frontend/Backend 전체 완주 시작**](tracks/README.md)
+[**처음이라면 여기서 시작하기**](tracks/README.md)
 
-학습 경로, 환경 점검, 중단·재개, 개인 원장과 마지막 평가·회상까지 위 문서에서 끊김 없이
-연결합니다. 다른 문서를 학습 첫 진입점으로 사용하지 않습니다.
-
-42를 이미 직접 구현한 복습자를 위한 빠른 지원 준비 경로도 전체 완주 문서의 42 incident 분기에서
-연결합니다. 별도 시작점이나 별도 Frontend 트랙은 만들지 않습니다.
+환경 확인부터 첫 프로젝트 선택, 연습문제 한 개를 푸는 방법과 완료 기준까지 순서대로 안내합니다.
+42의 C·C++·인프라 갈래와 이후 Frontend·Backend 선택도 같은 문서에서 찾을 수 있습니다.
 
 ## 거버넌스 작업
 

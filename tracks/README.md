@@ -1,235 +1,170 @@
-# 세 트랙 학습 시작
+# 학습 시작
 
-이 문서가 42·Frontend·Backend 전체 과정의 유일한 첫 학습 정본이다. 다른 index나 프로젝트
-README에서 시작했더라도 여기로 돌아와 현재 카드를 찾는다.
+처음 왔다면 이 문서에서 시작한다. 어려운 Git 용어를 먼저 외울 필요는 없다. 아래 순서대로 한 단계씩
+진행하고, 막혔을 때만 [기술 안내](TECHNICAL_GUIDE.md)를 연다.
+
+## 지금 할 일
+
+1. `make preflight TRACK=42`로 환경을 확인한다.
+2. Linux/Git 선수 과정을 마친다.
+3. C·C++·인프라 중 시작할 갈래를 고른다. 여러 갈래를 함께 진행해도 된다.
+4. 프로젝트 카드가 지정한 선수 노트만 읽는다.
+5. 연습문제 목록에서 문제 한 개를 고르고 해설을 보지 않은 채 시도한다.
+6. 자기 시도와 실제 실패를 기록한 뒤 해설과 비교하고, 해설을 닫은 채 다시 구현한다.
+7. 카드의 현재 완성본 검사와 완료 조건을 통과한 뒤 다음 과제로 이동한다.
+
+42를 마치면 Frontend와 Backend 중 하나 또는 둘 다 선택할 수 있다.
 
 ```text
-Central Linux/Git Foundations → 42의 13개 프로젝트
-→ 42 통합 incident
-├─ Frontend 4개 프로젝트 → transfer → Portfolio → production regression → 회상 → 완료
-└─ Backend 12개 프로젝트 → distributed incident → 회상 → 완료
+Linux/Git
+├─ C 갈래: c-foundation → format-printer → buffered-line-reader → signal-message-bus
+│            → thread-dining → small-shell → stack-sort
+├─ C++ 갈래: cpp-foundation → stl-container → irc-relay-server
+└─ 인프라 갈래: container-stack
+        ↓ 세 갈래를 모두 완료
+web-boundary-inspector → pong-pong → 42 통합 평가
+├─ Frontend
+└─ Backend
 ```
 
-42는 두 확장 트랙의 필수 선행이다. 42 incident의 즉시 checkpoint를 통과하면 7일·30일 회상을
-병행하면서 Frontend, Backend 또는 둘 다 시작할 수 있다. 두 확장 트랙은 서로 기다리지 않지만 각
-트랙 내부 카드 순서는 바꾸지 않는다.
-
-42를 이미 직접 구현했고 Frontend 지원 준비를 먼저 해야 하는 학습자는 42 incident 뒤
-[Frontend 지원 준비 브리지](frontend-fast-track.md#route-frontend-application-bridge)를 선택할 수 있다.
-이 브리지는 정규 prev/next 사슬을 바꾸지 않으며 outcome `frontend-application-readiness`만 부여한다.
-`grants_mastery=false`이므로 지원을 시작한 뒤 정규 Frontend의 Delivery 카드로 복귀해야 한다.
+병렬 진행은 의무가 아니다. 처음 배우는 사람은 C 갈래부터 한 과제씩 진행하는 편이 쉽다. C에 익숙하면
+C++ 또는 인프라 갈래를 함께 진행할 수 있다.
 
 ## 처음 한 번만 준비
 
-1. 이 repository를 clone하고 원하는 트랙의 환경을 검사한다.
+1. 이 저장소를 clone한 뒤 필요한 트랙을 확인한다.
 
    ```sh
    make preflight TRACK=42
-   # 42 incident 뒤 선택할 때:
+   # 42 통합 평가를 마친 뒤 필요할 때 실행한다.
    make preflight TRACK=frontend
    make preflight TRACK=backend
-   # 42 복습자의 Frontend 지원 준비 브리지를 선택할 때:
-   make preflight ROUTE=frontend-application-bridge
    ```
 
-   `BLOCK`은 현재 단계를 시작하기 전에 해결한다. `WARN`은 뒤 프로젝트에서 필요한 도구이므로 해당
-   카드까지 해결한다. preflight는 설치나 upgrade를 하지 않고 누락 도구와 setup 명령만 알려 준다.
+   `BLOCK`은 시작 전에 해결해야 하는 문제다. `WARN`은 해당 도구가 필요한 프로젝트에 도착하기 전까지
+   해결하면 된다. 이 명령은 프로그램을 설치하거나 업데이트하지 않는다.
 
-2. [개인 진행 원장 템플릿](PROGRESS_TEMPLATE.md)을 이 저장소 밖의 개인 경로에 복사한다. 프로젝트마다
-   별도 파일을 만들거나 `단계 실행` section을 복제하고, baseline, practice ID, 첫 실패, 가설·반증,
-   answer를 처음 연 시각, 무자료 재구현, 최종 gate와 회상 날짜를 남긴다.
+2. [개인 진행 기록 템플릿](PROGRESS_TEMPLATE.md)을 이 저장소 밖에 복사한다. 프로젝트마다 새 기록을
+   만들고 선택한 문제, 첫 실패, 해설을 본 시각, 다시 구현한 결과와 최종 검사 결과를 적는다.
 
-3. GitHub CLI가 private project를 읽는지 확인한다. `make preflight`의 GitHub 항목이 `BLOCK`이면
-   `gh auth login` 뒤 다시 검사한다. Plain `git clone`용 credential helper가 필요하면
-   `gh auth setup-git`을 한 번 실행한다. 아래 절차의 `gh repo clone`은 현재 gh 인증을 직접 사용한다.
-
-## 한 프로젝트를 학습하는 정확한 순서
-
-각 단계 카드는 아래 절차에 필요한 실제 release/ref/path와 검증 명령을 제공한다.
-
-1. **이전 gate 확인** — 이전 카드의 최종 gate와 원장 artifact가 없으면 돌아간다.
-2. **Central 선수 노트** — 카드의 정확한 문서 anchor만 읽고 프로젝트를 대신 구현하지 않는다.
-3. **release baseline** — repository를 clone하고 annotated release를 분리 checkout한다.
+3. private 저장소를 읽을 수 있는지 확인한다. GitHub 인증이 막히면 다음을 실행한 뒤 preflight를 다시
+   실행한다.
 
    ```sh
-   gh repo clone woopinbell/<repo>
-   cd <repo>
+   gh auth login
+   gh auth setup-git
+   ```
+
+## 프로젝트 한 개를 끝내는 방법
+
+각 프로젝트 카드는 정확한 링크와 검사 명령을 제공한다.
+
+1. **시작 조건 확인** — 카드가 요구하는 앞 과제를 마쳤는지 확인한다. 여러 갈래가 합쳐지는 카드라면
+   표시된 앞 과제를 모두 마쳐야 한다.
+2. **선수 노트 읽기** — 카드의 `먼저 읽을 것` 링크만 읽는다.
+3. **현재 완성본 확인** — 저장소를 clone하고 카드의 완성본 태그에서 검사 명령을 실행한다.
+
+   ```sh
+   gh repo clone woopinbell/<저장소>
+   cd <저장소>
    git fetch --tags origin
-   git switch --detach <release>
-   # 카드에 적힌 baseline 명령 실행
+   git switch --detach <완성본-태그>
+   # 카드의 "현재 완성본 확인" 명령 실행
    ```
 
-4. **practice-first** — 카드의 current practice README에서 아래 공식 수행 범위에 맞는 대표 문제
-   한 개를 고른다. Git publication은 `notes → answers → practices`지만 실제 학습 소비는 다음 순서다.
+4. **연습문제 한 개 선택** — 카드의 연습문제 목록을 열고 아래 선택 규칙에 따라 하나를 고른다.
+5. **해설 없이 시도** — 문제에 적힌 시작 커밋에서 개인 branch를 만든다. 최소 한 번의 실제 실패와
+   원인 추측, 확인 결과를 진행 기록에 남긴다.
+6. **해설 확인 후 다시 구현** — 자기 시도가 생긴 뒤에만 해설을 연다. 차이를 이해한 다음 해설과 기존
+   구현을 닫고 같은 시작 커밋의 새 branch에서 다시 구현한다.
+7. **완료 확인** — 문제가 요구한 당시 검사와 카드가 요구한 현재 완성본 검사를 각각 통과한다. 마지막으로
+   무엇을 바꿨고 현재 완성본에서 그 책임이 어디까지 이어지는지 자기 말로 설명한다.
 
-   ```text
-   Central/notes → practice → 직접 실행·실패 → answer → 무자료 재구현
-   ```
+`learning/*` branch는 읽기 전용이다. 그 branch에서 직접 작업하거나 `main`에 합치지 않는다. 개인 코드는
+`study/<프로젝트>-<문제-ID>`처럼 별도의 branch에 작성한다.
 
-   `learning/<release>`는 읽기 전용이다. checkout해 수정하거나 `main`에 merge하지 않는다.
+<a id="공식-수행-범위"></a>
+## 필수 학습 범위 — 연습문제 한 개
 
-5. **개인 구현** — release tag는 baseline에만 사용한다. 먼저 현재 practice의 full `부모 commit`을
-   사용한다. Practice에 parent가 없으면 answer 본문 파일은 열지 않고, current answer ledger
-   README에서 연결한 full crosswalk의 해당 stable ID metadata mapping 행만 읽어 parent를 확인한다.
-   Mapping이 abbreviated SHA라면 clone에서 mapped commit과 parent를 각각
-   `git rev-parse <mapped-sha>^{commit}`으로 full SHA로 해소하고, commit tree는
-   `git show -s --format=%T <full-commit>`으로 기록한다. 그 parent에서 개인
-   branch를 만들어야 아직 정답 diff가 없는 상태에서 실패와 구현을 재현할 수 있다.
+- 프로젝트마다 연습문제 한 개만 필수다.
+- 목록을 위에서부터 보고, 해설 없이 해결 방법과 검사 방법을 설명하기 어려운 첫 문제를 고른다.
+- 모든 문제를 설명할 수 있으면 목록에서 첫 번째로 제공되는 문제를 고른다.
+- `생략`, `예약`, `검토 전용`으로 표시된 항목은 고르지 않는다.
+- 나머지 연습문제는 선택 심화다. 더 깊이 복습하고 싶을 때만 추가로 진행한다.
+- 선택한 문제의 구현 범위와 검사는 줄이지 않는다.
 
-   ```sh
-   PRACTICE_PARENT=<practice 또는 current answer ledger mapping의 full parent hash>
-   git switch -c study/<project>-<practice-id> "$PRACTICE_PARENT"
-   ```
+프로젝트의 오래된 안내가 모든 문제를 풀라고 하더라도, 현재 필수 수량은 Document Box의 이 규칙이 우선한다.
 
-   Root commit을 재구현하는 practice처럼 부모가 없다고 명시된 경우에만 별도 빈 디렉터리 또는
-   `git switch --orphan study/<project>-<practice-id>`를 사용한다.
+한 문제를 끝냈다고 프로젝트를 이해한 것은 아니다. 카드의 현재 완성본 검사와 완료 조건, 답지 없는
+평가를 함께 통과해야 한다.
 
-   Ledger가 해당 항목을 `metadata-only`로 분류한다면 root practice가 아니다. Branch나 실패를
-   만들지 말고 실제 hash·parent·tree, 분류와 practice 생략 사유를 원장에 기록한 뒤 source
-   관찰·설명으로 검토한다. 구현 항목은 practice와 ledger mapping 어느 쪽에도 full parent가 없거나
-   두 문서의 mapping이 충돌할 때만 `BLOCK`으로 기록하고 문서 교정을 요청한다.
+<a id="basis-안내의-우선순위"></a>
+## 어느 코드에서 시작해야 하나
 
-   최소 한 번의 실제 실패와 자기 원인 가설·반증·검증 결과를 원장에 남긴다. 실패를 일부러 꾸미거나
-   source/test 계약을 바꾸지 않는다.
+완성본 태그는 완성된 프로그램이 정상인지 확인할 때만 사용한다. 연습문제 구현은 문제 파일에 적힌
+`시작 커밋`에서 시작한다.
 
-6. **answer barrier** — 자기 시도와 실패 근거가 생기기 전에는 answer 링크를 열지 않는다. 이후
-   answer의 basis commit/tree/diff를 자기 branch와 비교하고, 복사 대신 잘못된 결정만 교정한다.
+- **문제가 만들어졌던 시점의 코드:** 선택한 문제를 직접 구현하고 당시 검사를 실행하는 곳이다.
+- **현재 완성본:** 별도의 깨끗한 작업 공간에서 카드의 최신 검사 명령을 실행하는 곳이다.
 
-7. **무자료 재구현과 두 tree의 gate** — answer와 기존 구현을 닫고 같은 practice parent에서 새
-   branch를 만들어 같은 범위를 다시 구현한다.
+문제에 시작 커밋이 없거나 `검토 전용`이라고 적혀 있다면 임의로 branch를 만들지 않는다. 이 경우와
+root commit, 커밋 대응표, 별도 worktree 사용법은 [기술 안내](TECHNICAL_GUIDE.md#시작-커밋을-찾는-방법)를
+따른다.
 
-   - **Historical practice tree**: study branch에서는 그 practice가 명시한 당시 검증만 실행한다. 당시
-     존재하지 않던 현재 release 명령을 억지로 적용하지 않는다.
-   - **Clean release tree**: 별도 clean worktree에서 annotated release를 checkout하고 카드의 현재 전체
-     gate를 실행한다. 이 결과는 현재 공개 계약과 환경을 검증하며 historical patch를 검증한 것처럼
-     기록하지 않는다.
-   - **연결 설명**: 대표 변경의 책임·public behavior가 historical parent에서 현재 release까지 어떻게
-     이어지는지 diff/tree 근거로 설명한다. 이 설명과 이후 answerless 평가가 프로젝트 수준의 이해를
-     검증한다.
+## 중단하고 다시 시작할 때
 
-   ```sh
-   git worktree add --detach ../<repo>-release-gate <release>
-   # ../<repo>-release-gate 에서 카드의 현재 전체 gate 실행
-   git worktree remove ../<repo>-release-gate
-   ```
+진행 기록에 다음 여섯 가지를 적는다.
 
-8. **다음 링크** — historical practice gate, clean release gate와 연결 설명을 마친 뒤 완료 artifact를
-   원장에 기록하고 그 카드의 `다음` 링크만 따른다.
+- 저장소와 완성본 태그
+- 선택한 문제 ID
+- 개인 branch 이름
+- 마지막으로 성공하거나 실패한 명령
+- 아직 해결하지 못한 내용
+- 다음에 할 한 가지
 
-### 공식 수행 범위
+다시 시작할 때는 이 문서 → 현재 트랙 → 프로젝트 카드 순서로 이동한다. 원격 정보가 바뀌었는지
+확인하려면 Document Box에서 `make check-remote-navigation`을 실행한다.
 
-- 프로젝트 학습 완료에 필요한 기본 범위는 current practice ledger의 **대표 practice 한 개**와 카드가
-  명시한 전체 gate다. Ledger의 나머지 practice는 release 전체를 더 깊게 재구성하려는 선택 심화이며,
-  전수 수행이 필수는 아니다.
-- 대표 practice는 baseline 뒤 answer를 보지 않고 구현·검증 계획을 설명하지 못한 첫 제공 항목으로
-  고른다. 모든 항목을 설명할 수 있으면 current ledger의 첫 제공 practice를 사용한다. Omission과
-  reserved 항목, `metadata-only` review는 선택 대상이 아니다.
-- Immutable learning wrapper에 남은 “기존 N개 practice 수행” 문구는 전체 corpus를 순회하던 과거
-  navigation이자 선택 심화 경로다. 현행 필수 범위에는 이 Document Box 규칙이 우선한다. 단, 선택한
-  대표 practice 파일 자체의 구현 범위와 historical 검증 계약은 줄이지 않는다.
-- 이 범위는 42 복습자와 Frontend·Backend 신규 학습자에게 동일하다. 신규 학습자는 카드 전체 gate와
-  답지 없는 평가에서 한 practice의 우연한 통과가 아닌 프로젝트 수준의 이해를 별도로 증명한다.
+## 트랙 선택
 
-### Basis 안내의 우선순위
+### 42
 
-일부 이미 공개된 immutable project navigation wrapper에는 `tag에서 study branch`라는 축약 문구가
-남아 있다. 그 문구는 release baseline checkout에만 적용하며 commit 재구현의 시작점을 뜻하지 않는다.
-현재 학습에서는 수행 수량·선택 규칙은 이 문서, 선택한 항목의 구현·historical 검증은 각 practice
-파일의 full `부모 commit` 지시가 우선한다. 그 값이 없을 때는 answer 본문을 열지 않고 current
-answer ledger README가 연결한 full crosswalk의 해당 metadata mapping 행만 읽어 parent를 보충하고,
-abbreviated SHA는 clone에서 full commit으로 해소한다. 공개된 tag와 learning
-ref는 이 문구를 고치기 위해
-이동하거나 rewrite하지 않는다. Portfolio의 통합 content
-publication 과제만 카드가 지정한 neutral template tag에서 시작하고, 개별 commit practice는 동일하게
-각 파일의 parent를 따른다.
+[42 시작과 세 갈래 보기](42.md)
 
-Immutable ledger가 명시적으로 `metadata-only`라고 분류하고 practice 생략 사유를 기록한 행은 위
-full-parent 규칙의 구현 대상이 아니다. 실제 commit object의 hash·parent·tree를 대조하고 source를
-관찰·설명하되 `study/*`, 의도적 실패나 무자료 구현을 꾸미지 않는다. Practice와 ledger mapping
-모두에 parent가 없거나 서로 충돌하는 구현 항목은 이 예외에 포함하지 않는다.
-
-## 중단과 재개
-
-중단할 때 원장에 repository, release, `study/*` branch, practice ID, 마지막 통과/실패 명령과 다음 한
-단계를 기록한다. 코드는 개인 study branch에 commit할 수 있지만 public release나 learning ref를
-움직이지 않는다. 재개할 때 이 문서 → 해당 트랙 → 현재 단계 anchor 순서로 열고, release ref가 카드와
-같은지 `git fetch --tags` 후 확인한다. 카드가 바뀌었다면 `make check-remote-navigation`으로 현행 ref를
-먼저 검증한다.
-
-## 42 공통 선행
-
-정확한 순서:
-
-```text
-Linux/Git Foundations → c-foundation → format-printer → buffered-line-reader
-→ signal-message-bus → thread-dining → small-shell → stack-sort → cpp-foundation
-→ stl-container → irc-relay-server → container-stack
-→ web-boundary-inspector → pong-pong → 42 incident
-```
-
-[첫 카드: Linux/Git Foundations](42.md#stage-linux-foundation)
-
-42 incident의 즉시 checkpoint 뒤 아래 둘 중 하나 또는 둘 다 선택한다.
-
-- [Frontend 첫 카드](frontend.md#stage-frontend-foundations-training)
-- [Backend 첫 카드](backend.md#stage-backend-foundations-training)
-
-이미 42를 구현한 복습자는 필요하면 [Frontend 지원 준비 브리지](frontend-fast-track.md#route-frontend-application-bridge)를
-거쳐 지원을 시작할 수 있다. 이 선택은 Frontend 완료나 mastery가 아니며 정규 사슬의 Delivery로
-돌아간다.
-
-42의 30일 회상까지 통과해야 42 curriculum mastery를 확정한다. 확장 트랙을 먼저 시작해도 이 clock을
-삭제하거나 다시 시작하지 않는다.
-
-## 분기와 완료
+세 갈래를 모두 끝내고 Web·Pong·통합 평가까지 통과해야 42가 끝난다.
 
 ### Frontend
 
-```text
-Foundations → Delivery → Cloud → Reliability → unfamiliar-API transfer
-→ Portfolio → Web production regression → 두 회상 clock의 30일 checkpoint → 완료
-```
+[Frontend 첫 카드](frontend.md#stage-frontend-foundations-training)
 
-[Frontend 현재 카드 찾기](frontend.md)
+42 통합 평가 직후 시작할 수 있다. 42를 이미 구현했고 지원 준비를 먼저 해야 한다면
+[Frontend 지원 준비 경로](frontend-fast-track.md#route-frontend-application-bridge)를 선택할 수 있다.
+이 경로는 Frontend 전체 완료를 대신하지 않는다.
 
 ### Backend
 
-```text
-Foundations → Delivery → Reliability
-→ Shared → Wallet → Risk → Odds → Betting → Settlement → Gateway → Admin → Orchestration
-→ distributed incident → 30일 checkpoint → 완료
-```
+[Backend 첫 카드](backend.md#stage-backend-foundations-training)
 
-[Backend 현재 카드 찾기](backend.md)
+Frontend와 기다릴 필요 없이 42 통합 평가 직후 시작할 수 있다.
 
-Frontend와 Backend를 병행하면 별도 진행 원장 또는 명확히 분리한 section을 사용한다. 한 트랙의
-평가·회상 결과를 다른 트랙 완료 근거로 재사용하지 않는다.
+## 무엇을 완료로 보는가
 
-## Release 완료와 학습 완료
+- **프로젝트 공개 완료:** 원격 저장소에 완성본 태그와 읽기 전용 학습 자료가 게시되고 검증된 상태다.
+- **프로젝트 학습 완료:** 선택한 문제를 직접 시도하고, 해설과 비교한 뒤 다시 구현했으며 카드의 완료
+  조건을 모두 통과한 상태다.
+- **트랙 완료:** 모든 필수 프로젝트와 답지 없는 평가, 완료 직후·7일·30일 복습까지 끝낸 상태다.
 
-- **Project release 완료**: 원격 `main`, annotated release tag, registry가 지정한 읽기 전용 learning ref와
-  fresh-clone 검증이 게시된 상태다. 활성 30개 공식 프로젝트는 이 상태다. Linux/Git Foundations는
-  Central Notes가 소유하는 선수 과정이므로 프로젝트 수에 포함하지 않는다.
-- **Project 학습 완료**: 한 학습자가 대표 practice 한 개에서 practice-first 시도, 실패 증거, answer
-  비교와 무자료 재구현을 마치고 카드의 전체 gate를 통과한 상태다. 나머지 practice는 선택 심화다.
-- **Curriculum mastery**: 트랙의 모든 project 학습 완료에 answerless 평가와 완료 직후·7일·30일
-  회상까지 더한 상태다.
+Risk 프로젝트의 성능 목표인 1,000 RPS `p99 < 30 ms`, errors=0, drops=0은 아직 통과 상태가 아니다.
+학습에는 사용할 수 있지만 이 결과를 production 성능 달성 근거로 사용하지 않는다.
 
-Risk의 correctness release는 학습 가능하지만 1,000 RPS `p99 < 30 ms`, errors=0, drops=0 성능
-qualification은 RED이다. 이 제한을 숨기거나 production SLO 달성 근거로 바꾸어 쓰지 않는다.
+## 안내 링크 확인
 
-## 자체 검증
-
-이 사슬이 현재 원격과 맞는지 다음으로 확인한다.
+Document Box에서 다음 명령을 실행한다.
 
 ```sh
 make check-navigation
 make check-remote-navigation
 ```
 
-첫 명령은 30개 프로젝트와 Linux/Git 선수 과정, prev/next 대칭, 42 이후 분기, anchor와 dead end를
-오프라인 검사한다. 두 번째
-명령은 인증된 GitHub에서 각 `main`, annotated tag, learning publication 순서·path와 current
-practice/answer를 고정 SHA로 검사한다. `main_backlink=true`인 프로젝트의 정확한 카드 역링크도
-검사한다. Navigation source가 그대로인 신규 3개와 Signal·Web Boundary·Cloud·Orchestration은
-이 문서의 current 카드가 진입점을 소유하며 registry에 exact object 예외로 고정한다.
+첫 명령은 프로젝트 순서와 분기·합류, 문서 링크 구조를 확인한다. 두 번째 명령은 GitHub의 실제 완성본
+태그와 학습 자료 링크가 현재 카드와 맞는지 확인한다.

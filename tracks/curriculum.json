@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "owner": "woopinbell",
   "entry": "linux-foundation",
   "practice_policy": {
@@ -123,7 +123,7 @@
       "answer": "docs/commits/README.md",
       "main_backlink": false,
       "prev": "small-shell",
-      "next": "cpp-foundation"
+      "next": "web-boundary-inspector"
     },
     {
       "id": "cpp-foundation",
@@ -142,7 +142,7 @@
         "README.md",
         "DESIGN.md"
       ],
-      "prev": "stack-sort",
+      "prev": "linux-foundation",
       "next": "stl-container"
     },
     {
@@ -173,7 +173,7 @@
       "answer": "docs/commits/README.md",
       "main_backlink": false,
       "prev": "stl-container",
-      "next": "container-stack"
+      "next": "web-boundary-inspector"
     },
     {
       "id": "container-stack",
@@ -187,7 +187,7 @@
       "practice": "docs/practice/README.md",
       "answer": "docs/commits/README.md",
       "main_backlink": false,
-      "prev": "irc-relay-server",
+      "prev": "linux-foundation",
       "next": "web-boundary-inspector"
     },
     {
@@ -202,7 +202,11 @@
       "anchor": "stage-web-boundary-inspector",
       "practice": "docs/practice/README.md",
       "answer": "docs/commits/README.md",
-      "prev": "container-stack",
+      "prev": [
+        "stack-sort",
+        "irc-relay-server",
+        "container-stack"
+      ],
       "next": "pong-pong"
     },
     {
@@ -468,7 +472,11 @@
       "doc": "tracks/42.md",
       "anchor": "stage-linux-foundation",
       "prev": null,
-      "next": "c-foundation"
+      "next": [
+        "c-foundation",
+        "cpp-foundation",
+        "container-stack"
+      ]
     }
   ],
   "assessments": [
@@ -585,11 +593,27 @@
   ],
   "branches": [
     {
+      "from": "linux-foundation",
+      "choices": [
+        "c-foundation",
+        "cpp-foundation",
+        "container-stack"
+      ],
+      "join": "web-boundary-inspector",
+      "requires": [
+        "stack-sort",
+        "irc-relay-server",
+        "container-stack"
+      ]
+    },
+    {
       "from": "42-incident",
       "choices": [
         "frontend-foundations-training",
         "backend-foundations-training"
-      ]
+      ],
+      "join": null,
+      "requires": []
     }
   ]
 }

@@ -28,11 +28,12 @@ class RegistryFixture:
         (root / "tracks/README.md").write_text(
             "# Curriculum\n\n"
             "[application overlay](frontend-fast-track.md#route-frontend-application-bridge)\n\n"
-            "### 공식 수행 범위\n\n"
-            "대표 practice 한 개와 카드 전체 gate를 수행한다.\n"
-            "나머지 practice는 release 전체를 더 깊게 재구성하려는 선택 심화다.\n"
-            "Historical practice tree와 Clean release tree를 구분한다.\n"
-            "현행 필수 범위에는 이 Document Box 규칙이 우선한다.\n",
+            '<a id="공식-수행-범위"></a>\n'
+            "## 필수 학습 범위\n\n"
+            "프로젝트마다 연습문제 한 개만 필수다.\n"
+            "나머지 연습문제는 선택 심화다.\n"
+            "문제가 만들어졌던 시점의 코드와 현재 완성본을 구분한다.\n"
+            "Document Box의 이 규칙이 우선한다.\n",
             encoding="utf-8",
         )
         self.projects = []
@@ -123,21 +124,22 @@ class RegistryFixture:
                     learning = "learning/portfolio-v3.0.1"
                     practice = "docs/practice-portfolio-v3.0.1/README.md"
                     answer = "docs/commits-portfolio-v3.0.1/README.md"
-                if track == "42":
-                    next_id = ids[index + 1] if index + 1 < len(ids) else "42-incident"
-                elif track == "frontend":
-                    if index < 3:
-                        next_id = ids[index + 1]
-                    elif index == 3:
-                        next_id = "frontend-transfer"
-                    else:
-                        next_id = "web-production-regression"
-                else:
-                    next_id = (
-                        ids[index + 1]
-                        if index + 1 < len(ids)
-                        else "backend-incident"
+                _, next_ids = curriculum.CANONICAL_EDGES[node_id]
+                next_links = "".join(
+                    f'[next](#stage-{next_id})\n' for next_id in next_ids
+                )
+                prev_ids, _ = curriculum.CANONICAL_EDGES[node_id]
+                prior_links = "".join(
+                    (
+                        f'[prior](42.md#stage-{prev_id})\n'
+                        if prev_id == "42-incident" and track != "42"
+                        else f'[prior](#stage-{prev_id})\n'
                     )
+                    for prev_id in prev_ids
+                )
+                join_marker = (
+                    "세 갈래를 모두 완료한다.\n" if len(prev_ids) > 1 else ""
+                )
                 odds_handoffs = (
                     "[Spring Kafka](https://github.com/woopinbell/"
                     "sportsbook-orchestration/blob/learning/orchestration-v1/"
@@ -160,11 +162,15 @@ class RegistryFixture:
                     '[Central](https://github.com/woopinbell/central-notes/blob/main/'
                     f'TRACK_SEQUENCE.md#{anchor})\n'
                     '[scope](README.md#공식-수행-범위)\n'
-                    '- Clean release gate: annotated release의 별도 clean worktree에서 검증한다.\n'
-                    '- Historical 무자료 gate: 현재 practice 파일이 명시한 시작 tree에서 검증한다.\n'
-                    '- 연결 설명: 두 tree의 경계를 설명한다.\n'
+                    '- **시작 조건:** 앞 과제를 완료한다.\n'
+                    '- **먼저 읽을 것:** Central 안내를 읽는다.\n'
+                    '- **저장소와 학습 자료:** 저장소와 문제·해설 링크를 사용한다.\n'
+                    '- **직접 해볼 것:** 문제 한 개를 직접 구현한다.\n'
+                    '- **현재 완성본 확인:** 별도 작업 공간에서 검사한다.\n'
+                    '- **완료 조건:** 두 코드 시점을 구분해 설명한다.\n'
+                    '- **다음 과제:** 표시된 링크로 이동한다.\n'
                     f'{odds_handoffs}'
-                    f'[next](#stage-{next_id})\n'
+                    f'{join_marker}{prior_links}{next_links}'
                 )
                 project = {
                     "id": node_id,
@@ -207,26 +213,38 @@ class RegistryFixture:
         ids_42 = track_ids["42"]
         ids_frontend = track_ids["frontend"]
         ids_backend = track_ids["backend"]
-        for ids in (ids_42, ids_frontend, ids_backend):
-            for left, right in zip(ids, ids[1:]):
-                by_id[left]["next"] = right
-                by_id[right]["prev"] = left
+        for node_id, project in by_id.items():
+            prev_ids, next_ids = curriculum.CANONICAL_EDGES[node_id]
+            project["prev"] = list(prev_ids) if len(prev_ids) > 1 else (
+                prev_ids[0] if prev_ids else None
+            )
+            project["next"] = list(next_ids) if len(next_ids) > 1 else (
+                next_ids[0] if next_ids else None
+            )
 
         prerequisite = self._local_node(
             "linux-foundation",
             "42",
             "tracks/42.md",
             None,
-            ids_42[0],
+            list(curriculum.CANONICAL_EDGES["linux-foundation"][1]),
         )
-        by_id[ids_42[0]]["prev"] = "linux-foundation"
         path_42 = root / "tracks/42.md"
         path_42.write_text(
             '<a id="stage-linux-foundation"></a>\n'
             "## Linux/Git Foundations\n"
             "[Central](https://github.com/woopinbell/central-notes/blob/main/"
             "TRACK_SEQUENCE.md#stage-linux-foundation)\n"
-            f'[next](#stage-{ids_42[0]})\n\n'
+            "- **시작 조건:** 준비를 마친다.\n"
+            "- **먼저 읽을 것:** Central 안내를 읽는다.\n"
+            "- **저장소와 학습 자료:** Central 실습 자료를 사용한다.\n"
+            "- **직접 해볼 것:** Git 실습을 한다.\n"
+            "- **현재 완성본 확인:** 빠른 확인을 실행한다.\n"
+            "- **완료 조건:** 결과를 설명한다.\n"
+            "- **다음 과제:** 세 갈래 중 하나를 고른다.\n"
+            '[next](#stage-c-foundation)\n'
+            '[next](#stage-cpp-foundation)\n'
+            '[next](#stage-container-stack)\n\n'
             + path_42.read_text(encoding="utf-8"),
             encoding="utf-8",
         )
@@ -235,7 +253,7 @@ class RegistryFixture:
             "42-incident",
             "42",
             "tracks/42.md",
-            ids_42[-1],
+            "pong-pong",
             [ids_frontend[0], ids_backend[0]],
         )
         frontend_transfer = self._local_node(
@@ -280,18 +298,21 @@ class RegistryFixture:
                 ),
             )
         )
-        by_id[ids_42[-1]]["next"] = "42-incident"
-        by_id[ids_frontend[0]]["prev"] = "42-incident"
-        by_id[ids_backend[0]]["prev"] = "42-incident"
-        by_id[ids_frontend[-2]]["next"] = "frontend-transfer"
-        by_id[ids_frontend[-1]]["prev"] = "frontend-transfer"
-        by_id[ids_frontend[-1]]["next"] = "web-production-regression"
-        by_id[ids_backend[-1]]["next"] = "backend-incident"
 
         for node in self.assessments + self.completions:
             path = root / node["doc"]
             with path.open("a", encoding="utf-8") as stream:
                 stream.write(f'\n<a id="{node["anchor"]}"></a>\n## {node["id"]}\n')
+                if node["id"] not in {"frontend-complete", "backend-complete"}:
+                    stream.write(
+                        "- **시작 조건:** 앞 단계를 마친다.\n"
+                        "- **먼저 읽을 것:** 평가 안내를 읽는다.\n"
+                        "- **저장소와 학습 자료:** 평가 자료를 사용한다.\n"
+                        "- **직접 해볼 것:** 평가를 수행한다.\n"
+                        "- **현재 완성본 확인:** 결과를 확인한다.\n"
+                        "- **완료 조건:** 검사를 통과한다.\n"
+                        "- **다음 과제:** 다음 링크로 이동한다.\n"
+                    )
                 if node["id"] == "42-incident":
                     stream.write(
                         "[frontend](frontend.md#stage-frontend-foundations-training)\n"
@@ -336,7 +357,7 @@ class RegistryFixture:
             "portfolio": dict(curriculum.FRONTEND_APPLICATION_PORTFOLIO),
         }
         route_42_links = []
-        for stage in curriculum.CANONICAL_SEQUENCES["42"]:
+        for stage in curriculum.DISPLAY_SEQUENCES["42"]:
             if stage == "42-incident":
                 central = (
                     "https://github.com/woopinbell/central-notes/blob/main/"
@@ -368,7 +389,7 @@ class RegistryFixture:
         )
 
         self.data = {
-            "version": 3,
+            "version": 4,
             "owner": "woopinbell",
             "entry": "linux-foundation",
             "practice_policy": dict(curriculum.PRACTICE_POLICY),
@@ -379,11 +400,27 @@ class RegistryFixture:
             "overlays": [self.overlay],
             "branches": [
                 {
+                    "from": "linux-foundation",
+                    "choices": [
+                        "c-foundation",
+                        "cpp-foundation",
+                        "container-stack",
+                    ],
+                    "join": "web-boundary-inspector",
+                    "requires": [
+                        "stack-sort",
+                        "irc-relay-server",
+                        "container-stack",
+                    ],
+                },
+                {
                     "from": "42-incident",
                     "choices": [
                         "frontend-foundations-training",
                         "backend-foundations-training",
                     ],
+                    "join": None,
+                    "requires": [],
                 }
             ],
         }
@@ -414,15 +451,15 @@ class CurriculumValidationTest(unittest.TestCase):
             curriculum.validate_registry(self.fixture.data, self.root), []
         )
 
-    def test_registry_version_three_is_required(self):
+    def test_registry_version_four_is_required(self):
         self.fixture.data["version"] = 1
         errors = curriculum.validate_registry(self.fixture.data, self.root)
-        self.assertTrue(any("registry version must be 3" in error for error in errors))
+        self.assertTrue(any("registry version must be 4" in error for error in errors))
 
     def test_application_overlay_stays_outside_the_canonical_graph(self):
         canonical_ids = {
             node_id
-            for sequence in curriculum.CANONICAL_SEQUENCES.values()
+            for sequence in curriculum.DISPLAY_SEQUENCES.values()
             for node_id in sequence
         }
         self.assertNotIn(curriculum.FRONTEND_APPLICATION_OVERLAY_ID, canonical_ids)
@@ -684,14 +721,14 @@ class CurriculumValidationTest(unittest.TestCase):
         path = self.root / "tracks/README.md"
         path.write_text(
             path.read_text(encoding="utf-8").replace(
-                "대표 practice 한 개",
-                "모든 practice",
+                "프로젝트마다 연습문제 한 개만 필수다.",
+                "프로젝트마다 모든 연습문제가 필수다.",
             ).replace(
-                "Historical practice tree와 Clean release tree를 구분한다.",
-                "하나의 tree에서 모든 gate를 실행한다.",
+                "문제가 만들어졌던 시점의 코드와 현재 완성본을 구분한다.",
+                "한 시점의 코드만 확인한다.",
             ).replace(
-                "현행 필수 범위에는 이 Document Box 규칙이 우선한다.",
-                "project wrapper가 우선한다.",
+                "Document Box의 이 규칙이 우선한다.",
+                "프로젝트 문구가 우선한다.",
             ),
             encoding="utf-8",
         )
@@ -715,18 +752,57 @@ class CurriculumValidationTest(unittest.TestCase):
         errors = curriculum.validate_registry(self.fixture.data, self.root)
         self.assertTrue(any("missing canonical practice scope" in error for error in errors))
 
-    def test_each_project_card_separates_historical_and_release_gates(self):
+    def test_each_project_card_has_beginner_action_sections(self):
         path = self.root / "tracks/42.md"
         text = path.read_text(encoding="utf-8")
-        text = text.replace("Clean release gate:", "통합 gate:", 1)
-        text = text.replace("Historical 무자료 gate:", "무자료 gate:", 1)
-        text = text.replace("연결 설명:", "설명:", 1)
+        text = text.replace("**먼저 읽을 것:**", "**읽기:**", 1)
+        text = text.replace("**직접 해볼 것:**", "**실습:**", 1)
+        text = text.replace("**현재 완성본 확인:**", "**검사:**", 1)
         path.write_text(text, encoding="utf-8")
         errors = curriculum.validate_registry(self.fixture.data, self.root)
         self.assertEqual(
-            sum("missing the two-tree gate marker" in error for error in errors),
+            sum("missing the learner action marker" in error for error in errors),
             3,
         )
+
+    def test_linux_split_and_web_join_are_exact(self):
+        by_id = {
+            node["id"]: node
+            for group in ("prerequisites", "projects", "assessments", "completions")
+            for node in self.fixture.data[group]
+        }
+        self.assertEqual(
+            curriculum._ids(by_id["linux-foundation"]["next"]),
+            ["c-foundation", "cpp-foundation", "container-stack"],
+        )
+        self.assertEqual(
+            curriculum._ids(by_id["web-boundary-inspector"]["prev"]),
+            ["stack-sort", "irc-relay-server", "container-stack"],
+        )
+
+    def test_web_join_requires_all_three_prior_links_and_plain_marker(self):
+        path = self.root / "tracks/42.md"
+        text = path.read_text(encoding="utf-8")
+        text = text.replace("세 갈래를 모두 완료한다.", "앞 과제를 완료한다.", 1)
+        text = text.replace("[prior](#stage-irc-relay-server)", "irc 완료", 1)
+        path.write_text(text, encoding="utf-8")
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        self.assertTrue(any("every prior lane is required" in error for error in errors))
+        self.assertTrue(any("missing required prior link" in error for error in errors))
+
+    def test_linux_branch_contract_is_required(self):
+        self.fixture.data["branches"] = self.fixture.data["branches"][1:]
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        self.assertTrue(any("linux-foundation and 42-incident" in error for error in errors))
+
+    def test_beginner_documents_reject_retired_jargon(self):
+        path = self.root / "tracks/frontend.md"
+        path.write_text(
+            path.read_text(encoding="utf-8") + "\nClean release gate\n",
+            encoding="utf-8",
+        )
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        self.assertTrue(any("uses learner-facing jargon" in error for error in errors))
 
     def test_odds_card_uses_original_kafka_and_avro_handoffs(self):
         path = self.root / "tracks/backend.md"

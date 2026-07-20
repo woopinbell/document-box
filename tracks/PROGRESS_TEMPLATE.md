@@ -1,164 +1,148 @@
-# 개인 학습 진행 원장
+# 개인 학습 진행 기록
 
-이 파일을 저장소 밖의 개인 공간에 복사해 사용합니다. `learning/<release>`는 읽기 전용으로 두고,
-release tag는 baseline 확인에만 사용합니다. 실제 구현과 실패 기록은 practice 또는 current answer
-ledger가 연결한 crosswalk에서 full SHA로 해소한 historical parent의 개인 `study/*` branch에
-남깁니다. 비밀번호, token, 개인 정보, 실제 서비스 credential은
-기록하지 않습니다.
+이 파일을 Document Box 밖의 개인 경로에 복사해 사용한다. 프로젝트마다 `프로젝트 한 개 기록` 부분을
+새로 복사한다. Git 값이 헷갈리면 [기술 안내](TECHNICAL_GUIDE.md)를 참고한다.
 
 ## 과정 선택
 
-- 학습자:
-- 시작일(KST):
-- 현재 트랙: 42 / Frontend / Backend
-- 현재 단계 카드:
-- repository:
-- annotated release:
-- learning ref:
-- registry 원격 검증 시각(KST):
-- release peeled SHA:
-- learning tip SHA:
-- 개인 study branch:
-- 이전 gate 통과 근거:
+- 시작일:
+- 선택한 트랙: 42 / Frontend / Backend
+- preflight 명령과 결과:
 
-## 단계 실행
+### 42 세 갈래
 
-아래 section은 프로젝트마다 복제하거나 프로젝트별 별도 원장 파일로 저장합니다. 앞 프로젝트의
-실패·answer 시각·gate를 다음 프로젝트 기록으로 덮어쓰지 않습니다.
+- [ ] Linux/Git 선수 과정
+- [ ] C 갈래: C1–C7
+- [ ] C++ 갈래: CPP1–CPP3
+- [ ] 인프라 갈래: INFRA1
+- [ ] 세 갈래 합류: JOIN1–JOIN2
+- [ ] 42 통합 평가
 
-### 1. 환경과 baseline
+병렬 진행한다면 갈래마다 별도 프로젝트 기록을 사용한다. 한 갈래의 성공이나 실패를 다른 갈래 기록에
+덮어쓰지 않는다.
 
-- 실행한 preflight 명령:
-- `PASS` 항목:
-- `WARN` 항목과 대응:
-- `BLOCK` 해소 근거:
-- release baseline 명령:
-- baseline 결과와 시각:
-- baseline stdout/stderr 또는 artifact 위치:
+## 프로젝트 한 개 기록
 
-### 2. 선수 노트와 practice
+### 1. 어디까지 왔나
 
-- Central Notes 선수 문서:
-- 자체 설명 또는 요약 artifact:
-- 대표 practice stable ID:
-- 대표 practice 선택 근거:
-- 항목 유형: implementation practice / metadata-only review
-- parent 출처: practice file / current answer ledger가 연결한 full crosswalk / `ROOT`
-- full commit / parent / tree (`git rev-parse`, `git show -s --format=%T`):
-- metadata-only이면 실제 commit hash·parent·tree:
-- metadata-only 분류와 practice 생략 사유:
-- practice README 확인 시각:
-- answer를 열기 전에 세운 가설:
-
-`metadata-only` ledger 행은 구현 practice가 아니다. 가짜 branch·실패·무자료 재구현을 만들지 말고
-실제 object와 source 관찰·자기 설명을 기록한다. 구현 항목의 practice에 full parent가 없으면 answer
-본문을 열지 않고 current answer ledger README가 연결한 full crosswalk의 해당 metadata mapping 행만
-확인하고 abbreviated commit·parent는 clone에서 full SHA로 해소하며 tree도 기록한다. 두 곳 모두
-parent가 없거나 mapping이 충돌하면 추측하지 말고 `BLOCK`으로 기록한다. Metadata-only review는
-프로젝트 완료용 대표 practice를 대신할 수 없다.
-
-### 3. 실행·실패 증거
-
-- 최초 실행 명령:
-- 관찰한 실패:
-- 재현 최소 조건:
-- stdout/stderr, trace, screenshot 또는 test report 위치:
-- 실패 원인 가설:
-- 가설을 반증할 수 있는 관찰:
-- 수정 또는 구현 단위:
-
-### 4. answer 대조
-
-- answer를 처음 연 시각(KST):
-- 확인한 answer stable ID:
-- 내 접근과 같았던 결정:
-- 달랐던 결정과 근거:
-- basis commit/tree/diff 대조 결과:
-- answer를 그대로 복사하지 않고 다시 설명한 내용:
-
-### 5. 무자료 재구현
-
-- answer를 닫고 새로 만든 branch/working tree:
+- 프로젝트:
+- 카드 링크:
+- 시작 조건을 통과한 근거:
+- 완성본 태그:
+- 읽기 전용 학습 branch:
 - 시작 시각:
+
+### 2. 먼저 읽은 것
+
+- Central 선수 노트:
+- 프로젝트 학습 자료 목차:
+- 이해가 안 된 내용:
+- 확인이 필요한 질문:
+
+### 3. 연습문제 선택
+
+- 선택한 문제 ID와 링크:
+- 이 문제를 고른 이유:
+- 문제에서 지정한 시작 커밋:
+- 개인 branch:
+- 시작 커밋을 확인한 위치: 문제 파일 / 해설 목록의 커밋 대응표 / ROOT
+- commit·parent·tree 전체 SHA:
+
+`생략`, `예약`, `검토 전용` 항목은 구현 문제로 고르지 않는다. 문제 파일과 대응표가 서로 다른 시작
+커밋을 가리키면 진행을 멈추고 교정을 요청한다.
+
+### 4. 해설을 보기 전 직접 시도
+
+- 만들려는 동작:
+- 예상 결과:
+- 처음 실행한 명령:
+- 실제 결과:
+- 첫 실패:
+- 원인이라고 생각한 것:
+- 그 생각을 확인하거나 반박한 방법:
+- 직접 만든 수정:
+- 수정 뒤 결과:
+
+실패를 일부러 꾸미지 않는다. 실제로 관찰한 실패나 잘못된 첫 판단을 기록한다.
+
+### 5. 해설과 비교
+
+- 해설을 처음 연 시각:
+- 내 구현과 달랐던 결정:
+- 해설에서 확인한 commit·tree:
+- 복사하지 않고 고친 내용:
+- 여전히 이해되지 않는 내용:
+
+### 6. 해설을 닫고 다시 구현
+
+- 같은 시작 커밋에서 만든 새 branch:
+- 해설과 기존 구현을 닫은 시각:
+- 다시 구현한 범위:
+- 문제가 요구한 당시 검사 명령:
+- 검사 결과:
+- 첫 구현과 달라진 판단:
+
+### 7. 현재 완성본 확인
+
+- 별도 작업 공간 경로:
+- 카드가 요구한 현재 검사 명령:
+- 반환값:
+- 중요한 출력:
+- 실행 시각:
+- 실행하지 못한 항목과 정확한 환경 제한:
+
+문제가 만들어졌던 시점의 검사와 현재 완성본 검사를 섞지 않는다.
+
+### 8. 완료 확인
+
+- 이 변경이 담당한 책임:
+- 사용자가 볼 수 있는 동작:
+- 실패할 때 정리·rollback되는 과정:
+- 시작 커밋의 변경이 현재 완성본까지 이어지는 과정:
+- 완료 조건 통과 근거:
+- 다음 과제:
 - 종료 시각:
-- 재구현 commit 또는 patch:
-- 기억에 의존하지 못해 다시 조사한 항목:
-- historical practice 검증 명령과 결과:
-- answer basis와 내 patch의 diff/tree 비교:
 
-### 6. 최종 gate와 handoff
+## 답지 없는 평가 기록
 
-- clean release worktree와 peeled SHA:
-- 카드의 현재 release gate 명령과 결과:
-- historical patch를 current release 검증으로 오인하지 않았다는 확인:
-- 대표 변경이 current release까지 이어지는 책임·public behavior 설명:
-- 완료 artifact:
-- 남은 known limitation:
-- 다음 단계 카드:
-- 다음 단계 시작 가능 여부: PASS / BLOCK
+- 평가 이름과 링크:
+- 시작 시각:
+- 사용한 starter·contract·evidence:
+- 첫 실패:
+- 가설:
+- 반증 방법:
+- 최소 수정 또는 복구:
+- 자동 검사 결과:
+- 사람 평가 결과:
+- rollback 결과:
+- 완료 시각:
 
-## 독립 평가
+## Frontend 지원 준비 경로
 
-Frontend처럼 평가가 둘 이상이면 이 section을 평가마다 복제합니다.
+- [ ] 42 통합 평가와 완료 직후 복습
+- [ ] Foundations 핵심 확인
+- [ ] Reliability 핵심 실습
+- [ ] Portfolio 검사
+- [ ] `frontend-application-readiness` 기록
+- [ ] `grants_mastery=false` 확인
+- [ ] 정규 Frontend Delivery로 복귀
 
-- 평가 이름:
-- starter/evidence pack 기준 commit:
-- 답지를 보지 않고 시작한 시각:
-- 제출 artifact:
-- checker 명령과 결과:
-- rubric 자기 평가:
-- 보완 후 재평가 날짜:
+## 복습 일정
 
-## Frontend 지원 준비 브리지
+자료와 기존 구현을 닫고 자기 말과 코드로 다시 설명한다.
 
-이 section은 [`frontend-application-bridge`](frontend-fast-track.md#route-frontend-application-bridge)를
-선택한 경우에만 사용한다. 정규 Frontend 진행 원장과 완료 판정을 대체하지 않는다.
-
-- 이전 42 incident gate 근거:
-- Foundations Form `039/040/041` review 증거:
-- Foundations App Router `067/068/069` review 증거:
-- Foundations Query Cache `071/072/073` review 증거:
-- Foundations Accessibility `079/080/081` review 증거:
-- Reliability Form `010/011/013` hands-on 증거:
-- Reliability Table `036/037/039` hands-on 증거:
-- Reliability Optimistic `043/044/046/047` hands-on 증거:
-- Reliability Server/client `108/109/110/112` hands-on 증거:
-- Portfolio neutral/content branch와 전체 gate:
-- 지원 자료와 공개 대상으로 고른 repository:
-- outcome: `frontend-application-readiness` / `BLOCK`
-- `grants_mastery=false` 확인:
-- 정규 복귀 카드: `frontend-delivery-training`
-- 정규 Delivery 시작일:
-
-## 무자료 회상
-
-- 회상 clock 이름: 42 incident / Frontend transfer / Web production regression / Backend incident
-
-아래 표는 clock마다 하나씩 복제합니다. 서로 다른 평가의 예정일을 한 표에 합치거나, 뒤 평가를
-통과했다는 이유로 앞 clock을 다시 시작하지 않습니다.
-
-| checkpoint | 예정일 | 실제 수행일 | 자료를 닫고 재현한 내용 | gate 결과 | 다음 조치 |
+| 시점 | 예정일 | 실제 수행일 | 다시 설명하거나 구현한 내용 | 결과 | 다음 조치 |
 | --- | --- | --- | --- | --- | --- |
 | 완료 직후 |  |  |  |  |  |
 | 7일 |  |  |  |  |  |
 | 30일 |  |  |  |  |  |
 
-42 incident를 통과한 뒤 Frontend 또는 Backend를 시작해도 42의 7일·30일 회상은 취소하지 않습니다.
-Frontend transfer와 Web production regression도 서로 다른 회상 clock으로 기록합니다.
+## 최종 완료 확인
 
-## 완료 판정
-
-- [ ] 프로젝트 release gate를 통과했다.
-- [ ] 대표 practice에서 실행·실패 → answer → 무자료 재구현 순서를 지켰다.
-- [ ] Historical practice tree에서 해당 practice의 검증을 통과했다.
-- [ ] 별도 clean release tree에서 카드의 현재 전체 gate를 통과했다.
-- [ ] 두 tree의 결과를 섞지 않고 대표 변경이 current release로 이어지는 경계를 설명했다.
-- [ ] 답지 없는 독립 평가를 통과했다.
-- [ ] 완료 직후 회상을 통과했다.
-- [ ] 7일 회상을 통과했다.
-- [ ] 30일 회상을 통과했다.
-- [ ] 단계 카드의 다음 링크로 이동했다.
-- [ ] Frontend/Backend 완료 시 병행 중이던 42 incident의 30일 회상도 통과했다.
-
-모든 항목을 통과하기 전에는 원격 release 완료와 개인 curriculum mastery를 같은 의미로 기록하지
-않습니다.
+- [ ] 선택한 문제를 해설 없이 직접 시도했다.
+- [ ] 실제 실패와 원인 확인 과정을 기록했다.
+- [ ] 해설을 비교한 뒤 같은 시작점에서 다시 구현했다.
+- [ ] 문제 당시 검사와 현재 완성본 검사를 각각 통과했다.
+- [ ] 배운 내용을 자기 말로 설명했다.
+- [ ] 답지 없는 평가를 통과했다.
+- [ ] 완료 직후·7일·30일 복습을 마쳤다.
