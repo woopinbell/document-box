@@ -201,8 +201,8 @@ UNCHANGED_NAVIGATION_RELEASES = {
     },
     "pong-pong": {
         "release": "v1.0.0",
-        "main": "091a9326c7efe94f59b7e6db4dd841eb2bb228cd",
-        "tag": "22f9d6e3b646b6e76cfa545497c9f14e5f0bfebd",
+        "main": "e537ffb457bfbb6225c55beb1dd9cb7b7389867d",
+        "tag": "30db31454a16571cdbbb129671ad2d6218a29afa",
     },
     "cloud-launch-training": {
         "release": "cloud-launch-v1.0.1",

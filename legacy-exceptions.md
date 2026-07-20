@@ -61,8 +61,8 @@ source history와 단일 `learning/current` 진입점을 만드는 일회성 승
 - 단일 `docs(learning)` role은 위 exact object의 `format-printer`에만 허용합니다. 이후 새 learning
   publication은 전역의 notes → commits → practice 순서를 따릅니다.
 - `format-printer`, `signal-message-bus`, `thread-dining`, `small-shell`, `stack-sort`, `stl-container`,
-  `irc-relay-server`, `container-stack`, `web-boundary-inspector`의 current source release에는
-  learner-navigation-only commit을 추가하지 않았습니다. 아홉 저장소의
+  `irc-relay-server`, `container-stack`, `web-boundary-inspector`, `pong-pong`의 current source release에는
+  learner-navigation-only commit을 추가하지 않았습니다. 열 저장소의
   main backlink 부재는 명시적
   예외이며 current ref·학습 진입점은 Document Box 단계 카드가 소유합니다. 이 예외는 각각
   `be4966f3c1d176453a34b609036ef4998fa8b022`/`fe7a0d79cb9733f4f6871e5164a305907cd7b78e`,
@@ -73,7 +73,8 @@ source history와 단일 `learning/current` 진입점을 만드는 일회성 승
   `6f875e0677674d86145188d8558e3cf56b61c9cb`/`d6ff0b12322c9221d47f308097dc4b4980f3b483`,
   `b69347797e81c803397ced1ba23042216caa74fd`/`7c8fe460cd8e4e01ac5c82a5e6e987be7cce58fb`,
   `bd498c17f255681cbc57e598e09a876abb2c0a2e`/`dd878d65945e32c9a499b175643a1ae39880cb3a`,
-  `cf57ffeb652288548c351209a278d4907f0b2f95`/`5ee7967b12c27a259d1a64f4c72de67f524c46c7`
+  `cf57ffeb652288548c351209a278d4907f0b2f95`/`5ee7967b12c27a259d1a64f4c72de67f524c46c7`,
+  `e537ffb457bfbb6225c55beb1dd9cb7b7389867d`/`30db31454a16571cdbbb129671ad2d6218a29afa`
   main/tag object 쌍에만 적용하며 어느 object든 이동하면 backlink 검사를 다시 요구합니다.
 
 ### `small-shell` 정렬 실행 원장
@@ -581,6 +582,141 @@ remote는 `main`, `learning/current`, annotated `v1.0.0`만 advertise합니다. 
 각각 strict fsck, exact 7/9 linear graph, 22/38 file topology, raw metadata, source drift 0, active corpus
 root·mapping·relative link와 수량 gate를 통과했습니다. 두 fresh clone 모두 request 3/3과
 Chromium·Firefox·WebKit browser 21/21의 `make check`를 통과했습니다.
+
+### `pong-pong` 정렬 실행 원장
+
+2026-07-20 KST에 private `woopinbell/pong-pong`을 두 차례의 exact-lease atomic transition으로
+정렬했습니다. Original `main`은 `1f23360c3fc4829aedf2ea6a1633d2b34f466406`이었습니다. 첫 transition은
+old learning 세 ref와 금지 provenance가 있는 source tag 일곱 개를 모두 제거하고 interim
+`main` `091a9326c7efe94f59b7e6db4dd841eb2bb228cd`, `learning/current`
+`d647dc25b51c566e5d0e5dab9929518a0cc3a6a5`, annotated `v1.0.0` object
+`22f9d6e3b646b6e76cfa545497c9f14e5f0bfebd`만 게시했습니다.
+
+그 fresh source의 실제 Chromium desktop/mobile navigation trace가 session identity 전 profile 항목을
+`/` anchor로 노출하는 race를 찾았습니다. Source freeze를 다시 열어 `AppShell`이 identity 전에는
+`aria-disabled` non-link를, 유효한 handle 뒤에는 `/profile/<handle>` link만 노출하게 했습니다. 두 번째
+transition은 위 세 interim object를 exact lease로 잡아 final `main`
+`e537ffb457bfbb6225c55beb1dd9cb7b7389867d`(tree
+`060530a6b480e49db056950c3a27b5975802c556`), final `learning/current`
+`04d4f9d54c5f235ca0c368506217650b8f623f62`, annotated tag object
+`30db31454a16571cdbbb129671ad2d6218a29afa`로 한 번에 교체했습니다. Tag는 final `main`으로 peel됩니다.
+
+Source-only recovery artifact는 learning ref와 learning-only object를 포함하지 않습니다. Original
+`main`과 일곱 source tag를 담은 bundle의 SHA-256은
+`a103a04de242b7c0b941bbb298d8d3864bc6121ae41cb30571de8c5dcb7e17c3`이고, interim clean source와
+old interim tag를 담은 두 번째 bundle의 SHA-256은
+`6dc061bfa8a7c1094b56d5cac8a4cd47f628be7ea2f6e8b9e5257981bbc91d73`입니다. 두 bundle 모두
+complete-history, verify, strict fsck와 restore checkout을 통과했습니다. Learning bundle·tag·archive는
+만들지 않았으며 project·governance publication과 final remote audit 뒤 recovery artifact를 폐기합니다.
+
+삭제한 source tag는 remote에 neutral alias로 남기지 않았습니다.
+
+| ref | old tag object | old peeled target |
+| --- | --- | --- |
+| `codex-5.6` | `437ed54c9e853aa60b6eb08a8683a80bd4f73707` | `b949bbeabf7c93d1a3c7acc0cfd6b1230486a79f` |
+| `codex-5.6.1` | `fbce934afd920658d54c9625f829fc5b4f8367ed` | `cdc444b96934530ed72ae6b5eecb964bd7b60131` |
+| `codex-5.7` | `c3c17b98b01cab07d32c3d5919df5bd4084faf66` | `1f23360c3fc4829aedf2ea6a1633d2b34f466406` |
+| `legacy/codex-5.6-active-union` | `c39b80c63e660d08e8a24cd610525af9d6dc40b7` | `d96d9d9b5ff8ce525b04388b624848df777a37ac` |
+| `legacy/codex-5.6-monolith` | `7f6908ecdb9b6388ee9be31e7ae42393c25646df` | `1a3e70a6475404ac8edbe09c08586e726209b56d` |
+| `pre-history-clean-codex-5.7` | `ce0343f3f1177bf2a6ad793cd4364ec7d1238162` | `cdc444b96934530ed72ae6b5eecb964bd7b60131` |
+| `pre-learning-split-codex-5.6` | `fc7ed821ef8d621b3f6a718d375fa447b5684699` | `258edf487ac18ef6f5fe19259eed5a681726fc0d` |
+
+Old `main`의 첫 85 commits는 `07017767044e4882733a587a2c5cebe6893d95b6`까지 object ID, parent
+topology, patch 순서, identity와 timestamp를 byte-for-byte 보존했습니다. Final source는 88 commits와
+13 conflict-free merges이며 source window는 `2024-08-05T18:45:46+09:00`부터
+`2024-11-13T21:08:41+09:00`까지입니다.
+
+| stable ID | old responsibility | final responsibility | disposition |
+| --- | --- | --- | --- |
+| `086` | `4674dcc146a0ad75f93efa0d7973d6f9925335eb` / tree `230c88173dfa8c5f785e4599919b34dcf8d8c1cd` / patch `0d0a0fb2cc6ce006f79ba0cc064cd577f7537e8c` | `699d065cc2dbc80ba11d2ac5b59561d7b4365bb5` / tree `dfe742615265304ff075071b0847f80a2098613b` / patch `348d1f67af920a21062201f591a0d48610107a40` | 12 reference를 보존하고 세 target-DB readiness를 실제 query 기준으로 교정 |
+| `087` | `0344a7868934c5461d8ede83d36a3243ea605081` / tree `aaa8cb0222fb49f0e5cb68e55db473c0b46d3f01` / patch `29df97af9b91a38b59ef10eda979b8ef0cf1f30f` | `091a9326c7efe94f59b7e6db4dd841eb2bb228cd` / tree `ecf5b3b9e7bb2a1c4cc17d868b221379ffdfcc69` / patch `ad180aac81a0017ecfde8888e0eddc20920885d6` | product guide와 DESIGN을 source-local contract로 정리 |
+| `088` | `1f23360c3fc4829aedf2ea6a1633d2b34f466406` / tree `2a2d0b479105b10f1322c256524fd80852798992` / patch `3b65cf727015b3dc81174a684a3d42c6c73f5a5f` | none | learner-navigation-only 책임을 source에서 제거하고 ID를 영구 reserved |
+| `089` | none | `e537ffb457bfbb6225c55beb1dd9cb7b7389867d` / tree `060530a6b480e49db056950c3a27b5975802c556` / patch `5df5368e5b6057615f4b0148b610aa81f0676b0f` | profile identity readiness를 새 source 책임으로 추가 |
+
+Old `main`과 final `main`의 tree diff는 19 paths, 60 additions와 96 deletions입니다. Final source의 raw
+identity, timestamp ordering, three-section suffix message, trailer, ref/tag/path/blob provenance, strict
+fsck와 annotated-tag gate를 통과했습니다. Root frozen install, four-package typecheck, API 9/9, DB 5/5,
+declared zero-test gates, nine-route production build, HTTP/WebSocket smoke와 desktop/mobile Playwright
+12/12도 통과했습니다.
+
+Source의 `cursor` token은 제품 CSS 의미만 허용합니다. Historical reachable graph의 exact allowlist는
+20 unique blobs와 31 occurrences이고 final tree는 아래 첫 다섯 blobs의 7 occurrences입니다. 새
+`AppShell` blob에는 해당 token이 없습니다.
+
+| blob | path | occurrences | 의미 |
+| --- | --- | ---: | --- |
+| `9626c6be546653bd9036c89a435d2ee15f65df9c` | `apps/web/src/app/page.tsx` | 1 | disabled cursor utility |
+| `fa403682248123737bf04dad2e23e3d96921ff93` | `apps/web/src/app/play/page.tsx` | 3 | disabled cursor utility |
+| `4838aa8d57cbaf6f1b64e34e6f09daf618d2ee7a` | `apps/web/src/app/profile/[handle]/page.tsx` | 1 | disabled cursor utility |
+| `5bd900d480f2124c12be69b583a457335a227237` | `apps/web/src/app/tournaments/page.tsx` | 1 | disabled cursor utility |
+| `d9fdc73a2bd94d571642689f1846b3219e91d4ed` | `notes/reference-impl/playwright/public/index.html` | 1 | CSS pointer cursor |
+| `c5bd8882af4a90caee04a81124e595766c80485f` | `apps/web/src/app/page.tsx` | 1 | disabled cursor utility |
+| `af7121090b4f90e2ed7703a8e28ab5060c41459f` | `apps/web/src/app/play/page.tsx` | 3 | disabled cursor utility |
+| `88d795878eefc5bfd2f5b5ada59fadcfc7b7f098` | `apps/web/src/app/play/page.tsx` | 3 | disabled cursor utility |
+| `640736ee5c05b3ca50e9994b1f10380715275cdb` | `apps/web/src/app/tournaments/page.tsx` | 1 | disabled cursor utility |
+| `d578fb46dcaab0e79ef64c5d2599c7a988cf92dd` | `apps/web/src/app/profile/[handle]/page.tsx` | 1 | bare cursor utility |
+| `f6351562622e7a880784e1342930ab5c75dcb310` | `apps/web/src/app/page.tsx` | 1 | disabled cursor utility |
+| `b53e2b8d608563a739bf4836761c1f5a92e8db33` | `apps/web/src/app/profile/[handle]/page.tsx` | 1 | bare cursor utility |
+| `8fc3a52af6a78fe4c20e3f5721e926ed1132e9fb` | `apps/web/src/app/tournaments/page.tsx` | 1 | disabled cursor utility |
+| `ef1999c6634c0f76cef31bd1550456f9a5b40e7e` | `apps/web/src/app/page.tsx` | 1 | disabled cursor utility |
+| `b925177781be139af7d14cf80b4685a852434f42` | `apps/web/src/app/play/page.tsx` | 3 | disabled and bare cursor utilities |
+| `cbae31488c4eeca78bcd819477fc7d3e77d11859` | `apps/web/src/app/play/page.tsx` | 2 | disabled and bare cursor utilities |
+| `1b1351daf86af5633b105ab3b2b86f92f28ae4d1` | `apps/web/src/app/page.tsx` | 1 | disabled cursor utility |
+| `258f52483f447b0a6646531cdbb59619377f948a` | `apps/web/src/app/play/page.tsx` | 2 | disabled and bare cursor utilities |
+| `ab4ac861010bfcd3022559bbca5b4d73352a0e2a` | `apps/web/src/app/profile/[handle]/page.tsx` | 1 | bare cursor utility |
+| `e90955a9f1e6b8593012935317c07fd549509872` | `apps/web/src/app/play/page.tsx` | 2 | disabled and bare cursor utilities |
+
+Preserved prefix의 historical gate는 85 commits와 73 unique trees를 모두 검사했습니다. Machine result
+SHA-256은 `867acdeef30535d57e1bee97d65e39b0c9b9bbbf8229a15f76752d107ad7ef32`이고 commit
+분류는 PASS 75, PHASE-RED 9, EXPECTED-RED 1입니다. Post-lock unexpected red는 0입니다.
+
+| progressive responsibility | bounded historical failure | first green |
+| --- | --- | --- |
+| `981d6a3886644d96bff7b921109e7da714b18548`, `3b5bb1b96596d7939d106b8c7e795cb952d5b607` | shared later export | `a93304cdb1d709bb41ae29b5ffeac6f04524309b` |
+| `fa3b46fc3d78b47bce96e5581af3d087811ec931`, `ed32ebcd1b4a0eabe83e5dd16ba12bc13774d0db` | DB input와 repository index 순서 | `dff0e024a7c969ce317157526612e8c958f7f6f7` |
+| `3cb89a215abe772997b03531256594869887461a`, `8b7eef825e6f6b6ede70b9c3e967dcd1ceb561c4`, `da87cb492a151818ba120f51a39562ffe6a89093`, `d6b2fe11e20ccc9d17a1ced1884e5d8b9c311735` | API input, app, game hub와 test collection 순서 | `90c193689c75372d8ca6483a172013b90a65175d` |
+| `c85f3745cabe28e9f75b6bde418575bb578b274d` | Next workspace가 app directory보다 먼저 존재 | `e67eae94cd6ddfd9aaa9e6d0ec1fc4fa7954b182` |
+
+EXPECTED-RED `a3f44baacd97bf017742254a34230cf9136bb22f`는 lockfile-only zero-test state이고
+`76f3dac37552d2ed050e87eb1fa044d4f5c21deb`에서 명시적으로 green이 됩니다.
+
+Learning 후보는 path/blob matrix의 완전 포함관계로 비교했습니다.
+
+| old ref | tip | tree | paths / commits | disposition |
+| --- | --- | --- | ---: | --- |
+| `learning/codex-5.6` | `984b1235ab80300f223092fe36b80482311d8c1e` | `3baad8655ff7a3f8cb8dc5da3beabe44811bbe1d` | 539 / 90 | 5.7에 없는 유효 corpus path가 없어 별도 active copy 폐기 |
+| `learning/codex-5.6.1` | `a9ddbbfe2ec408326a1358bbc3ba905bc99fbb6d` | `a608ad06c3f24a39c6ad5bc461242da7bc5131fb` | 542 / 91 | 5.7에 완전 포함 |
+| `learning/codex-5.7` | `f39366c57a73624f77bbdbf18b8a2a1f7a8c8998` | `99dd261f4a59e2c6245fbd7970141c4746d274d4` | 548 / 91 | canonical blob reuse basis |
+
+동일한 000–084 answer, 67 canonical practice, notes와 reflection blob은 재독하지 않았습니다. Stable ID
+`086`의 기존 answer/practice를 재사용하고 `087`의 actual source 책임만 좁혀 읽었으며, 신규 source
+`089` answer를 전담 집필자가 수작업 작성했습니다. Answer 전체 review barrier가 닫힌 뒤 같은 집필자가
+`089` practice를 처음부터 수작업 파생했습니다. Writer는 stage·commit·tag·push를 하지 않았고 repository
+owner와 독립 reviewer가 신규·변경 파일만 한 번 검토했습니다.
+
+Final learning publication은 source 뒤의 actual-time commits 세 개입니다.
+
+| phase | commit | tree | parent | actual KST time | paths |
+| --- | --- | --- | --- | --- | ---: |
+| notes | `44a62b7a8b280b181954b80ebea370b87cb9b655` | `31ee408ca0c30b1998ef4748d2a1c03d84336eac` | source `e537ffb457bfbb6225c55beb1dd9cb7b7389867d` | `2026-07-20T11:41:56+09:00` | 48 |
+| answers | `f3931695110f9f49856ca8a25f413ff5f2931bc1` | `915caadcd2b9efd594cc8b96fe28a61377dcbf38` | notes | `2026-07-20T11:56:06+09:00` | 89 |
+| practices / tip | `04d4f9d54c5f235ca0c368506217650b8f623f62` | `30540fb255177cc65fba590365d0efbbde7fbc14` | answers | `2026-07-20T12:07:12+09:00` | 70 |
+
+Final reconciliation은 `88 reachable = 74 answers + 14 exclusions`와
+`74 answers = 69 practices + 5 omissions`입니다. Exclusion은 13 conflict-free merges와 lockfile-only
+`032`, omission은 `000`, `002`, `039`, `048`, `087`이고 stable IDs `085`, `088`은 reserved입니다.
+Numbered answer는 88개, practice는 69개입니다. Final checkout은 179 source paths와 207 learning-only
+paths, 총 386 tracked files이며 source/config/test diff는 0입니다.
+
+Final remote는 `main`, `learning/current`, annotated `v1.0.0`만 advertise합니다. 별도 fresh source와
+learning clone에서 exact ref/tag/tree, strict fsck, 88/13 source graph, 3단 learning publication,
+386-file topology, raw publication metadata, 288 local Markdown links missing 0과 corpus 수량을
+재검증했습니다. Fresh source의 frozen install, typecheck, API 9/9, DB 5/5와 nine-route build도
+통과했고 최종 source object에서 앞서 완료한 HTTP/WebSocket 및 Playwright 12/12 증거와 일치합니다.
+Document Box의 인증 remote-navigation에서도 42의 13개 project와 Central link가 모두 PASS했습니다.
+전체 30개 실행이 별도로 보고한 `frontend-reliability-training`, `portfolio-site`,
+`sportsbook-shared-protocol` 세 저장소의 5개 오류는 delegated lane의 미완료 집필 publication 문제이며
+이 42 migration에서 source나 registry를 임의 수정하지 않습니다.
 
 ### Execution lane handoff 원장
 
