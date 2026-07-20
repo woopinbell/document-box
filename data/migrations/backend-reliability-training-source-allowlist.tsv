@@ -1,0 +1,25 @@
+path	blob	occurrences	old_responsibility	reachability	product_reason
+README.md	92b745ccbe8a02125d5725b194486daafd740a65	1	replacement_navigation_commit	final-tree	Spring essential track의 keyset pagination exercise 목록
+docs/DESIGN.md	0a8e895d8e8b6b9864dc52634ebb6457b6ea8428	2	replacement_navigation_commit	final-tree	설계 구조와 구현 순서의 keyset pagination exercise 명칭
+spring-main/essential/cursor-pagination/.gitkeep	8b137891791fe96927ad78e64b0aad7bded08bdc	0	d6236de9c7ef412fcda660278cc396f08232b9e2	final-tree	keyset pagination exercise 디렉터리를 추적하는 제품 module marker의 명시 경로
+spring-main/essential/cursor-pagination/README.md	8907d9ede96398fe7d9c4843e21806bd906a7036	4	77bddc11d703f513376dc2fb70e74833c848ccc1	final-tree	opaque keyset pagination exercise 계약과 실행 명령
+spring-main/essential/cursor-pagination/src/main/java/com/example/reliability/pagination/CursorAnchor.java	1246e51ce6603cde34e3dc02872de254b6dbbea0	1	dcaaa818553ae76a00190f0ece8faca56989dc1b	final-tree	keyset anchor 제품 타입
+spring-main/essential/cursor-pagination/src/main/java/com/example/reliability/pagination/CursorCodec.java	74152e2d641064fad6b7024fa32005a2378a2528	8	dcaaa818553ae76a00190f0ece8faca56989dc1b	final-tree	opaque page token encode/decode 제품 구현
+spring-main/essential/cursor-pagination/src/main/java/com/example/reliability/pagination/CursorPage.java	97639d66f766cf225e0e9f3a42620168bfb2c5e1	2	dcaaa818553ae76a00190f0ece8faca56989dc1b	final-tree	page result의 next token 제품 필드
+spring-main/essential/cursor-pagination/src/main/java/com/example/reliability/pagination/CursorPaginationApplication.java	77768544393539176f5ee97ab13912a63316bcbb	1	dcaaa818553ae76a00190f0ece8faca56989dc1b	final-tree	keyset pagination Spring application marker
+spring-main/essential/cursor-pagination/src/main/java/com/example/reliability/pagination/PostItem.java	cb91f7879353d818f5fc29dbaa613c6014253195	1	dcaaa818553ae76a00190f0ece8faca56989dc1b	final-tree	created_at,id keyset index 제품 이름
+spring-main/essential/cursor-pagination/src/main/java/com/example/reliability/pagination/PostItemRepository.java	4b7c4a157510f3255fe6f1d7b1f37a8ba3e9339f	1	dcaaa818553ae76a00190f0ece8faca56989dc1b	final-tree	anchor 이후 keyset query 제품 메서드
+spring-main/essential/cursor-pagination/src/main/java/com/example/reliability/pagination/PostPaginationService.java	652a10c9a08253b12db003c49b0b2cb625161f14	21	dcaaa818553ae76a00190f0ece8faca56989dc1b	final-tree	opaque page token validation과 next token 계산
+spring-main/essential/cursor-pagination/src/main/java/com/example/reliability/pagination/PostSummary.java	540bc37b6ce9ff41a23759ea5d8ccd9224afc8bc	0	dcaaa818553ae76a00190f0ece8faca56989dc1b	final-tree	keyset pagination 응답 projection 제품 타입의 명시 exercise 경로
+spring-main/essential/cursor-pagination/src/test/java/com/example/reliability/pagination/PostPaginationServiceTest.java	64a248937b343e483e2781da3e9f2dbed51be943	17	77bddc11d703f513376dc2fb70e74833c848ccc1	final-tree	keyset pagination 보장과 scale 회귀 검증
+spring-main/settings.gradle.kts	fe9f4cc57052c5b8ee77742314e4ac98f79fcca0	2	77bddc11d703f513376dc2fb70e74833c848ccc1	final-tree	Gradle exercise logical name과 실제 module 경로
+README.md	bab287a72c527617e91bea5bebe132db6e18eb2b	1	b0aad3cd7f74f98e9ab1c3b2a88b0f302bccc9fc	historical	earlier source README의 keyset pagination track 목록
+docs/DESIGN.md	5f508d654fd778ef99aece01c44cfe882107f7a8	2	b0aad3cd7f74f98e9ab1c3b2a88b0f302bccc9fc	historical	earlier source design의 exercise 구조와 순서
+README.md	28ff6251bd96e3097eff87af86eb25f063939538	1	29df1f727f01b4d91d80377ecd01b038659f78fc	historical	earlier source README의 keyset pagination track 목록
+docs/DESIGN.md	463e2c165da7b7158780e061a1366ada23106b97	2	a28ad09ceea9bc28a1321601ff4202816ac00775	historical	earlier source design의 exercise 구조와 순서
+docs/DESIGN.md	c22e266a5a11268a84e1e9aedc4e15ebbdb7ee30	2	ce0b45b6e497403f24cecd6d2577b5c0308e1dab	historical	initial source design의 exercise 구조와 순서
+README.md	f457a466fe2056901bd4bcba9d09cef5d7563478	1	77bddc11d703f513376dc2fb70e74833c848ccc1	historical	earlier source README의 keyset pagination track 목록
+spring-main/essential/cursor-pagination/README.md	eeeefb210973b76e858f2b61cfec30f29139ae91	4	99692ba261b7f2a7dd78fb76c63be6b583ab468c	historical	initial opaque keyset pagination exercise 계약
+spring-main/essential/cursor-pagination/src/test/java/com/example/reliability/pagination/PostPaginationServiceTest.java	ced2b44fb28e009815715a15e03945d42011dc1f	17	266c3fbccd6aaea80077b4c1620d3872497a1c43	historical	earlier keyset pagination 보장과 scale test
+spring-main/settings.gradle.kts	e47e046d77aeb7da494c4256d5e4ef994037d5ba	2	5c85d2f8826164cf1bc0f115db8b1a3b79e0e565	historical	initial Gradle exercise logical name과 module 경로
+spring-main/essential/cursor-pagination/src/test/java/com/example/reliability/pagination/PostPaginationServiceTest.java	558c9a46c68be9df0da00a913b4e0295fb5700bd	14	2e9898ce6527e2a36fe819e11c5fb8cf53eef4df	historical	initial keyset pagination 보장 test

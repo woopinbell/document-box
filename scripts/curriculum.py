@@ -331,6 +331,7 @@ MIGRATED_BACKEND_PROJECTS = frozenset(
     {
         "backend-foundations-training",
         "backend-delivery-training",
+        "backend-reliability-training",
     }
 )
 STRICT_TOPOLOGY_PROJECTS = (

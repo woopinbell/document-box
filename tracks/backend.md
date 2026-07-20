@@ -40,9 +40,9 @@
 
 - **시작 조건:** [B2. Backend 배포](#stage-backend-delivery-training)를 완료한다.
 - **먼저 읽을 것:** [Backend 안정성 읽는 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-backend-reliability-training)의 transaction·idempotency·Redis·test 범위를 읽는다.
-- **저장소와 학습 자료:** [`backend-reliability-training`](https://github.com/woopinbell/backend-reliability-training), 완성본 `reliability-v2.0.1`, 읽기 전용 자료 `learning/reliability-v2.0.1`; [학습 자료 목차](https://github.com/woopinbell/backend-reliability-training/blob/learning/reliability-v2.0.1/docs/README.md), [연습문제 목록](https://github.com/woopinbell/backend-reliability-training/blob/learning/reliability-v2.0.1/docs/practice-reliability-v2.0.1/README.md), [해설 목록](https://github.com/woopinbell/backend-reliability-training/blob/learning/reliability-v2.0.1/docs/commits-reliability-v2.0.1/README.md).
+- **저장소와 학습 자료:** [`backend-reliability-training`](https://github.com/woopinbell/backend-reliability-training), annotated 완성본 `reliability-v2.0.1`, 유일한 읽기 전용 자료 `learning/current`; [학습 자료 목차](https://github.com/woopinbell/backend-reliability-training/blob/learning/current/docs/README.md), [연습문제 목록](https://github.com/woopinbell/backend-reliability-training/blob/learning/current/docs/practice/README.md), [해설 목록](https://github.com/woopinbell/backend-reliability-training/blob/learning/current/docs/commits/README.md).
 - **직접 해볼 것:** [필수 학습 범위](README.md#공식-수행-범위)에 따라 문제 한 개를 고른다. 지정된 시작 커밋에 `study/backend-reliability-<ID>`를 만들고 중복 요청, lock, outbox, retry, cache와 보상 실패를 재현한다. 결정적인 실패 test를 만든 뒤 해설과 비교하고 다시 구현한다.
-- **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 Java·Maven, Go와 Docker·Testcontainers를 확인하고 `make check`를 실행한다.
+- **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 Java 21·Gradle 8.10.2, Go와 Docker·Testcontainers를 확인하고 `make check`와 `make check-runtime`을 실행한다.
 - **완료 조건:** transaction 경합, idempotency, outbox, cache와 rate limit의 상태 변화와 권위 경계를 설명한다.
 - **다음 과제:** [B4. sportsbook-shared-protocol](#stage-sportsbook-shared-protocol).
 
