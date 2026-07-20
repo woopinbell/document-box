@@ -1793,6 +1793,8 @@ def _learning_path_allowed(
             if exact_current_paths
             else re.match(r"^docs/practice(?:-[^/]+)?/", path) is not None
         )
+    if role == "interview":
+        return path == "docs/README.md" or path.startswith("docs/interview/")
     return False
 
 
@@ -1809,9 +1811,21 @@ def _validate_learning_history(
     """Validate the immutable release-to-learning publication as a pure contract."""
 
     errors: list[str] = []
-    expected_count = len(roles)
     merge_base = compare.get("merge_base_commit") or {}
     commits = compare.get("commits")
+    effective_roles = roles
+    if isinstance(commits, list) and len(commits) == len(roles) + 1:
+        last_summary = commits[-1]
+        last_sha = last_summary.get("sha") if isinstance(last_summary, dict) else None
+        last_detail = details.get(last_sha) if isinstance(last_sha, str) else None
+        last_commit = last_detail.get("commit") if isinstance(last_detail, dict) else None
+        last_message = (
+            last_commit.get("message") if isinstance(last_commit, dict) else None
+        )
+        last_subject = last_message.splitlines()[0] if isinstance(last_message, str) else ""
+        if re.match(r"^docs\(interview\):\s+\S", last_subject):
+            effective_roles = roles + ("interview",)
+    expected_count = len(effective_roles)
     if compare.get("status") != "ahead":
         errors.append(f"{label}: learning status must be ahead of release")
     if compare.get("behind_by") != 0:
@@ -1841,7 +1855,8 @@ def _validate_learning_history(
         else "commits"
     )
     index_change_count = 0
-    for index, (role, summary) in enumerate(zip(roles, commits)):
+    interview_index_count = 0
+    for index, (role, summary) in enumerate(zip(effective_roles, commits)):
         sha = summary.get("sha") if isinstance(summary, dict) else None
         if not isinstance(sha, str):
             errors.append(f"{label}: learning commit {index + 1} has no SHA")
@@ -1882,6 +1897,8 @@ def _validate_learning_history(
                     paths.append(file_entry.get("previous_filename"))
                 if role == index_owner and "docs/README.md" in paths:
                     index_change_count += 1
+                if role == "interview" and "docs/README.md" in paths:
+                    interview_index_count += 1
                 for path in paths:
                     if not isinstance(path, str) or not _learning_path_allowed(
                         role,
@@ -1896,6 +1913,10 @@ def _validate_learning_history(
     if index_change_count != 1:
         errors.append(
             f"{label}: {index_owner} publication must change docs/README.md exactly once"
+        )
+    if "interview" in effective_roles and interview_index_count != 1:
+        errors.append(
+            f"{label}: interview publication must change docs/README.md exactly once"
         )
     final_sha = commits[-1].get("sha") if isinstance(commits[-1], dict) else None
     if final_sha != learning_sha:

@@ -91,7 +91,9 @@ source·test의 명시 path에만 적용하며 ref/tag 이름, commit metadata·
 
 허용 type은 `feat`, `fix`, `docs`, `test`, `refactor`, `chore`, `build`, `ci`, `perf`입니다. 실질 변경은
 세 본문을 모두 쓰고, empty merge나 단순 관리 작업만 본문을 생략할 수 있습니다. Learning publication
-scope는 `docs(notes)`, `docs(commits)`, `docs(practice)`입니다.
+scope는 `docs(notes)`, `docs(commits)`, `docs(practice)`, `docs(interview)`입니다.
+`docs(interview)`는 기존 학습 corpus가 공개된 뒤 프로젝트 근거를 다시 읽어 작성하는 선택적 후속
+집필 commit에만 사용합니다.
 
 ## 4. 장기 ref topology
 
@@ -118,6 +120,7 @@ historical source implementation / refactor / test / source docs
                           → optional docs(notes)
                           → docs(commits)
                           → docs(practice)
+                          → optional docs(interview)
 ```
 
 - `main`은 source, config, test, asset, 실행 가능한 reference implementation, exercise 계약과 source
@@ -129,6 +132,10 @@ historical source implementation / refactor / test / source docs
 - `learning/current`는 `main`에 merge하지 않습니다. Source release가 바뀌면 새 고정 basis에서 전체
   corpus의 hash·tree·patch·path·metadata·link를 기계적으로 재검증하고, 신규·변경·고유·충돌 본문만
   직접 검토한 뒤 승인된 publication으로 갱신합니다.
+- 프로젝트 고유 면접 질문은 `docs/interview/**`에 두며 공통 이론을 복제하지 않습니다. 이미 공개된
+  corpus에는 실제 집필 시각의 `docs(interview):` commit 하나를 fast-forward로 추가할 수 있습니다.
+  이 commit은 `docs/interview/**`와 목차 링크용 `docs/README.md`만 변경하며 source, answer,
+  practice와 기존 notes를 수정하지 않습니다.
 - `learning/current`의 non-fast-forward 갱신은 old/new tip·tree, 전체 file disposition, 신규·변경·고유·
   충돌 파일의 직접 검토, 복구 불가 고지와 destructive approval을 요구합니다. 동일 blob과 final source
   crosswalk가 증명된 본문은 재독하지 않습니다. Old tip을 branch, tag 또는 bundle로 보존하지 않고 exact

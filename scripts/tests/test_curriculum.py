@@ -979,6 +979,7 @@ class RemoteContractTest(unittest.TestCase):
                 if exact_current_paths
                 else "docs/practice-release-v1/README.md"
             ),
+            "interview": "docs/interview/README.md",
         }
         compare = {
             "status": "ahead",
@@ -993,6 +994,8 @@ class RemoteContractTest(unittest.TestCase):
         for role, sha in zip(roles, shas):
             files = [{"filename": paths[role]}]
             if role == "commits" and "notes" not in roles:
+                files.append({"filename": "docs/README.md"})
+            if role == "interview":
                 files.append({"filename": "docs/README.md"})
             details[sha] = {
                 "sha": sha,
@@ -1576,6 +1579,59 @@ class RemoteContractTest(unittest.TestCase):
         )
         self.assertTrue(any("subject must start with docs(commits)" in e for e in errors))
         self.assertTrue(any("forbidden path 'src/server.c'" in e for e in errors))
+
+    def test_learning_accepts_one_source_grounded_interview_publication(self):
+        release, learning, roles, compare, details = self._learning_fixture(
+            roles=("notes", "commits", "practice", "interview"),
+            learning_sha="9" * 40,
+            exact_current_paths=True,
+        )
+        errors = curriculum._validate_learning_history(
+            "repo",
+            release,
+            learning,
+            roles[:-1],
+            compare,
+            details,
+            exact_current_paths=True,
+        )
+        self.assertEqual(errors, [])
+
+        interview_sha = compare["commits"][-1]["sha"]
+        details[interview_sha]["files"] = [
+            {"filename": "docs/interview/README.md"}
+        ]
+        errors = curriculum._validate_learning_history(
+            "repo",
+            release,
+            learning,
+            roles[:-1],
+            compare,
+            details,
+            exact_current_paths=True,
+        )
+        self.assertTrue(
+            any("interview publication must change docs/README.md exactly once" in e for e in errors)
+        )
+
+    def test_learning_rejects_unrecognized_extra_publication(self):
+        release, learning, roles, compare, details = self._learning_fixture(
+            roles=("notes", "commits", "practice", "interview"),
+            learning_sha="9" * 40,
+            exact_current_paths=True,
+        )
+        interview_sha = compare["commits"][-1]["sha"]
+        details[interview_sha]["commit"]["message"] = "docs(review): publish review\n"
+        errors = curriculum._validate_learning_history(
+            "repo",
+            release,
+            learning,
+            roles[:-1],
+            compare,
+            details,
+            exact_current_paths=True,
+        )
+        self.assertTrue(any("exactly 3 publication commits" in e for e in errors))
 
     def test_learning_without_project_notes_publishes_index_with_answers(self):
         for project_id in (

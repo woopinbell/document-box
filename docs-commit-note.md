@@ -281,6 +281,7 @@ learning branch입니다.
 1. 선택적 notes commit: `docs/README.md`, `notes/**`, `docs/notes/**`, `docs/reflection/**`
 2. answers commit: `docs/commits/**`와 answer ledger
 3. practices commit: `docs/practice/**`와 practice ledger
+4. 선택적 interview commit: `docs/interview/**`와 `docs/README.md`의 목차 링크
 
 Active tip에는 다음 root가 정확히 하나씩만 존재해야 합니다.
 
@@ -302,6 +303,20 @@ docs/practice/
   발행합니다.
 - `learning/current`는 `main`에 merge하지 않습니다. 다른 `learning/*`, supplemental/fixup branch와
   archive subtree를 만들지 않습니다.
+
+### 프로젝트 실전 질문
+
+프로젝트 고유 면접 질문은 source release와 answer·practice publication이 모두 고정된 뒤
+`docs/interview/README.md`에 수작업으로 작성합니다. 공통 개념 설명은 Central Notes QnA에 두고,
+여기에는 해당 프로젝트의 실제 설계·구현·검증 근거가 있어야 답할 수 있는 질문만 둡니다.
+
+- 질문마다 `질문의 의도`, `짧은 답변`, `프로젝트 근거`, `꼬리 질문`, `과장하면 안 되는 범위`를 둡니다.
+- `프로젝트 근거`에는 실제 source path, test 또는 관찰 가능한 검증 명령을 적습니다. 실행하지 않은
+  결과와 source에 없는 운영 경험은 만들지 않습니다.
+- 기존 answer 문장을 질문 형식으로 일괄 변환하지 않습니다. 저장소별 전담 집필자 한 명이 source와
+  관련 answer를 직접 읽고 파일 하나를 수작업 작성한 뒤 한 번 전수검토합니다.
+- 기존 corpus 뒤에는 실제 집필 시각의 `docs(interview):` commit 하나만 fast-forward로 추가합니다.
+  허용 경로는 `docs/interview/**`와 링크를 추가하는 `docs/README.md`입니다.
 
 ## 11. Source rewrite와 corpus 재검증
 
