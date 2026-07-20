@@ -43,15 +43,15 @@ Foundations 4개 review, Reliability 4개 hands-on과 Portfolio 병행 범위를
 ## 2. frontend-delivery-training
 
 - 이전 gate: Foundations 무자료 gate와 App Router/data contract 설명 완료.
-- 저장소·ref: [`frontend-delivery-training`](https://github.com/woopinbell/frontend-delivery-training), release `delivery-v1.0.1`, learning `learning/delivery-v1.0.1`.
+- 저장소·ref: [`frontend-delivery-training`](https://github.com/woopinbell/frontend-delivery-training), release `delivery-v1.0.1`, learning `learning/current`.
 - Central 상세 목록: [frontend-delivery-training 전체 읽기 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-frontend-delivery-training). 이 목록이 Central과 프로젝트 delivery 노트 범위를 확정한다.
 - 빠른 노트: [Frontend Delivery](https://github.com/woopinbell/central-notes/blob/main/frontend-react/README.md#delivery).
 - 수행 범위: [대표 practice 한 개와 카드 전체 gate](README.md#공식-수행-범위). 나머지는 선택 심화다.
-- 프로젝트 노트: [current learning index](https://github.com/woopinbell/frontend-delivery-training/blob/learning/delivery-v1.0.1/docs/README.md).
+- 프로젝트 노트: [current learning index](https://github.com/woopinbell/frontend-delivery-training/blob/learning/current/docs/README.md).
 - Clean release gate: annotated release의 별도 clean worktree에서 Node/pnpm, image와 Chromium 도구를 확인하고 `make check`를 기록한다. 실제 DNS/Search Console 변경은 하지 않는다.
-- 문제지: [current practice ledger](https://github.com/woopinbell/frontend-delivery-training/blob/learning/delivery-v1.0.1/docs/practice-delivery-v1.0.1/README.md).
+- 문제지: [current practice ledger](https://github.com/woopinbell/frontend-delivery-training/blob/learning/current/docs/practice/README.md).
 - 구현: 현재 practice의 full `부모 commit`에서 `study/frontend-delivery-<ID>`를 만들고 route·asset budget·SEO/build 실패와 release checklist를 남긴다.
-- 답지 개방: 공개 surface와 검증 근거가 생긴 뒤 [answer ledger](https://github.com/woopinbell/frontend-delivery-training/blob/learning/delivery-v1.0.1/docs/commits-delivery-v1.0.1/README.md)를 연다.
+- 답지 개방: 공개 surface와 검증 근거가 생긴 뒤 [answer ledger](https://github.com/woopinbell/frontend-delivery-training/blob/learning/current/docs/commits/README.md)를 연다.
 - Historical 무자료 gate: 현재 practice 파일이 명시한 시작 tree의 새 branch에서 그 파일의 구현 범위와 당시 검증 계약만 통과한다.
 - 연결 설명: 선택한 delivery 변경이 current release의 route·asset budget·SEO·build·release checklist로 이어지는 근거를 설명한다.
 - 다음: [cloud-launch-training](#stage-cloud-launch-training).

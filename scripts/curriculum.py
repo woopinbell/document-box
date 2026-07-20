@@ -249,7 +249,12 @@ MIGRATED_42_PROJECTS = frozenset(
         "web-boundary-inspector",
     }
 )
-STRICT_TOPOLOGY_PROJECTS = EXTENDED_SOURCE_WINDOWS | MIGRATED_42_PROJECTS
+MIGRATED_FRONTEND_PROJECTS = frozenset(
+    {"frontend-foundations-training", "frontend-delivery-training"}
+)
+STRICT_TOPOLOGY_PROJECTS = (
+    EXTENDED_SOURCE_WINDOWS | MIGRATED_42_PROJECTS | MIGRATED_FRONTEND_PROJECTS
+)
 FROZEN_MONOLITHIC_LEARNING = {
     "format-printer": {
         "release": "v1.0.0",

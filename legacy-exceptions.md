@@ -843,6 +843,90 @@ Final corpus 수량은 `99 reachable = 76 answers + 23 exclusions`,
 topology를 다시 검증했습니다. Authenticated remote-navigation에서도 project와 Frontend application
 overlay가 통과했습니다.
 
+### `frontend-delivery-training` 실행 원장
+
+2026-07-20 KST에 private `woopinbell/frontend-delivery-training`을 사용자 승인과 exact lease를 사용한
+단일 atomic push로 전환했습니다. Expected-old `main`은
+`6a08f77379408f87874239893b368b47e0366ea2`(tree
+`753dce5dce94b1f6daa6ade6e3cc5cd50cc6b23f`)였고 replacement `main`은
+`eaab17de0c56f236362b6e53ab0e8af6e650e5e7`(tree
+`fd4178ba7d9eea46c7997ec866759725806c725a`)입니다. Annotated `delivery-v1.0.1` tag object
+`ccb838904a006b0fdb9b0e111dedc61dbe9c74c2`는 replacement `main`으로 peel됩니다. Final source는 root
+`c5f7d82d9c84aae7e1327fb2a08367354df0e391`부터 16개 linear commit이며 merge는 없습니다.
+
+삭제하거나 교체한 source tag의 ref/object/peeled target은 다음과 같습니다.
+
+| ref | old tag object | old peeled target | disposition |
+| --- | --- | --- | --- |
+| `delivery-v1` | `0370ef9a6f11ec46ef0d70ec0a0cd7fe4ae0ba79` | `95c4d9ed5130f56c56dfbc881dccaa0918d5bffd` | 삭제 |
+| `delivery-v1.0.1` | `b8b6b25c76deda00cc0882b3efca51d67fb2ddb8` | `6a08f77379408f87874239893b368b47e0366ea2` | 위 final annotated object로 교체 |
+| `pre-codex-5.6` | `79a1902151d1bbcdc75bd7c10048ff54947a17a0` | `6fa3d12de7cf00e59de667cc0e0031db7cc03b16` | 삭제 |
+
+17개 old↔new source disposition은
+[`data/migrations/frontend-delivery-training-source-crosswalk.tsv`](data/migrations/frontend-delivery-training-source-crosswalk.tsv)에
+고정합니다. 파일은 header 포함 18줄이며 SHA-256은
+`094285202dfc64a165a5acea1e91002984a64485f95aa6dc055c59f165336f16`입니다. 첫 9개 책임은 old/new
+tree와 stable patch-id가 exact이고 원래 `2025-05-04`–`2025-05-06` KST timestamp도 보존했습니다.
+Old `b96d5bef7b587e0cf689559c440d19edcd1176b8`의 source boundary 문서는 stable topology에 맞게 수동
+교정했습니다. 그 뒤 lockfile, generated framework file, local browser QA, smooth scroll과 production E2E
+다섯 patch는 원래 patch-id와 순서를 보존해 승인 window 안에 replay했습니다. Final
+`95c4d9ed5130f56c56dfbc881dccaa0918d5bffd` 책임은 active 문서의 exact heading, H3별 단일 책임과
+answer 누출 검사를 강화해 replacement tip에 통합했습니다. Old final
+`6a08f77379408f87874239893b368b47e0366ea2`는 source 기여가 없는 learner-navigation-only commit이라
+source graph에서 제외했습니다. Source identity, author/committer timestamp 일치, source window,
+three-section message, trailer와 source ref·tag·path·blob·metadata의 금지 provenance 검사는 모두 0건입니다.
+
+전환 전 source-only rollback bundle은 다음 값으로 검증했습니다.
+
+- 경로:
+  `/Users/woopinbell/Documents/Codex/2026-07-19/1/work/frontend-lane/frontend-delivery-training/frontend-delivery-training-6a08f773-source.bundle`
+- SHA-256: `0a4fe6c6451b36b11b2e1b3a23fe9ea601f9d012b6e7e80e41fa774faab5f63f`
+- 범위: old `main`과 old source tag 3개, learning ref 0개
+- 복원 검증: bundle verify, 네 ref exact 대조와 restore clone의 strict fsck 통과
+
+Project 원격과 fresh clone은 이미 green이지만 이 원장을 포함한 governance publication과 authenticated
+remote-navigation이 끝날 때까지 bundle, source-only snapshot과 restore clone을 보존합니다. 성공 gate 뒤
+세 복구 artifact를 폐기하고 이 문단에 실제 삭제 시각과 결과를 추가합니다. Old learning ref는 사용자
+결정대로 bundle, archive ref 또는 보존 tag를 만들지 않았습니다.
+
+Learning 후보와 단일화 근거는 다음과 같습니다.
+
+| old ref | tip | tree | total paths |
+| --- | --- | --- | ---: |
+| `learning/delivery-v1` | `f394e71293c8fe29a424ecfb78eaa3cdb670ac65` | `368a7f2b23077adf95a1f104a613638d088cb6e5` | 89 |
+| `learning/delivery-v1.0.1` | `75b284f385e206fec53f5f0d37a7c9a1b1944fe2` | `89f51ce0518fc480002d2a929b5c67b740b35376` | 92 |
+
+두 tip은 ancestor 관계가 아니지만 공통 86 paths의 blob이 같고 충돌은 source 소유 `README.md`,
+`docs/DESIGN.md`, `docs/README.md`뿐입니다. `delivery-v1.0.1`은 `delivery-v1`의 유효 corpus에 stable
+`023`과 versioned answer/practice row를 더한 strict corpus superset이라 canonical legacy basis로
+선택했습니다. Canonical basis의 commit/practice 37개 row는
+[`data/migrations/frontend-delivery-training-learning-disposition.tsv`](data/migrations/frontend-delivery-training-learning-disposition.tsv)에
+고정합니다. 파일은 header 포함 38줄이며 SHA-256은
+`c422429b716734141c722d3d192693b71d6297b6acd1faa1168768a088bd41b1`입니다. Disposition은
+`corrected 21 / replaced 10 / discarded 6`, review mode는 `direct-content 33 / metadata-only 4`입니다.
+원장의 `reviewed_at` `2026-07-20T10:07:26+09:00`은 publication 전 이미 끝난 content review의 시각을
+소급해 만든 값이 아니라, repository owner가 disposition과 object를 다시 대조한 governance ledger 검증
+시각입니다. Original content-review의 정확한 종료 시각은 별도로 기록되지 않았고 세 publication commit
+전에 완료됐습니다.
+
+위 37-row corpus 원장 밖의 legacy note 5개와 reflection 2개는 EOF를 포함한 blob byte가 exact임을 확인해
+별도 내용 변경 없이 재사용했습니다. Final `learning/current`는 source 뒤의 actual-time publication 세
+commit으로만 구성됩니다.
+
+| phase | commit | tree | parent |
+| --- | --- | --- | --- |
+| notes | `275cba2df2b55abfc2fef78a2444ec31ae3529cc` | `51fa7e932f9322c171a246067d1f3d3032a7839f` | source `eaab17de0c56f236362b6e53ab0e8af6e650e5e7` |
+| answers | `ccdbd9e8f270c8d34d71f22c69a637a139208f7c` | `cce63a9211923fbc477662259aaecbd878a35f49` | notes |
+| practices / tip | `79dd60e9f88bd188a47e192024ba4956caaa9b05` | `623402dae0ec96c1684891eceb3d1c90f8b55dca` | answers |
+
+Final 수량은 learning tip에서 reachable한 `19 commits = 13 answers + 6 exclusions`,
+`13 answers = 12 practices + omission 002`입니다. Exclusion은 source ordinal `009`–`011` 세 개와
+publication ordinal `016`–`018` 세 개입니다. Remote는 branch `main`, `learning/current`와 annotated
+`delivery-v1.0.1`만 advertise합니다. 별도 fresh clone의 `main`에서 lint, typecheck, unit 19, docs 6,
+build 11과 Chromium 1을 포함한 `check:repo`를 통과했고 `learning/current`에서 같은 source gate와 corpus
+checker를 포함한 `check:learning`을 통과했습니다. 두 checkout 모두 exact ref·tree, strict fsck,
+source drift 0과 clean status를 확인했습니다.
+
 ### 승인된 source window
 
 날짜는 모두 Asia/Seoul `+09:00` 기준이며 양 끝 날짜를 포함합니다. `extensionEnd`가 있는 신규 프로젝트는
