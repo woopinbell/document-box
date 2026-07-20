@@ -938,6 +938,15 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
                         _safe_relative_path(value, f"{node_id}.{field}")
                 except CurriculumError as exc:
                     errors.append(str(exc))
+            if node.get("interview") is not None:
+                try:
+                    interview_paths = _paths(
+                        node.get("interview"), f"{node_id}.interview"
+                    )
+                    for value in interview_paths:
+                        _safe_relative_path(value, f"{node_id}.interview")
+                except CurriculumError as exc:
+                    errors.append(str(exc))
             try:
                 main_paths = _paths(
                     node.get("main_paths", ["README.md"]),
@@ -2145,6 +2154,17 @@ def _check_remote_project(owner: str, project: dict[str, Any]) -> list[str]:
             if check.returncode != 0:
                 errors.append(
                     f"{label}@{learning_sha or learning}: missing {field} path {path}"
+                )
+    if project.get("interview") is not None:
+        for path in _paths(project["interview"], f"{project['id']}.interview"):
+            endpoint = (
+                f"repos/{owner}/{repo}/contents/{quote(path, safe='/')}"
+                f"?ref={quote(learning_sha or '', safe='')}"
+            )
+            check = _run(["gh", "api", "--silent", endpoint], timeout=20)
+            if check.returncode != 0:
+                errors.append(
+                    f"{label}@{learning_sha or learning}: missing interview path {path}"
                 )
     for path in _paths(project.get("main_paths", ["README.md"]), "main_paths"):
         endpoint = (
