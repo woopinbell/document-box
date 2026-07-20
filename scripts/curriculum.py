@@ -2311,10 +2311,13 @@ def _check_remote_overlay(
                     f"practice path {path}"
                 )
             stable_id = Path(path).stem
+            escaped_id = re.escape(stable_id)
             mapping_row = re.compile(
-                rf"^\|\s*(?:{re.escape(stable_id)}|"
-                rf"`{re.escape(stable_id)} / {re.escape(stable_id)}`)\s*\|\s*"
-                r"`[0-9a-f]{8,40}`\s*\|\s*`[0-9a-f]{8,40}`\s*\|",
+                rf"^(?:"
+                rf"\|\s*(?:{escaped_id}|`{escaped_id} / {escaped_id}`)\s*\|\s*"
+                r"`[0-9a-f]{8,40}`\s*\|\s*`[0-9a-f]{8,40}`\s*\|"
+                rf"|\|\s*\d+\s*\|\s*\[{escaped_id}\]\({escaped_id}\.md\)\s*\|\s*"
+                r"`[0-9a-f]{8,40}`\s*\|\s*`[0-9a-f]{8,40}`\s*\|)",
                 re.MULTILINE,
             )
             if mapping_text is not None and not mapping_row.search(mapping_text):

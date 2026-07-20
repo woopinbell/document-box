@@ -1192,25 +1192,33 @@ class RemoteContractTest(unittest.TestCase):
                 stable_id = Path(path).stem
                 if stable_id == missing_mapping_id:
                     continue
-                mapping_id = (
-                    stable_id
-                    if mapping_format == "legacy"
-                    else f"`{stable_id} / {stable_id}`"
-                )
+                mapping_id = stable_id
+                if mapping_format == "stable-pair":
+                    mapping_id = f"`{stable_id} / {stable_id}`"
+                elif mapping_format == "ordinal-link":
+                    mapping_id = f"[{stable_id}]({stable_id}.md)"
                 commit = f"`{'c' * 8}`"
                 parent = f"`{'d' * 8}`"
                 if stable_id == "041":
                     if missing_mapping_field == "stable-id":
-                        mapping_id = (
-                            "" if mapping_format == "legacy" else f"` / {stable_id}`"
-                        )
+                        if mapping_format == "legacy":
+                            mapping_id = ""
+                        elif mapping_format == "stable-pair":
+                            mapping_id = f"` / {stable_id}`"
+                        else:
+                            mapping_id = "[](041.md)"
                     elif missing_mapping_field == "commit":
                         commit = ""
                     elif missing_mapping_field == "parent":
                         parent = ""
-                mapping_rows.append(
-                    f"| {mapping_id} | {commit} | {parent} | phase |"
-                )
+                if mapping_format == "ordinal-link":
+                    mapping_rows.append(
+                        f"| 41 | {mapping_id} | {commit} | {parent} | tree |"
+                    )
+                else:
+                    mapping_rows.append(
+                        f"| {mapping_id} | {commit} | {parent} | phase |"
+                    )
         mapping_rows = "\n".join(mapping_rows)
         mapping_payload = {
             "encoding": "base64",
@@ -1409,9 +1417,9 @@ class RemoteContractTest(unittest.TestCase):
                 [],
             )
 
-    def test_application_overlay_accepts_both_answer_mapping_row_formats(self):
+    def test_application_overlay_accepts_canonical_answer_mapping_row_formats(self):
         overlay, projects = self._application_overlay_fixture()
-        for mapping_format in ("legacy", "stable-pair"):
+        for mapping_format in ("legacy", "stable-pair", "ordinal-link"):
             with self.subTest(mapping_format=mapping_format), patch.object(
                 curriculum,
                 "_run",
@@ -1458,7 +1466,7 @@ class RemoteContractTest(unittest.TestCase):
 
     def test_application_overlay_missing_answer_metadata_is_rejected(self):
         overlay, projects = self._application_overlay_fixture()
-        for mapping_format in ("legacy", "stable-pair"):
+        for mapping_format in ("legacy", "stable-pair", "ordinal-link"):
             for missing_field in ("stable-id", "commit", "parent"):
                 with self.subTest(
                     mapping_format=mapping_format,
