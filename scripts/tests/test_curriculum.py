@@ -1810,6 +1810,38 @@ class RemoteContractTest(unittest.TestCase):
         self.assertTrue(any("subject must start with docs(commits)" in e for e in errors))
         self.assertTrue(any("forbidden path 'src/server.c'" in e for e in errors))
 
+    def test_frozen_learning_publication_subjects_are_exact(self):
+        release, learning, roles, compare, details = self._learning_fixture()
+        frozen = []
+        for index, summary in enumerate(compare["commits"], start=1):
+            sha = summary["sha"]
+            subject = f"docs(learning): frozen publication {index}"
+            details[sha]["commit"]["message"] = subject
+            frozen.append((sha, subject))
+        errors = curriculum._validate_learning_history(
+            "repo",
+            release,
+            learning,
+            roles,
+            compare,
+            details,
+            frozen_publications=tuple(frozen),
+        )
+        self.assertEqual(errors, [])
+
+        first_sha = compare["commits"][0]["sha"]
+        details[first_sha]["commit"]["message"] = "docs(learning): drifted subject"
+        errors = curriculum._validate_learning_history(
+            "repo",
+            release,
+            learning,
+            roles,
+            compare,
+            details,
+            frozen_publications=tuple(frozen),
+        )
+        self.assertTrue(any("must match frozen" in error for error in errors))
+
     def test_learning_accepts_one_source_grounded_interview_publication(self):
         release, learning, roles, compare, details = self._learning_fixture(
             roles=("notes", "commits", "practice", "interview"),

@@ -1753,6 +1753,88 @@ source와 learning exact tip·tree, strict fsck, active root·link·metadata·pa
 기록하지 않습니다. Remote는 branch `main`, `learning/current`와 annotated `shared-v1.0.1`만
 advertise합니다.
 
+두 actual-time publication은 source·answer·practice 순서와 path role을 모두 지켰지만 subject scope를
+각각 `docs(learning): publish source responsibility answers`, `docs(learning): publish derived practice
+corpus`로 기록했습니다. 완료된 learning graph를 다시 쓰지 않도록 exact commit과 exact subject pair만
+remote-navigation 예외로 동결합니다. 이 예외는 다른 commit, 다른 subject 또는 다른 저장소에
+`docs(learning)` scope를 허용하지 않으며 notes→commits→practice path gate도 완화하지 않습니다.
+
+### `sportsbook-wallet-service` 실행 원장
+
+2026-07-21 KST에 private `woopinbell/sportsbook-wallet-service`의 source와 learning ref를 모든 ref의
+exact lease를 사용한 단일 GitHub atomic push로 전환했습니다. Expected-old `main`
+`bd203952b9ef1a0bec47f8a19c95fa8930e952cd`은 replacement `main`
+`a4be0d5fdfdd08a76952dbafadadb620ffdbcc8e`(tree
+`6599086e7a71250f7dc1a9c1747bd9f15a44aa97`)로 이동했습니다. Final source는 28개 linear commit,
+merge 0이며 승인된 `2026-02-16`–`2026-03-01` KST window, canonical identity,
+author/committer timestamp 일치, parent chronology, three-section message와 trailer gate를 통과했습니다.
+Old formatter-only 책임은 final source 책임에 완성 상태로 흡수했고 learner-navigation-only tip은 source
+graph에서 제외한 뒤 정확한 release 상태와 Document Box backlink를 final source guide에 통합했습니다.
+Old `main`과 final source의 tree diff는 provenance·learning navigation 정화에 필요한 `.gitignore`,
+`README.md`, `load-test/scenarios/debit_load.js`, `SystemAccountIds.java`, `UuidV7.java` 다섯 path뿐입니다.
+
+41개 old advertised source commit의 disposition은
+[`data/migrations/sportsbook-wallet-service-source-crosswalk.tsv`](data/migrations/sportsbook-wallet-service-source-crosswalk.tsv)에
+고정합니다. Header 포함 42줄, SHA-256
+`0f39220b71ce3242f2450f003d210052b69696f157954de496ddb2f29c5173d5`이며 old/new commit, parent,
+tree, stable patch-id, timestamp, subject와 disposition을 모두 닫습니다. Final source ref·annotated tag·commit
+metadata·trailer·historical path·reachable blob의 금지 provenance는 0건이며 제품 기능상 허용할 token도
+0건입니다.
+
+Current annotated release `wallet-v1.0.2`는 old object
+`6c895206f8dc8ce42d18d9c4f1249b3faf3efa81`에서 final object
+`559bebcebcbb3b0d4737914ecd564b2d6b7c2c20`으로 교체했으며 final `main`으로 peel됩니다. 다음 legacy
+source tag는 exact old object에서 삭제했습니다.
+
+| ref | old tag object | old peeled target |
+| --- | --- | --- |
+| `pre-wallet-v1` | `acabf64d4077c82a5d01a5e96379920b6ca0cc8c` | `2fcb8cca9f81dfd45bdc23af273d966885446cda` |
+| `wallet-v1` | `89afc07a1886426ce8d68bdae3c99f650fbf98b7` | `0f28d668856d702c1bcea90e1a42bd43871c0a9f` |
+| `wallet-v1.0.1` | `836c6b6823ae09ceca3ee7b0974f7752f08ef3f9` | `04c0c9706ed16ae6ba763aadd02d8eddd6bde536` |
+
+원격 전환 전 source-only rollback bundle은 다음 값으로 검증했으며 learning ref를 담지 않았습니다.
+
+- 경로: `/Users/woopinbell/Documents/Codex/2026-07-19/1/work/backend-lane/sportsbook-wallet-service/source-audit/sportsbook-wallet-service-bd203952-source.bundle`
+- SHA-256: `509e6c3f6d5ce929a68f6de6f9f46ee80af4941a0a2f60f8d4dcd89073542ade`
+- 범위: old `main`, source tag 네 개와 `HEAD`; learning ref와 learning-only 보존 object 0개
+- 복원 검증: `git bundle verify`, complete history, restore clone exact refs와 `git fsck --strict` 통과
+- lifecycle: project source·learning fresh-clone gate, Document Box·Central Notes pointer와 authenticated
+  remote-navigation이 모두 통과할 때까지 보존하고, 완료 시 삭제 시각을 이 원장에 기록합니다.
+
+Learning 입력은 다음 세 ref였습니다. Ancestor 우열로 간주하지 않고 path·blob·tree matrix, source
+호환성, commit coverage, link·metadata와 고유 내용을 비교해 최종 corpus를 단일화했습니다.
+
+| old ref | tip | tree | disposition |
+| --- | --- | --- | --- |
+| `learning/wallet-v1` | `009de12feb4dc99410dddb08469d9261e4a3ffcf` | `5cfc9f474b3e890f863b11e6bdddbbab6c501516` | 유효 blob 대조 뒤 삭제 |
+| `learning/wallet-v1.0.1` | `dacb59158a50897c4de93ff780663862ce0ab407` | `5da42d781a24bd4edda3b4fc5bc6436dd37e0d0e` | source-split donor 대조 뒤 삭제 |
+| `learning/wallet-v1.0.2` | `33552cb95a3ff8f443ec8c471c24ba4a41bb3522` | `bdeeabf374cb4101d20b76a2c2c24d559323215a` | provisional superset donor; 단일화 뒤 삭제 |
+
+225개 union path 판정은
+[`data/migrations/sportsbook-wallet-service-learning-disposition.tsv`](data/migrations/sportsbook-wallet-service-learning-disposition.tsv)에
+고정합니다. Header 포함 226줄, SHA-256
+`b840501b4c728e85118c04614d6786ba47abddcd51c3f661b038f9c43aacd2db`입니다. Review mode는
+`oid-identical` 161, `metadata-only` 48, `direct-content` 16입니다. 동일 OID는 재독하지 않고 고유·충돌·
+source 영향 본문만 한 번 검토했습니다. 최종 50개 문서의 정규화 digest는
+`4d216ce35033e02c1b64a06f701ddd3f38a696a5efad56df90b4c3bc7eb358db`이며 learning bundle,
+archive ref와 보존 tag는 만들지 않았습니다.
+
+Final `learning/current`는 source freeze 뒤 actual-time publication 세 commit으로만 구성됩니다.
+
+| phase | commit | tree | parent | actual KST time |
+| --- | --- | --- | --- | --- |
+| notes | `677a2f9fe8cb9205f56bc1b85cad3a6d39a9cecd` | `7f1ee589d844b563f349520a8074a8e5025956fd` | source `a4be0d5fdfdd08a76952dbafadadb620ffdbcc8e` | `2026-07-21T05:26:14+09:00` |
+| answers | `42bf59fec8bba200a5fcabfbb40d8184ff498014` | `fd7ed92b9769ec7ca996fd50e6c2d5058e495e96` | notes | `2026-07-21T05:26:23+09:00` |
+| practices / tip | `49275a73a5b3b5677f42d8f9ce3b97b0fbac959b` | `6ceb755a5016372bf0db31df7e9dd3e6661fdc31` | answers | `2026-07-21T05:26:35+09:00` |
+
+Final 수량은 `28 source = 24 answers + 4 exclusions`, `24 answers = 21 practices + 3 omissions`입니다.
+Answer 전체 barrier와 검토 뒤 practice를 수작업으로 파생했으며 final source와 learning 사이
+source/config/test diff는 0입니다. Host clean verify에서 PostgreSQL·Kafka·Redis integration, 62 tests,
+Spotless 52 files, Checkstyle 0 violations와 package를 통과했습니다. Remote는 branch `main`,
+`learning/current`와 annotated `wallet-v1.0.2`만 advertise합니다. 별도 HTTPS fresh clone에서도 source
+tip·tree·28-commit graph·source provenance 0·62-test build와 learning tip·tree·세 publication 역할·50개
+문서·수량식·link·metadata·source drift 0을 독립적으로 다시 통과했습니다.
+
 ### 승인된 source window
 
 날짜는 모두 Asia/Seoul `+09:00` 기준이며 양 끝 날짜를 포함합니다. `extensionEnd`가 있는 신규 프로젝트는

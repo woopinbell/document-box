@@ -62,9 +62,9 @@
 
 - **시작 조건:** [B4. 공통 규약](#stage-sportsbook-shared-protocol)을 완료한다.
 - **먼저 읽을 것:** [Wallet 읽는 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-sportsbook-wallet-service)의 transaction·Redis 범위를 읽는다.
-- **저장소와 학습 자료:** [`sportsbook-wallet-service`](https://github.com/woopinbell/sportsbook-wallet-service), 완성본 `wallet-v1.0.2`, 읽기 전용 자료 `learning/wallet-v1.0.2`; [학습 자료 목차](https://github.com/woopinbell/sportsbook-wallet-service/blob/learning/wallet-v1.0.2/docs/README.md), [연습문제 목록](https://github.com/woopinbell/sportsbook-wallet-service/blob/learning/wallet-v1.0.2/docs/practice-wallet-v1.0.2/README.md), [해설 목록](https://github.com/woopinbell/sportsbook-wallet-service/blob/learning/wallet-v1.0.2/docs/commits-wallet-v1.0.2/README.md).
+- **저장소와 학습 자료:** [`sportsbook-wallet-service`](https://github.com/woopinbell/sportsbook-wallet-service), annotated 완성본 `wallet-v1.0.2`, 유일한 읽기 전용 자료 `learning/current`; [학습 자료 목차](https://github.com/woopinbell/sportsbook-wallet-service/blob/learning/current/docs/README.md), [연습문제 목록](https://github.com/woopinbell/sportsbook-wallet-service/blob/learning/current/docs/practice/README.md), [해설 목록](https://github.com/woopinbell/sportsbook-wallet-service/blob/learning/current/docs/commits/README.md).
 - **직접 해볼 것:** [필수 학습 범위](README.md#공식-수행-범위)에 따라 문제 한 개를 고른다. 지정된 시작 커밋에 `study/wallet-<ID>`를 만들고 balance, lock, idempotency와 금액 기록 실패의 전후 상태를 남긴다. 중복 차감이 없음을 확인한 뒤 해설과 비교하고 다시 구현한다.
-- **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 Java·Maven과 필요한 PostgreSQL·Redis로 `./mvnw verify`를 실행한다.
+- **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 Java 17·Maven으로 `./mvnw verify`를 실행해 PostgreSQL·Kafka·Redis integration, 62 tests, Spotless, Checkstyle과 package를 확인한다.
 - **완료 조건:** 잔액·잠금·중복 방지·금액 기록의 불변식을 상태 전이로 설명한다.
 - **다음 과제:** [B6. sportsbook-risk-service](#stage-sportsbook-risk-service).
 

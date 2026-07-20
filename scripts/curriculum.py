@@ -333,6 +333,7 @@ MIGRATED_BACKEND_PROJECTS = frozenset(
         "backend-delivery-training",
         "backend-reliability-training",
         "sportsbook-shared-protocol",
+        "sportsbook-wallet-service",
     }
 )
 STRICT_TOPOLOGY_PROJECTS = (
@@ -349,6 +350,18 @@ FROZEN_MONOLITHIC_LEARNING = {
         "learning_ref": "learning/current",
         "learning": "7a271026d6afbec22e8e32c6cfeaf7ac5ae1d777",
     }
+}
+FROZEN_LEARNING_PUBLICATIONS = {
+    "sportsbook-shared-protocol": (
+        (
+            "86ee2af2913a6fb9c2af88fa56a41a8d0ac484a9",
+            "docs(learning): publish source responsibility answers",
+        ),
+        (
+            "63c5639cec295d83e5bc47671e1d1d02641a8537",
+            "docs(learning): publish derived practice corpus",
+        ),
+    )
 }
 CURRENT_42_RELEASE = "v1.0.0"
 CURRENT_42_LEARNING = "learning/current"
@@ -1908,6 +1921,7 @@ def _validate_learning_history(
     details: dict[str, dict[str, Any]],
     *,
     exact_current_paths: bool = False,
+    frozen_publications: tuple[tuple[str, str], ...] = (),
 ) -> list[str]:
     """Validate the immutable release-to-learning publication as a pure contract."""
 
@@ -1980,7 +1994,14 @@ def _validate_learning_history(
         commit = detail.get("commit") or {}
         message = commit.get("message") if isinstance(commit, dict) else None
         subject = message.splitlines()[0] if isinstance(message, str) else ""
-        if not re.match(rf"^docs\({re.escape(role)}\):\s+\S", subject):
+        if index < len(frozen_publications):
+            frozen_sha, frozen_subject = frozen_publications[index]
+            if sha != frozen_sha or subject != frozen_subject:
+                errors.append(
+                    f"{label}: publication {index + 1} must match frozen "
+                    f"{frozen_sha} subject {frozen_subject!r}"
+                )
+        elif not re.match(rf"^docs\({re.escape(role)}\):\s+\S", subject):
             errors.append(
                 f"{label}: publication {index + 1} subject must start with "
                 f"docs({role}):"
@@ -2295,6 +2316,9 @@ def _check_remote_project(owner: str, project: dict[str, Any]) -> list[str]:
                     compare,
                     details,
                     exact_current_paths=(learning == "learning/current"),
+                    frozen_publications=FROZEN_LEARNING_PUBLICATIONS.get(
+                        project_id, ()
+                    ),
                 )
             )
 
