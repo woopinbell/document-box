@@ -227,6 +227,7 @@
       "anchor": "stage-pong-pong",
       "practice": "docs/practice/README.md",
       "answer": "docs/commits/README.md",
+      "interview": "docs/interview/README.md",
       "prev": "web-boundary-inspector",
       "next": "42-incident"
     },
