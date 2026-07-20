@@ -109,6 +109,7 @@
       "anchor": "stage-small-shell",
       "practice": "docs/practice/README.md",
       "answer": "docs/commits/README.md",
+      "interview": "docs/interview/README.md",
       "prev": "thread-dining",
       "next": "stack-sort"
     },
