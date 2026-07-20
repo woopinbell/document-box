@@ -29,7 +29,7 @@
 
 - **시작 조건:** [B1. Backend 기초](#stage-backend-foundations-training)를 완료한다.
 - **먼저 읽을 것:** [Backend 배포 읽는 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-backend-delivery-training)의 build·container·Flyway와 프로젝트 배포 노트를 읽는다.
-- **저장소와 학습 자료:** [`backend-delivery-training`](https://github.com/woopinbell/backend-delivery-training), 완성본 `delivery-v1.0.1`, 읽기 전용 자료 `learning/delivery-v1.0.1`; [학습 자료 목차](https://github.com/woopinbell/backend-delivery-training/blob/learning/delivery-v1.0.1/docs/README.md), [연습문제 목록](https://github.com/woopinbell/backend-delivery-training/blob/learning/delivery-v1.0.1/docs/practice-delivery-v1.0.1/README.md), [해설 목록](https://github.com/woopinbell/backend-delivery-training/blob/learning/delivery-v1.0.1/docs/commits-delivery-v1.0.1/README.md).
+- **저장소와 학습 자료:** [`backend-delivery-training`](https://github.com/woopinbell/backend-delivery-training), annotated 완성본 `delivery-v1.0.1`, 독자의 유일한 집필 branch `learning/current`; [학습 자료 목차](https://github.com/woopinbell/backend-delivery-training/blob/learning/current/docs/README.md), [연습문제 목록](https://github.com/woopinbell/backend-delivery-training/blob/learning/current/docs/practice/README.md), [해설 목록](https://github.com/woopinbell/backend-delivery-training/blob/learning/current/docs/commits/README.md).
 - **직접 해볼 것:** [필수 학습 범위](README.md#공식-수행-범위)에 따라 문제 한 개를 고른다. 지정된 시작 커밋에 `study/backend-delivery-<ID>`를 만들고 build 산출물, 실행 설정, migration, health와 log 실패를 기록한다. 해설과 비교한 뒤 다시 구현한다.
 - **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 `make test && make build-spring && make build-go && make check-docs`를 실행하고 가능한 환경에서는 image·Compose 검사도 수행한다.
 - **완료 조건:** 같은 산출물을 설정만 바꿔 실행하는 방법과 migration·readiness·log 확인 순서를 설명한다.

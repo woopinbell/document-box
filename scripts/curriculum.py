@@ -327,8 +327,17 @@ MIGRATED_FRONTEND_PROJECTS = frozenset(
         "portfolio-site",
     }
 )
+MIGRATED_BACKEND_PROJECTS = frozenset(
+    {
+        "backend-foundations-training",
+        "backend-delivery-training",
+    }
+)
 STRICT_TOPOLOGY_PROJECTS = (
-    EXTENDED_SOURCE_WINDOWS | MIGRATED_42_PROJECTS | MIGRATED_FRONTEND_PROJECTS
+    EXTENDED_SOURCE_WINDOWS
+    | MIGRATED_42_PROJECTS
+    | MIGRATED_FRONTEND_PROJECTS
+    | MIGRATED_BACKEND_PROJECTS
 )
 FROZEN_MONOLITHIC_LEARNING = {
     "format-printer": {

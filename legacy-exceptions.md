@@ -1493,6 +1493,89 @@ gate가 모두 통과했습니다. Authenticated 30-project 검사에서 Backend
 오류는 후속 `sportsbook-shared-protocol`에만 속합니다. 두 source-only bundle은 이 B1 closure 뒤
 삭제했으며 checksum과 복원 범위만 위 원장에 남겼습니다.
 
+### `backend-delivery-training` 실행 원장
+
+2026-07-21 KST에 private `woopinbell/backend-delivery-training`의 source와 learning ref를 모든 ref의
+exact lease를 사용한 단일 atomic push로 전환했습니다. Expected-old `main`
+`af7ba0aa827862991b2e405ad36bcc7dea924ed6`은 replacement `main`
+`fc9e1d3dc36415b4d6e7287d3738b4c1c9136364`(tree
+`be1fda88eb5fed37e9fd941bb13204f76cc78121`)로 이동했습니다. Final source는 linear 11개 commit,
+merge 0개이며 승인된 `2025-02-01`–`2025-02-14` KST window, canonical identity,
+author/committer timestamp 일치, `09:00`–`21:59` KST 시간대, parent chronology와 message·trailer gate를
+통과했습니다. Source ref·tag·commit metadata·tracked path와 blob의 금지 AI provenance는 0건입니다.
+
+Current annotated release `delivery-v1.0.1`은 old object
+`6c4a4af648390f4199d6fa741a30c9e67286e879`(peeled old main)에서 final object
+`69ccd5daedfae45c1d8871468d6e2c74d1ae8d5d`(peeled final main)로 교체했습니다. 다음 legacy source tag는
+승인된 exact object에서 삭제했습니다.
+
+| ref | old tag object | old peeled target |
+| --- | --- | --- |
+| `delivery-v1` | `60d0f8dc26b6ca36e176fc3a315da1884096942b` | `66b095b7bf34a114b99f14ea80bd75763ef60eed` |
+| `pre-delivery-v1` | `dcdc5ee4b945bfccbb30957d9d21e441218f84a3` | `56d791cfcdaebe5e5b8eb4bf99aa6b4ffb909e3a` |
+
+23개 old advertised source commit의 disposition은
+[`data/migrations/backend-delivery-training-source-crosswalk.tsv`](data/migrations/backend-delivery-training-source-crosswalk.tsv)에
+고정합니다. Header 포함 24줄, SHA-256
+`392de1883d1dc48db6b7ae99f21119aff91721ca617a5429850bb455a91c6a64`입니다. Canonical main의 첫
+9개 commit은 exact object로 보존했고 ID `011` 책임은 parent·tree·patch를 보존한 채 source timestamp와
+message만 정규화했습니다. 두 release-navigation commit은 final navigation 책임 하나로 통합했습니다.
+별도 legacy `pre-delivery-v1` graph의 source patch 8개는 canonical main의 같은 patch 책임으로
+deduplicate했고 mixed root는 learning placeholder를 제거한 clean root로 canonicalize했습니다. 그 graph의
+publication-only 2개 commit은 source에서 제외했습니다.
+
+원격 전환 전 source-only rollback bundle은 다음 값으로 검증했으며, learning ref는 담지 않았습니다.
+
+- 경로: `/Users/woopinbell/Documents/Codex/2026-07-19/1/work/backend-lane/backend-delivery-training/backend-delivery-training-af7ba0aa-source.bundle`
+- SHA-256: `b5bd86f7c70d46e968aafb2abc5488c6806eaf9b57eca8e976cca772f4256d8a`
+- 범위: old `main`과 source tag `delivery-v1`, `delivery-v1.0.1`, `pre-delivery-v1`; learning ref 0개
+- 복원 검증: `git bundle verify`, restore clone `git fsck --full --strict`와 네 ref exact 대조 통과
+- lifecycle: project fresh-clone gate는 통과했지만 governance pointer와 authenticated Backend Delivery
+  navigation closure가 남아 있어 현재 보존 중이며, 두 closure가 통과한 뒤 삭제하고 별도 lifecycle
+  commit에 기록
+
+Learning 후보는 서로 ancestor가 아닌 다음 두 ref였습니다.
+
+| old ref | tip | tree | repository paths | disposition |
+| --- | --- | --- | ---: | --- |
+| `learning/delivery-v1` | `bf1a84e6eecd4544676a71ea7143b01a01b18a4d` | `02eb4ab1036663c14a967d7c11238247decbb81b` | 84 | v1.0.1의 유효 corpus와 blob 대조 뒤 삭제 |
+| `learning/delivery-v1.0.1` | `034e284ce49915c5f2fed4e7d170fa46a7055204` | `ca27a81d7691abe6c80fcb5c9c48e24e6284a0e0` | 87 | canonical donor; 단일화 뒤 삭제 |
+
+동일 blob은 재독하지 않고 source 호환성, commit coverage, link·metadata와 유효 고유 내용을 비교해
+v1.0.1을 기준본으로 선택했습니다. 83개 legacy corpus row의 exact 판정은
+[`data/migrations/backend-delivery-training-learning-disposition.tsv`](data/migrations/backend-delivery-training-learning-disposition.tsv)에
+고정합니다. Header 포함 84줄, SHA-256
+`b2d2b0152cf2d1292ee530f6bda906f6db571d65c73d2049e2acb03727e14b38`이며 final disposition은 adopted 12,
+replaced 66, discarded 5입니다. Review mode는 동일 OID 39, 직접 내용 검토 44로 나뉩니다.
+Learning bundle, archive ref와 보존 tag는 만들지 않았습니다.
+
+Final `learning/current`는 source 뒤의 actual-time publication 세 commit으로만 구성됩니다.
+
+| phase | commit | tree | parent | actual KST time |
+| --- | --- | --- | --- | --- |
+| notes | `76053e3425f9fc45fd0a7d25ef2be18c1ddb8d3d` | `084270a29ccf4c03b7994873dcf395b720587fa9` | source `fc9e1d3dc36415b4d6e7287d3738b4c1c9136364` | `2026-07-21T00:38:45+09:00` |
+| answers | `cfeb6fc437dcddb1c31a89362dbc181de62dc6e0` | `f4ab8bf537854e3d359b4ade8f0ac8e4cc46728a` | notes | `2026-07-21T00:48:54+09:00` |
+| practices / tip | `2c2ad03000a66ba6d1ef7381bb4401c714f506f9` | `dafa9e0e015c692845cd601b7ce9029cff740651` | answers | `2026-07-21T01:02:17+09:00` |
+
+Final 수량은 `11 source = 10 answers + 1 exclusion`, `10 answers = 6 practices + 4 omissions`입니다.
+Stable ID `009`, `010`, `012`는 legacy publication·navigation 전용 번호로 예약하고 active path에서
+제거했습니다. Final source와 learning 사이 source/config/test/build diff는 0이며 versioned duplicate
+corpus 없이 `docs/README.md`, `docs/notes/**`, `docs/reflection/**`, `docs/commits/**`,
+`docs/practice/**`만 publication role에 따라 배치했습니다.
+
+별도 private fresh clone에서 advertised branch가 `main`, `learning/current`뿐이고 annotated tag는
+`delivery-v1.0.1` 하나이며 exact object가 final main으로 peel되는 것을 확인했습니다. Source와 learning
+각각 Spring·Go test, `make build-spring`, `make build-go`, `make check-docs`, strict fsck와 corpus
+metadata·H3·link·count·path gate를 통과했습니다. Unique Spring·Go image build, Compose config와
+`up --build --wait --wait-timeout 120`도 통과했습니다. Spring live·ready·runtime·checks는 모두 HTTP 200,
+ready database `UP`, `secretConfigured=true`, runtime release `compose-local`, delivery checks 3개
+`READY`와 seed 3을 확인했고 response의 secret 출현은 0건이었습니다. Go live·ready·runtime도 주입한
+config로 HTTP 200이고 response와 log의 secret 출현은 0건이었습니다. Go 컨테이너의
+`SIGTERM` stop은 0.057초, exit 0, OOM false, restart 0과 stopped log를 확인했습니다. Gate가 만든
+Compose container·network·anonymous volume, Go container와 unique image 3개를 정리한 뒤 대상
+container·network·image는 0개이고 volume 목록은 실행 전과 같았습니다. Sandbox의 localhost·Docker
+socket·Gradle lock 거부는 환경 제약에 따른 false negative였고 host 재실행 결과는 모두 green입니다.
+
 ### 승인된 source window
 
 날짜는 모두 Asia/Seoul `+09:00` 기준이며 양 끝 날짜를 포함합니다. `extensionEnd`가 있는 신규 프로젝트는
