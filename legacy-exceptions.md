@@ -1634,9 +1634,11 @@ source tag는 exact old object에서 삭제했습니다.
 - SHA-256: `64f345cf46b8dbd8369e1135f5dfcd864aeaac6ef150a5a88a5d028d59d6dd90`
 - 범위: old `main`, source tag 네 개와 `HEAD`; learning ref와 learning-only 보존 object 0개
 - 복원 검증: `git bundle verify`, complete history, restore clone exact refs와 `git fsck --strict` 통과
-- lifecycle: project fresh-clone gate, Document Box와 Central Notes pointer, authenticated Backend Reliability
-  remote-navigation이 모두 통과할 때까지 보존하고 그 뒤 삭제합니다. 삭제 전에는 위 checksum과 복원
-  범위를 포함한 rollback boundary를 유지합니다.
+- lifecycle: project source·learning fresh-clone gate, Document Box
+  `6ff2450ba6d65ebb64d50ef4da294581fb23222f`, Central Notes
+  `054e818c9ad5edf0d334b4a13e70ba5376293fd5` pointer와 authenticated Backend Reliability
+  remote-navigation이 모두 통과한 뒤 `2026-07-21T03:00:04+09:00`에 삭제했습니다. 위 checksum과
+  복원 범위만 원장에 남으며 migration 전 source를 보장하는 offline rollback artifact는 더 이상 없습니다.
 
 Learning 후보는 다음 세 ref였습니다. Commit ancestor 관계가 아니라 path/blob/tree matrix로 비교했고,
 모든 유효 path를 포함하며 current source와 호환되는 v2.0.1 corpus를 canonical donor로 선택했습니다.
@@ -1666,8 +1668,10 @@ Final `learning/current`는 source freeze 뒤 actual-time publication 세 commit
 Final 수량은 `96 source = 74 answers + 22 exclusions`, `74 answers = 41 practices + 33 omissions`입니다.
 Answer 전체 barrier와 검토 뒤 practice를 수작업으로 파생했으며 source/config/test diff는 0입니다. Local
 source와 learning strict fsck, Go 1.22 targeted/full test, `make check`, Redis·PostgreSQL runtime gate,
-corpus metadata·H3·link·count·path 검사를 모두 통과했습니다. 원격 fresh-clone과 governance·authenticated
-navigation의 최종 결과는 위 rollback lifecycle을 닫을 때 이 원장에 확정합니다.
+corpus metadata·H3·link·count·path 검사를 모두 통과했습니다. 별도 HTTPS fresh clone에서도 source와
+learning 전체 gate, exact branch·tag topology와 clean status를 확인했습니다. Authenticated 30-project
+검사에서 Backend Reliability와 Central links는 PASS했고 남은 두 오류는 다음 작업 대상인
+`sportsbook-shared-protocol`에만 속합니다.
 
 ### 승인된 source window
 
