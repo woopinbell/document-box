@@ -1712,9 +1712,12 @@ source tag는 exact old object에서 삭제했습니다.
 - SHA-256: `5d608387b858178308caa3ee6e3362eda404e94c284d794cbe7e6ac06d059e55`
 - 범위: old `main`, source tag 네 개와 `HEAD`; learning ref와 learning-only 보존 object 0개
 - 복원 검증: `git bundle verify`, complete history, restore clone exact refs와 `git fsck --strict` 통과
-- lifecycle: project source·learning fresh-clone gate는 통과했습니다. Document Box·Central Notes pointer와
-  authenticated Shared Protocol remote-navigation이 통과할 때까지 보존한 뒤 삭제하며, learning bundle이나
-  대체 offline artifact는 만들지 않습니다.
+- lifecycle: project source·learning fresh-clone gate, Document Box
+  `4dc37f8b2be9776c93b98f1f54d1bdeedf4a9571`, Central Notes
+  `619e105c5e6d3cbfdfeef1122690181cf51c3ceb` pointer와 authenticated 30-project Shared Protocol
+  remote-navigation이 모두 통과한 뒤 `2026-07-21T04:00:11+09:00`에 삭제했습니다. 위 checksum과 복원
+  범위만 원장에 남으며 learning bundle, 대체 offline artifact와 migration 전 source를 보장하는 local
+  copy는 더 이상 없습니다.
 
 Learning 입력은 다음 두 ref였습니다. Ancestor 우열로 간주하지 않고 path·blob·tree matrix, source
 호환성, commit coverage, link·metadata와 고유 내용을 비교해 최종 corpus를 단일화했습니다.
