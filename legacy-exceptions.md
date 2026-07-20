@@ -1354,8 +1354,11 @@ author/committer timestamp 일치, tagger timestamp, message, trailer와 provena
 - 복원 검증: bundle verify, source ref 10개 exact 대조와 restore clone strict fsck 통과
 
 Learning ref를 포함했던 all-refs bundle은 publication 전에 폐기했고 learning bundle, archive ref 또는
-보존 tag는 만들지 않았습니다. 위 source-only bundle과 restore clone은 project·governance publication,
-authenticated remote-navigation과 closure 검사가 모두 green이 될 때까지만 일시 보존합니다.
+보존 tag는 만들지 않았습니다. Project fresh-clone, Document Box `c55d6de9c49c752d9e7aec61385be6bcfb99196d`,
+Central Notes `077283d6f7073ac97b0e1a0689d855cde10cd0c9`, authenticated remote-navigation과 closure 검사가
+모두 green이 된 뒤 `2026-07-20T22:16:57+09:00`에 위 source-only bundle, restore clone, audit
+mirror/candidate와 검증용 worktree·fresh clone을 폐기했습니다. 따라서 migration 전 Portfolio source를
+보장하는 offline rollback artifact는 남아 있지 않습니다.
 
 Learning 후보의 path/blob/tree matrix는 다음과 같습니다.
 
@@ -1394,7 +1397,12 @@ clone의 Node 22.22.0 clean install에서 content 16 projects/5 designs, content
 typecheck, Vitest 38개, Turbopack·Webpack production build 26 pages, Playwright/visual 27 pass와 의도된
 desktop skip 1을 통과했습니다. Exact branches·tag object·peeled target, strict fsck, source provenance,
 learning path allowlist, corpus metadata·link·count와 clean status도 확인했습니다. Remote는 branch
-`main`, `learning/current`와 위 annotated source tag 8개만 advertise합니다.
+`main`, `learning/current`와 위 annotated source tag 8개만 advertise합니다. Authenticated
+30-project remote-navigation에서 Frontend 프로젝트 5개, Portfolio strict topology, Frontend application
+overlay, ref snapshot과 Central links는 모두 PASS했습니다. 같은 전체 검사에서 남은
+`sportsbook-shared-protocol`의 `docs/README.md` publication/404 두 오류는 Backend lane 문제이며
+Frontend closure와 분리합니다. Frontend 전용 authenticated preflight는 private repository 접근과 도구
+검사를 포함해 PASS했습니다.
 
 ### 승인된 source window
 
