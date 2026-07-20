@@ -204,11 +204,6 @@ UNCHANGED_NAVIGATION_RELEASES = {
         "main": "e537ffb457bfbb6225c55beb1dd9cb7b7389867d",
         "tag": "30db31454a16571cdbbb129671ad2d6218a29afa",
     },
-    "cloud-launch-training": {
-        "release": "cloud-launch-v1.0.1",
-        "main": "480e18b5b47cccf5fe0f38e6c5811fde567bdfe4",
-        "tag": "20857ee56df971d3a1b5eb7a8cf181377dd971ef",
-    },
     "sportsbook-orchestration": {
         "release": "orchestration-v1",
         "main": "564a83a57bd834870303688adb96450639c13bd2",
@@ -307,7 +302,11 @@ MIGRATED_42_PROJECTS = frozenset(
     }
 )
 MIGRATED_FRONTEND_PROJECTS = frozenset(
-    {"frontend-foundations-training", "frontend-delivery-training"}
+    {
+        "frontend-foundations-training",
+        "frontend-delivery-training",
+        "cloud-launch-training",
+    }
 )
 STRICT_TOPOLOGY_PROJECTS = (
     EXTENDED_SOURCE_WINDOWS | MIGRATED_42_PROJECTS | MIGRATED_FRONTEND_PROJECTS

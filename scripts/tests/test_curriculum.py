@@ -114,6 +114,11 @@ class RegistryFixture:
                     learning = "learning/current"
                     practice = "docs/practice/README.md"
                     answer = "docs/commits/README.md"
+                if node_id == "cloud-launch-training":
+                    release = "cloud-launch-v1.0.1"
+                    learning = "learning/current"
+                    practice = "docs/practice/README.md"
+                    answer = "docs/commits/README.md"
                 if node_id == "frontend-reliability-training":
                     release = "reliability-v1.0.1"
                     learning = "learning/reliability-v1.0.1"
@@ -606,18 +611,18 @@ class CurriculumValidationTest(unittest.TestCase):
 
     def test_unchanged_backlink_exception_is_explicit_and_scoped(self):
         by_id = {project["id"]: project for project in self.fixture.data["projects"]}
-        del by_id["cloud-launch-training"]["main_backlink"]
-        by_id["sportsbook-wallet-service"]["main_backlink"] = False
+        del by_id["c-foundation"]["main_backlink"]
+        by_id["cloud-launch-training"]["main_backlink"] = False
         errors = curriculum.validate_registry(self.fixture.data, self.root)
         self.assertTrue(
             any(
-                "cloud-launch-training: unchanged navigation release" in error
+                "c-foundation: unchanged navigation release" in error
                 for error in errors
             )
         )
         self.assertTrue(
             any(
-                "sportsbook-wallet-service: only an explicitly unchanged" in error
+                "cloud-launch-training: only an explicitly unchanged" in error
                 for error in errors
             )
         )
@@ -1311,6 +1316,37 @@ class RemoteContractTest(unittest.TestCase):
             "answer": "docs/commits/README.md",
             "doc": "tracks/frontend.md",
             "anchor": "stage-frontend-delivery-training",
+        }
+        with patch.object(
+            curriculum, "_run", side_effect=self._project_dispatcher(project)
+        ):
+            self.assertEqual(
+                curriculum._check_remote_project("woopinbell", project), []
+            )
+
+        cases = (
+            ({"extra_branch": True}, "branches must be exactly"),
+            ({"extra_tag": True}, "tags must be exactly"),
+        )
+        for options, marker in cases:
+            with self.subTest(marker=marker), patch.object(
+                curriculum,
+                "_run",
+                side_effect=self._project_dispatcher(project, **options),
+            ):
+                errors = curriculum._check_remote_project("woopinbell", project)
+            self.assertTrue(any(marker in error for error in errors), errors)
+
+    def test_migrated_cloud_launch_rejects_extra_refs(self):
+        project = {
+            "id": "cloud-launch-training",
+            "repo": "cloud-launch-training",
+            "release": "cloud-launch-v1.0.1",
+            "learning": "learning/current",
+            "practice": "docs/practice/README.md",
+            "answer": "docs/commits/README.md",
+            "doc": "tracks/frontend.md",
+            "anchor": "stage-cloud-launch-training",
         }
         with patch.object(
             curriculum, "_run", side_effect=self._project_dispatcher(project)
