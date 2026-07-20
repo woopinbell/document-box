@@ -607,7 +607,7 @@ class CurriculumValidationTest(unittest.TestCase):
     def test_unchanged_backlink_exception_is_explicit_and_scoped(self):
         by_id = {project["id"]: project for project in self.fixture.data["projects"]}
         del by_id["cloud-launch-training"]["main_backlink"]
-        by_id["pong-pong"]["main_backlink"] = False
+        by_id["sportsbook-wallet-service"]["main_backlink"] = False
         errors = curriculum.validate_registry(self.fixture.data, self.root)
         self.assertTrue(
             any(
@@ -617,7 +617,7 @@ class CurriculumValidationTest(unittest.TestCase):
         )
         self.assertTrue(
             any(
-                "pong-pong: only an explicitly unchanged" in error
+                "sportsbook-wallet-service: only an explicitly unchanged" in error
                 for error in errors
             )
         )

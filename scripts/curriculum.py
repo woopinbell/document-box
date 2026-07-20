@@ -199,6 +199,11 @@ UNCHANGED_NAVIGATION_RELEASES = {
         "main": "cf57ffeb652288548c351209a278d4907f0b2f95",
         "tag": "5ee7967b12c27a259d1a64f4c72de67f524c46c7",
     },
+    "pong-pong": {
+        "release": "v1.0.0",
+        "main": "091a9326c7efe94f59b7e6db4dd841eb2bb228cd",
+        "tag": "22f9d6e3b646b6e76cfa545497c9f14e5f0bfebd",
+    },
     "cloud-launch-training": {
         "release": "cloud-launch-v1.0.1",
         "main": "480e18b5b47cccf5fe0f38e6c5811fde567bdfe4",
@@ -298,6 +303,7 @@ MIGRATED_42_PROJECTS = frozenset(
         "irc-relay-server",
         "container-stack",
         "web-boundary-inspector",
+        "pong-pong",
     }
 )
 MIGRATED_FRONTEND_PROJECTS = frozenset(
