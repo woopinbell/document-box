@@ -19,7 +19,7 @@
 
 - **시작 조건:** [42 통합 평가](42.md#stage-42-incident)를 통과하고 완료 직후 복습을 기록한다.
 - **먼저 읽을 것:** [Frontend 기초 읽는 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-frontend-foundations-training)의 language·React·build·state·test 범위를 읽는다.
-- **저장소와 학습 자료:** [`frontend-foundations-training`](https://github.com/woopinbell/frontend-foundations-training), 완성본 `foundations-v1.0.1`, 읽기 전용 자료 `learning/current`; [학습 자료 목차](https://github.com/woopinbell/frontend-foundations-training/blob/learning/current/docs/README.md), [연습문제 목록](https://github.com/woopinbell/frontend-foundations-training/blob/learning/current/docs/practice/README.md), [해설 목록](https://github.com/woopinbell/frontend-foundations-training/blob/learning/current/docs/commits/README.md).
+- **저장소와 학습 자료:** [`frontend-foundations-training`](https://github.com/woopinbell/frontend-foundations-training), 완성본 `foundations-v1.0.1`, 읽기 전용 자료 `learning/current`; [학습 자료 목차](https://github.com/woopinbell/frontend-foundations-training/blob/learning/current/docs/README.md), [연습문제 목록](https://github.com/woopinbell/frontend-foundations-training/blob/learning/current/docs/practice/README.md), [해설 목록](https://github.com/woopinbell/frontend-foundations-training/blob/learning/current/docs/commits/README.md), [실전 질문](https://github.com/woopinbell/frontend-foundations-training/blob/learning/current/docs/interview/README.md).
 - **직접 해볼 것:** [필수 학습 범위](README.md#공식-수행-범위)에 따라 문제 한 개를 고른다. 지정된 시작 커밋에 `study/frontend-foundations-<ID>`를 만들고 route, server/client 경계, form·data·UI state 실패를 기록한다. 자기 시도 뒤 해설과 비교하고 다시 구현한다.
 - **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 Node·pnpm과 browser를 확인하고 `make check-repo && make build && make test-e2e`를 실행한다.
 - **완료 조건:** route와 server/client 경계, form·data·UI 상태 흐름을 설명하고 선택한 문제를 해설 없이 다시 통과한다.
@@ -30,7 +30,7 @@
 
 - **시작 조건:** [F1. Frontend 기초](#stage-frontend-foundations-training)를 완료한다.
 - **먼저 읽을 것:** [Frontend 배포 읽는 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-frontend-delivery-training)의 Central·프로젝트 delivery 노트를 읽는다.
-- **저장소와 학습 자료:** [`frontend-delivery-training`](https://github.com/woopinbell/frontend-delivery-training), 완성본 `delivery-v1.0.1`, 읽기 전용 자료 `learning/current`; [학습 자료 목차](https://github.com/woopinbell/frontend-delivery-training/blob/learning/current/docs/README.md), [연습문제 목록](https://github.com/woopinbell/frontend-delivery-training/blob/learning/current/docs/practice/README.md), [해설 목록](https://github.com/woopinbell/frontend-delivery-training/blob/learning/current/docs/commits/README.md).
+- **저장소와 학습 자료:** [`frontend-delivery-training`](https://github.com/woopinbell/frontend-delivery-training), 완성본 `delivery-v1.0.1`, 읽기 전용 자료 `learning/current`; [학습 자료 목차](https://github.com/woopinbell/frontend-delivery-training/blob/learning/current/docs/README.md), [연습문제 목록](https://github.com/woopinbell/frontend-delivery-training/blob/learning/current/docs/practice/README.md), [해설 목록](https://github.com/woopinbell/frontend-delivery-training/blob/learning/current/docs/commits/README.md), [실전 질문](https://github.com/woopinbell/frontend-delivery-training/blob/learning/current/docs/interview/README.md).
 - **직접 해볼 것:** [필수 학습 범위](README.md#공식-수행-범위)에 따라 문제 한 개를 고른다. 지정된 시작 커밋에 `study/frontend-delivery-<ID>`를 만들고 route, asset budget, SEO·build와 release checklist 실패를 기록한다. 해설과 비교한 뒤 다시 구현한다.
 - **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 Node·pnpm, image와 Chromium 도구를 확인하고 `make check`를 실행한다. 실제 DNS나 Search Console은 변경하지 않는다.
 - **완료 조건:** 배포 가능한 산출물, route·asset·SEO·build 확인 순서를 자기 말로 설명한다.
@@ -41,7 +41,7 @@
 
 - **시작 조건:** [F2. Frontend 배포](#stage-frontend-delivery-training)를 완료한다.
 - **먼저 읽을 것:** [Cloud 읽는 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-cloud-launch-training)의 request lifecycle·browser security·Next·Playwright와 프로젝트 Cloud 노트를 읽는다.
-- **저장소와 학습 자료:** [`cloud-launch-training`](https://github.com/woopinbell/cloud-launch-training), 완성본 `cloud-launch-v1.0.1`, 읽기 전용 자료 `learning/current`; [학습 자료 목차](https://github.com/woopinbell/cloud-launch-training/blob/learning/current/docs/README.md), [연습문제 목록](https://github.com/woopinbell/cloud-launch-training/blob/learning/current/docs/practice/README.md), [해설 목록](https://github.com/woopinbell/cloud-launch-training/blob/learning/current/docs/commits/README.md).
+- **저장소와 학습 자료:** [`cloud-launch-training`](https://github.com/woopinbell/cloud-launch-training), 완성본 `cloud-launch-v1.0.1`, 읽기 전용 자료 `learning/current`; [학습 자료 목차](https://github.com/woopinbell/cloud-launch-training/blob/learning/current/docs/README.md), [연습문제 목록](https://github.com/woopinbell/cloud-launch-training/blob/learning/current/docs/practice/README.md), [해설 목록](https://github.com/woopinbell/cloud-launch-training/blob/learning/current/docs/commits/README.md), [실전 질문](https://github.com/woopinbell/cloud-launch-training/blob/learning/current/docs/practice/interview/README.md).
 - **직접 해볼 것:** [필수 학습 범위](README.md#공식-수행-범위)에 따라 문제 한 개를 고른다. 지정된 시작 커밋에 `study/cloud-launch-<ID>`를 만들고 Rules 허용·거부, Functions 신뢰와 Cloudflare 경계 실패를 기록한다. emulator에서 확인한 뒤 해설과 비교하고 다시 구현한다.
 - **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 Node·npm, Java, Firebase Emulator와 세 browser를 확인하고 `make check`를 실행한다. 실제 credential·비용·DNS 변경은 필수가 아니다.
 - **완료 조건:** client의 주장과 서버 권한을 구분하고 Rules·Functions·edge 경계를 설명한다.
@@ -52,7 +52,7 @@
 
 - **시작 조건:** [F3. Cloud](#stage-cloud-launch-training)를 완료한다.
 - **먼저 읽을 것:** [Frontend 안정성 읽는 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-frontend-reliability-training)의 RSC·router·query·form·접근성·test 범위를 읽는다.
-- **저장소와 학습 자료:** [`frontend-reliability-training`](https://github.com/woopinbell/frontend-reliability-training), 완성본 `reliability-v1.0.1`, 읽기 전용 자료 `learning/current`; [학습 자료 목차](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/README.md), [연습문제 목록](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/practice/README.md), [해설 목록](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/commits/README.md).
+- **저장소와 학습 자료:** [`frontend-reliability-training`](https://github.com/woopinbell/frontend-reliability-training), 완성본 `reliability-v1.0.1`, 읽기 전용 자료 `learning/current`; [학습 자료 목차](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/README.md), [연습문제 목록](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/practice/README.md), [해설 목록](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/commits/README.md), [실전 질문](https://github.com/woopinbell/frontend-reliability-training/blob/learning/current/docs/interview/README.md).
 - **직접 해볼 것:** [필수 학습 범위](README.md#공식-수행-범위)에 따라 문제 한 개를 고른다. 지정된 시작 커밋에 `study/frontend-reliability-<ID>`를 만들고 오래된 응답, rollback, URL state, focus와 reconnect 실패를 재현한다. 실패 test를 만든 뒤 해설과 비교하고 다시 구현한다.
 - **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 Node·pnpm과 Playwright를 확인하고 `pnpm check:repo && make lint && make typecheck && make test && make build && make test-e2e`를 실행한다.
 - **완료 조건:** 비동기 응답과 UI 상태의 권위, 실패 rollback과 접근성 focus 복구를 설명한다.
@@ -74,7 +74,7 @@
 
 - **시작 조건:** [F5. 낯선 API 평가](#stage-frontend-transfer)와 완료 직후 복습을 마친다.
 - **먼저 읽을 것:** [Portfolio 읽는 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-portfolio-site)의 production CSS·asset·build 범위를 읽는다.
-- **저장소와 학습 자료:** [`portfolio-site`](https://github.com/woopinbell/portfolio-site), 시작 template `template-v3.0.1`, 완성본 `portfolio-v3.0.1`, 독자가 읽을 유일한 집필 branch `learning/current`; [학습 시작](https://github.com/woopinbell/portfolio-site/blob/learning/current/docs/README.md), [연습문제 목록](https://github.com/woopinbell/portfolio-site/blob/learning/current/docs/practice/README.md), [해설 목록](https://github.com/woopinbell/portfolio-site/blob/learning/current/docs/commits/README.md).
+- **저장소와 학습 자료:** [`portfolio-site`](https://github.com/woopinbell/portfolio-site), 시작 template `template-v3.0.1`, 완성본 `portfolio-v3.0.1`, 독자가 읽을 유일한 집필 branch `learning/current`; [학습 시작](https://github.com/woopinbell/portfolio-site/blob/learning/current/docs/README.md), [연습문제 목록](https://github.com/woopinbell/portfolio-site/blob/learning/current/docs/practice/README.md), [해설 목록](https://github.com/woopinbell/portfolio-site/blob/learning/current/docs/commits/README.md), [실전 질문](https://github.com/woopinbell/portfolio-site/blob/learning/current/docs/interview/README.md).
 - **직접 해볼 것:** [필수 학습 범위](README.md#공식-수행-범위)에 따라 문제 한 개를 고른다. 일반 문제는 지정된 시작 커밋에서 진행한다. 통합 content publication 문제만 `git switch -c study/portfolio template-v3.0.1`로 시작한다. content·schema·render, five-design, 반응형과 접근성 실패를 기록한 뒤 해설과 비교하고 다시 구현한다.
 - **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`, `npm run test:e2e`를 실행한다.
 - **완료 조건:** neutral template와 개인 content를 구분하고, content 허용 경로와 반응형·접근성 결과를 설명한다.
