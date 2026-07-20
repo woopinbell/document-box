@@ -1153,7 +1153,7 @@ class RemoteContractTest(unittest.TestCase):
 
         return dispatch
 
-    def test_annotated_release_linear_learning_and_sha_paths_pass(self):
+    def test_migrated_project_release_learning_and_exact_topology_pass(self):
         project = {
             "id": "format-printer",
             "repo": "format-printer",
@@ -1171,6 +1171,19 @@ class RemoteContractTest(unittest.TestCase):
             self.assertEqual(
                 curriculum._check_remote_project("woopinbell", project), []
             )
+
+        cases = (
+            ({"extra_branch": True}, "branches must be exactly"),
+            ({"extra_tag": True}, "tags must be exactly"),
+        )
+        for options, marker in cases:
+            with self.subTest(marker=marker), patch.object(
+                curriculum,
+                "_run",
+                side_effect=self._project_dispatcher(project, **options),
+            ):
+                errors = curriculum._check_remote_project("woopinbell", project)
+            self.assertTrue(any(marker in error for error in errors), errors)
 
     def test_new_project_exact_topology_index_and_source_docs_are_enforced(self):
         project = {

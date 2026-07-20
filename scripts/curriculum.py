@@ -83,7 +83,6 @@ NO_PROJECT_NOTES = {
 EXTENDED_SOURCE_WINDOWS = frozenset(
     {"c-foundation", "buffered-line-reader", "cpp-foundation"}
 )
-STRICT_TOPOLOGY_PROJECTS = EXTENDED_SOURCE_WINDOWS
 REQUIRED_MAIN_PATHS = {
     project_id: ("README.md", "DESIGN.md")
     for project_id in EXTENDED_SOURCE_WINDOWS
@@ -145,9 +144,9 @@ UNCHANGED_NAVIGATION_RELEASES = {
         "tag": "dd878d65945e32c9a499b175643a1ae39880cb3a",
     },
     "web-boundary-inspector": {
-        "release": "codex-5.7",
-        "main": "33a62cf963bb48e55b304f7d80f6a582d9c90f81",
-        "tag": "8eea6c54810886d974334683d8b4d8a5e491ddb7",
+        "release": "v1.0.0",
+        "main": "cf57ffeb652288548c351209a278d4907f0b2f95",
+        "tag": "5ee7967b12c27a259d1a64f4c72de67f524c46c7",
     },
     "cloud-launch-training": {
         "release": "cloud-launch-v1.0.1",
@@ -247,8 +246,10 @@ MIGRATED_42_PROJECTS = frozenset(
         "stl-container",
         "irc-relay-server",
         "container-stack",
+        "web-boundary-inspector",
     }
 )
+STRICT_TOPOLOGY_PROJECTS = EXTENDED_SOURCE_WINDOWS | MIGRATED_42_PROJECTS
 FROZEN_MONOLITHIC_LEARNING = {
     "format-printer": {
         "release": "v1.0.0",
@@ -278,7 +279,7 @@ PROJECT_SETUP = {
     "stl-container": "make && make test (also run the strict C++98 compile gate)",
     "irc-relay-server": "make && make test && make smoke",
     "container-stack": "make test && make ENV_FILE=.env.example config; then prepare secret files and run make ENV_FILE=.env.example up && make smoke && make ENV_FILE=.env.example down",
-    "web-boundary-inspector": "npm ci; npx playwright install; make check",
+    "web-boundary-inspector": "pnpm --dir browser-platform install --frozen-lockfile; pnpm --dir browser-platform exec playwright install chromium firefox webkit; make check",
     "pong-pong": "pnpm install --frozen-lockfile; make typecheck && make test && make build && make e2e",
     "frontend-foundations-training": "pnpm install --frozen-lockfile; pnpm exec playwright install chromium; make check-repo && make build && make test-e2e",
     "frontend-delivery-training": "pnpm install --frozen-lockfile; pnpm exec playwright install chromium; make check",
