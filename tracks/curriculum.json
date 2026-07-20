@@ -294,11 +294,46 @@
       "repo": "portfolio-site",
       "release": "portfolio-v3.0.1",
       "template": "template-v3.0.1",
-      "learning": "learning/portfolio-v3.0.1",
+      "learning": "learning/current",
+      "main_backlink": false,
+      "source_tags": {
+        "template-v1": {
+          "object": "bf531c9c628fd623cfc0b1ec87de13b54b31402d",
+          "peeled": "847f10e27aeda6871d66e5a76ae16087cf569993"
+        },
+        "portfolio-v1": {
+          "object": "59db3a6dcc219a7bb7cdd57318a004c9c5b9232d",
+          "peeled": "63c4aecd756e29abf1570253451f79c949625725"
+        },
+        "template-v2": {
+          "object": "210375d9f052bfb0af7a2d8916f30b691ac17f14",
+          "peeled": "28e39ba95d7414f80b510fa1cac644f660ec801b"
+        },
+        "portfolio-v2": {
+          "object": "246a23166fb32769e31848d599449864b8b271e9",
+          "peeled": "b0d4f7c5071e17a231890bb82a14728950e189f5"
+        },
+        "template-v3": {
+          "object": "7f2e06bdab688523d518a767b4609d4c0212bf53",
+          "peeled": "f5bd465b08f79db815605e87e4d67eae65719389"
+        },
+        "portfolio-v3": {
+          "object": "6a0727c719601cba79475161ab5d6b5ccc291392",
+          "peeled": "10076d214bd232ebf2a306a89f6fcba10b7a83a5"
+        },
+        "template-v3.0.1": {
+          "object": "ece83dc0d55fd2ff346af6e9400ed35b8eb69faa",
+          "peeled": "049496ffd7d50f0ec2ae745d1e613c04560a1e05"
+        },
+        "portfolio-v3.0.1": {
+          "object": "66bef79b6020d68af3da014489b226bc2e09ee36",
+          "peeled": "38f61b1a405d1e1e72342f290cf36cdf6b1ef111"
+        }
+      },
       "doc": "tracks/frontend.md",
       "anchor": "stage-portfolio-site",
-      "practice": "docs/practice-portfolio-v3.0.1/README.md",
-      "answer": "docs/commits-portfolio-v3.0.1/README.md",
+      "practice": "docs/practice/README.md",
+      "answer": "docs/commits/README.md",
       "prev": "frontend-transfer",
       "next": "web-production-regression"
     },
@@ -594,7 +629,7 @@
         "project": "portfolio-site",
         "template": "template-v3.0.1",
         "release": "portfolio-v3.0.1",
-        "learning": "learning/portfolio-v3.0.1"
+        "learning": "learning/current"
       }
     }
   ],

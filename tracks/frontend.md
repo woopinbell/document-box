@@ -74,7 +74,7 @@
 
 - **시작 조건:** [F5. 낯선 API 평가](#stage-frontend-transfer)와 완료 직후 복습을 마친다.
 - **먼저 읽을 것:** [Portfolio 읽는 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-portfolio-site)의 production CSS·asset·build 범위를 읽는다.
-- **저장소와 학습 자료:** [`portfolio-site`](https://github.com/woopinbell/portfolio-site), 시작 template `template-v3.0.1`, 완성본 `portfolio-v3.0.1`, 읽기 전용 자료 `learning/portfolio-v3.0.1`; [연습문제 목록](https://github.com/woopinbell/portfolio-site/blob/learning/portfolio-v3.0.1/docs/practice-portfolio-v3.0.1/README.md), [해설 목록](https://github.com/woopinbell/portfolio-site/blob/learning/portfolio-v3.0.1/docs/commits-portfolio-v3.0.1/README.md).
+- **저장소와 학습 자료:** [`portfolio-site`](https://github.com/woopinbell/portfolio-site), 시작 template `template-v3.0.1`, 완성본 `portfolio-v3.0.1`, 독자가 읽을 유일한 집필 branch `learning/current`; [학습 시작](https://github.com/woopinbell/portfolio-site/blob/learning/current/docs/README.md), [연습문제 목록](https://github.com/woopinbell/portfolio-site/blob/learning/current/docs/practice/README.md), [해설 목록](https://github.com/woopinbell/portfolio-site/blob/learning/current/docs/commits/README.md).
 - **직접 해볼 것:** [필수 학습 범위](README.md#공식-수행-범위)에 따라 문제 한 개를 고른다. 일반 문제는 지정된 시작 커밋에서 진행한다. 통합 content publication 문제만 `git switch -c study/portfolio template-v3.0.1`로 시작한다. content·schema·render, five-design, 반응형과 접근성 실패를 기록한 뒤 해설과 비교하고 다시 구현한다.
 - **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`, `npm run test:e2e`를 실행한다.
 - **완료 조건:** neutral template와 개인 content를 구분하고, content 허용 경로와 반응형·접근성 결과를 설명한다.

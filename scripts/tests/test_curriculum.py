@@ -17,6 +17,42 @@ sys.path.insert(0, str(SCRIPT_DIR))
 import curriculum  # noqa: E402
 
 
+PORTFOLIO_SOURCE_TAGS = {
+    "template-v1": {
+        "object": "bf531c9c628fd623cfc0b1ec87de13b54b31402d",
+        "peeled": "847f10e27aeda6871d66e5a76ae16087cf569993",
+    },
+    "portfolio-v1": {
+        "object": "59db3a6dcc219a7bb7cdd57318a004c9c5b9232d",
+        "peeled": "63c4aecd756e29abf1570253451f79c949625725",
+    },
+    "template-v2": {
+        "object": "210375d9f052bfb0af7a2d8916f30b691ac17f14",
+        "peeled": "28e39ba95d7414f80b510fa1cac644f660ec801b",
+    },
+    "portfolio-v2": {
+        "object": "246a23166fb32769e31848d599449864b8b271e9",
+        "peeled": "b0d4f7c5071e17a231890bb82a14728950e189f5",
+    },
+    "template-v3": {
+        "object": "7f2e06bdab688523d518a767b4609d4c0212bf53",
+        "peeled": "f5bd465b08f79db815605e87e4d67eae65719389",
+    },
+    "portfolio-v3": {
+        "object": "6a0727c719601cba79475161ab5d6b5ccc291392",
+        "peeled": "10076d214bd232ebf2a306a89f6fcba10b7a83a5",
+    },
+    "template-v3.0.1": {
+        "object": "ece83dc0d55fd2ff346af6e9400ed35b8eb69faa",
+        "peeled": "049496ffd7d50f0ec2ae745d1e613c04560a1e05",
+    },
+    "portfolio-v3.0.1": {
+        "object": "66bef79b6020d68af3da014489b226bc2e09ee36",
+        "peeled": "38f61b1a405d1e1e72342f290cf36cdf6b1ef111",
+    },
+}
+
+
 class RegistryFixture:
     def __init__(self, root: Path) -> None:
         self.root = root
@@ -126,9 +162,9 @@ class RegistryFixture:
                     answer = "docs/commits/README.md"
                 if node_id == "portfolio-site":
                     release = "portfolio-v3.0.1"
-                    learning = "learning/portfolio-v3.0.1"
-                    practice = "docs/practice-portfolio-v3.0.1/README.md"
-                    answer = "docs/commits-portfolio-v3.0.1/README.md"
+                    learning = "learning/current"
+                    practice = "docs/practice/README.md"
+                    answer = "docs/commits/README.md"
                 _, next_ids = curriculum.CANONICAL_EDGES[node_id]
                 next_links = "".join(
                     f'[next](#stage-{next_id})\n' for next_id in next_ids
@@ -203,6 +239,9 @@ class RegistryFixture:
                     project["main_backlink"] = False
                 if node_id == "portfolio-site":
                     project["template"] = "template-v3.0.1"
+                    project["source_tags"] = json.loads(
+                        json.dumps(PORTFOLIO_SOURCE_TAGS)
+                    )
                 self.projects.append(project)
             (root / f"tracks/{track}.md").write_text(
                 "\n".join(documents[track]), encoding="utf-8"
@@ -388,7 +427,7 @@ class RegistryFixture:
             + "\n".join(selected_links)
             + "\n[portfolio](https://github.com/woopinbell/portfolio-site)\n"
             "`template-v3.0.1` `portfolio-v3.0.1` "
-            "`learning/portfolio-v3.0.1`\n"
+            "`learning/current`\n"
             "[resume](frontend.md#stage-frontend-delivery-training)\n",
             encoding="utf-8",
         )
@@ -460,6 +499,18 @@ class CurriculumValidationTest(unittest.TestCase):
         self.fixture.data["version"] = 1
         errors = curriculum.validate_registry(self.fixture.data, self.root)
         self.assertTrue(any("registry version must be 4" in error for error in errors))
+
+    def test_portfolio_registry_requires_all_four_source_tag_pairs(self):
+        portfolio = next(
+            project
+            for project in self.fixture.data["projects"]
+            if project["id"] == "portfolio-site"
+        )
+        del portfolio["source_tags"]["template-v1"]
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        self.assertTrue(
+            any("four template/portfolio release pairs" in error for error in errors)
+        )
 
     def test_application_overlay_stays_outside_the_canonical_graph(self):
         canonical_ids = {
@@ -950,6 +1001,22 @@ class RemoteContractTest(unittest.TestCase):
         return subprocess.CompletedProcess([], returncode, stdout, stderr)
 
     @staticmethod
+    def _portfolio_project():
+        return {
+            "id": "portfolio-site",
+            "repo": "portfolio-site",
+            "release": "portfolio-v3.0.1",
+            "learning": "learning/current",
+            "main_backlink": False,
+            "source_tags": json.loads(json.dumps(PORTFOLIO_SOURCE_TAGS)),
+            "practice": "docs/practice/README.md",
+            "answer": "docs/commits/README.md",
+            "doc": "tracks/frontend.md",
+            "anchor": "stage-portfolio-site",
+            "template": "template-v3.0.1",
+        }
+
+    @staticmethod
     def _learning_fixture(
         with_notes=True,
         roles=None,
@@ -1021,6 +1088,11 @@ class RemoteContractTest(unittest.TestCase):
         extra_tag=False,
         missing_learning_index=False,
         missing_design=False,
+        missing_source_tag=None,
+        lightweight_source_tag=None,
+        source_object_drift=None,
+        source_peeled_drift=None,
+        historical_parent_drift=None,
     ):
         navigation_freeze = curriculum.UNCHANGED_NAVIGATION_RELEASES.get(
             project["id"]
@@ -1055,11 +1127,43 @@ class RemoteContractTest(unittest.TestCase):
             tag_sha = "7" * 40
         refs = [
             f"{release_sha}\trefs/heads/main",
-            f"{tag_sha if not lightweight else release_sha}\trefs/tags/{project['release']}",
+            f"{learning_sha}\trefs/heads/{project['learning']}",
         ]
-        if not lightweight:
-            refs.append(f"{release_sha}\trefs/tags/{project['release']}^{{}}")
-        refs.append(f"{learning_sha}\trefs/heads/{project['learning']}")
+        source_tags = project.get("source_tags")
+        template = project.get("template")
+        if isinstance(source_tags, dict):
+            for source_tag, state in source_tags.items():
+                if (
+                    source_tag == missing_source_tag
+                    or source_tag == template
+                    and missing_template
+                ):
+                    continue
+                tag_object = state["object"]
+                tag_peeled = state["peeled"]
+                if source_tag == project["release"]:
+                    tag_object = tag_sha
+                    if lightweight:
+                        tag_object = tag_peeled
+                if source_tag == lightweight_source_tag:
+                    tag_object = tag_peeled
+                if source_tag == source_object_drift:
+                    tag_object = "6" * 40
+                if source_tag == source_peeled_drift:
+                    tag_peeled = "5" * 40
+                refs.append(f"{tag_object}\trefs/tags/{source_tag}")
+                if not (
+                    lightweight and source_tag == project["release"]
+                    or source_tag == lightweight_source_tag
+                ):
+                    refs.append(f"{tag_peeled}\trefs/tags/{source_tag}^{{}}")
+        else:
+            refs.append(
+                f"{tag_sha if not lightweight else release_sha}"
+                f"\trefs/tags/{project['release']}"
+            )
+            if not lightweight:
+                refs.append(f"{release_sha}\trefs/tags/{project['release']}^{{}}")
         if supplemental:
             refs.append(
                 f"{'b' * 40}\trefs/heads/{project['learning']}-supplemental"
@@ -1068,8 +1172,7 @@ class RemoteContractTest(unittest.TestCase):
             refs.append(f"{'c' * 40}\trefs/heads/dev")
         if extra_tag:
             refs.append(f"{'d' * 40}\trefs/tags/old-release")
-        template = project.get("template")
-        if template and not missing_template:
+        if template and not source_tags and not missing_template:
             refs.extend(
                 (
                     f"{'c' * 40}\trefs/tags/{template}",
@@ -1102,6 +1205,16 @@ class RemoteContractTest(unittest.TestCase):
                     return self._response(returncode=1, stderr="not found")
                 if "/compare/" in endpoint:
                     return self._response(compare)
+                if isinstance(source_tags, dict):
+                    for publication_tag, state in source_tags.items():
+                        if not publication_tag.startswith("portfolio-"):
+                            continue
+                        if endpoint.endswith(f"/commits/{state['peeled']}"):
+                            version = publication_tag.removeprefix("portfolio-")
+                            parent = source_tags[f"template-{version}"]["peeled"]
+                            if publication_tag == historical_parent_drift:
+                                parent = "e" * 40
+                            return self._response({"parents": [{"sha": parent}]})
                 if template and endpoint.endswith(f"/commits/{release_sha}"):
                     return self._response({"parents": [{"sha": "d" * 40}]})
                 for sha, detail in details.items():
@@ -1144,7 +1257,7 @@ class RemoteContractTest(unittest.TestCase):
                 "repo": "portfolio-site",
                 "template": "template-v3.0.1",
                 "release": "portfolio-v3.0.1",
-                "learning": "learning/portfolio-v3.0.1",
+                "learning": "learning/current",
             },
         }
         selections = [
@@ -1181,7 +1294,7 @@ class RemoteContractTest(unittest.TestCase):
                 f"{'3' * 40}\trefs/heads/main",
                 f"{'a' * 40}\trefs/tags/portfolio-v3.0.1",
                 f"{'3' * 40}\trefs/tags/portfolio-v3.0.1^{{}}",
-                f"{'4' * 40}\trefs/heads/learning/portfolio-v3.0.1",
+                f"{'4' * 40}\trefs/heads/learning/current",
                 f"{'b' * 40}\trefs/tags/template-v3.0.1",
                 f"{'5' * 40}\trefs/tags/template-v3.0.1^{{}}",
             )
@@ -1565,9 +1678,11 @@ class RemoteContractTest(unittest.TestCase):
             "id": "portfolio-site",
             "repo": "portfolio-site",
             "release": "portfolio-v3.0.1",
-            "learning": "learning/portfolio-v3.0.1",
-            "practice": "docs/practice-portfolio-v3.0.1/README.md",
-            "answer": "docs/commits-portfolio-v3.0.1/README.md",
+            "learning": "learning/current",
+            "main_backlink": False,
+            "source_tags": json.loads(json.dumps(PORTFOLIO_SOURCE_TAGS)),
+            "practice": "docs/practice/README.md",
+            "answer": "docs/commits/README.md",
             "doc": "tracks/frontend.md",
             "anchor": "stage-portfolio-site",
             "template": "template-v3.0.1",
@@ -1585,18 +1700,21 @@ class RemoteContractTest(unittest.TestCase):
             "id": "portfolio-site",
             "repo": "portfolio-site",
             "release": "portfolio-v3.0.1",
-            "learning": "learning/portfolio-v3.0.1",
-            "practice": "docs/practice-portfolio-v3.0.1/README.md",
-            "answer": "docs/commits-portfolio-v3.0.1/README.md",
+            "learning": "learning/current",
+            "main_backlink": False,
+            "source_tags": json.loads(json.dumps(PORTFOLIO_SOURCE_TAGS)),
+            "practice": "docs/practice/README.md",
+            "answer": "docs/commits/README.md",
             "doc": "tracks/frontend.md",
             "anchor": "stage-portfolio-site",
             "template": "template-v3.0.1",
         }
         dispatch = self._project_dispatcher(project)
+        current_release = PORTFOLIO_SOURCE_TAGS["portfolio-v3.0.1"]["peeled"]
 
         def wrong_parent(command, timeout=20, cwd=None):
             if command[:2] == ["gh", "api"] and command[-1].endswith(
-                f"/commits/{'1' * 40}"
+                f"/commits/{current_release}"
             ):
                 return self._response({"parents": [{"sha": "e" * 40}]})
             return dispatch(command, timeout=timeout, cwd=cwd)
@@ -1604,6 +1722,82 @@ class RemoteContractTest(unittest.TestCase):
         with patch.object(curriculum, "_run", side_effect=wrong_parent):
             errors = curriculum._check_remote_project("woopinbell", project)
         self.assertTrue(any("one publication commit after" in error for error in errors))
+
+    def test_portfolio_eight_tag_topology_passes(self):
+        project = self._portfolio_project()
+        with patch.object(
+            curriculum,
+            "_run",
+            side_effect=self._project_dispatcher(project),
+        ):
+            errors = curriculum._check_remote_project("woopinbell", project)
+        self.assertEqual(errors, [])
+
+    def test_portfolio_missing_or_lightweight_historical_tag_is_rejected(self):
+        project = self._portfolio_project()
+        cases = (
+            {"missing_source_tag": "template-v1"},
+            {"lightweight_source_tag": "portfolio-v2"},
+        )
+        for case in cases:
+            with self.subTest(case=case), patch.object(
+                curriculum,
+                "_run",
+                side_effect=self._project_dispatcher(project, **case),
+            ):
+                errors = curriculum._check_remote_project("woopinbell", project)
+            self.assertTrue(
+                any(
+                    "tags must be exactly" in error or "is not annotated" in error
+                    for error in errors
+                )
+            )
+
+    def test_portfolio_source_tag_object_and_peeled_drift_are_rejected(self):
+        project = self._portfolio_project()
+        cases = (
+            ({"source_object_drift": "template-v2"}, "object drifted"),
+            ({"source_peeled_drift": "portfolio-v3"}, "peeled target drifted"),
+        )
+        for case, marker in cases:
+            with self.subTest(case=case), patch.object(
+                curriculum,
+                "_run",
+                side_effect=self._project_dispatcher(project, **case),
+            ):
+                errors = curriculum._check_remote_project("woopinbell", project)
+            self.assertTrue(any(marker in error for error in errors))
+
+    def test_portfolio_historical_publication_must_follow_matching_template(self):
+        project = self._portfolio_project()
+        with patch.object(
+            curriculum,
+            "_run",
+            side_effect=self._project_dispatcher(
+                project, historical_parent_drift="portfolio-v2"
+            ),
+        ):
+            errors = curriculum._check_remote_project("woopinbell", project)
+        self.assertTrue(
+            any(
+                "portfolio-v2 must be one publication commit after template-v2"
+                in error
+                for error in errors
+            )
+        )
+
+    def test_portfolio_extra_branch_and_tag_are_rejected(self):
+        project = self._portfolio_project()
+        with patch.object(
+            curriculum,
+            "_run",
+            side_effect=self._project_dispatcher(
+                project, extra_branch=True, extra_tag=True
+            ),
+        ):
+            errors = curriculum._check_remote_project("woopinbell", project)
+        self.assertTrue(any("branches must be exactly" in error for error in errors))
+        self.assertTrue(any("tags must be exactly" in error for error in errors))
 
     def test_learning_wrong_subject_and_source_path_are_rejected(self):
         release, learning, roles, compare, details = self._learning_fixture()

@@ -149,6 +149,11 @@ UNCHANGED_NAVIGATION_RELEASES = {
         "main": "be4966f3c1d176453a34b609036ef4998fa8b022",
         "tag": "fe7a0d79cb9733f4f6871e5164a305907cd7b78e",
     },
+    "portfolio-site": {
+        "release": "portfolio-v3.0.1",
+        "main": "38f61b1a405d1e1e72342f290cf36cdf6b1ef111",
+        "tag": "66bef79b6020d68af3da014489b226bc2e09ee36",
+    },
     "signal-message-bus": {
         "release": "v1.0.0",
         "main": "ed859ce08c0d84154c21be6ffd6cdb1ea1c353c3",
@@ -282,8 +287,20 @@ FRONTEND_APPLICATION_PORTFOLIO = {
     "project": "portfolio-site",
     "template": "template-v3.0.1",
     "release": "portfolio-v3.0.1",
-    "learning": "learning/portfolio-v3.0.1",
+    "learning": "learning/current",
 }
+PORTFOLIO_SOURCE_TAG_NAMES = frozenset(
+    {
+        "template-v1",
+        "portfolio-v1",
+        "template-v2",
+        "portfolio-v2",
+        "template-v3",
+        "portfolio-v3",
+        "template-v3.0.1",
+        "portfolio-v3.0.1",
+    }
+)
 MIGRATED_42_PROJECTS = frozenset(
     {
         "c-foundation",
@@ -307,6 +324,7 @@ MIGRATED_FRONTEND_PROJECTS = frozenset(
         "frontend-delivery-training",
         "cloud-launch-training",
         "frontend-reliability-training",
+        "portfolio-site",
     }
 )
 STRICT_TOPOLOGY_PROJECTS = (
@@ -692,7 +710,7 @@ def _validate_overlays(
     if portfolio != FRONTEND_APPLICATION_PORTFOLIO:
         errors.append(
             "frontend application overlay portfolio must pin portfolio-site "
-            "template-v3.0.1, portfolio-v3.0.1 and learning/portfolio-v3.0.1"
+            "template-v3.0.1, portfolio-v3.0.1 and learning/current"
         )
     portfolio_project = node_by_id.get("portfolio-site")
     if portfolio_project:
@@ -793,7 +811,7 @@ def _validate_overlays(
         for token in (
             "template-v3.0.1",
             "portfolio-v3.0.1",
-            "learning/portfolio-v3.0.1",
+            "learning/current",
         ):
             if f"`{token}`" not in section:
                 errors.append(
@@ -919,6 +937,68 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
                 errors.append(f"{node_id}: release must be non-empty")
             if not isinstance(learning, str) or not learning.startswith("learning/"):
                 errors.append(f"{node_id}: learning must start with learning/")
+            source_tags = node.get("source_tags")
+            if node_id == "portfolio-site" and source_tags is None:
+                errors.append("portfolio-site: source_tags must pin every source release")
+            if source_tags is not None:
+                if not isinstance(source_tags, dict) or not source_tags:
+                    errors.append(f"{node_id}: source_tags must be a non-empty object")
+                else:
+                    if (
+                        node_id == "portfolio-site"
+                        and set(source_tags) != PORTFOLIO_SOURCE_TAG_NAMES
+                    ):
+                        errors.append(
+                            "portfolio-site: source_tags must contain exactly the four "
+                            "template/portfolio release pairs"
+                        )
+                    for tag_name, tag_state in source_tags.items():
+                        if not isinstance(tag_name, str) or not re.fullmatch(
+                            r"[A-Za-z0-9][A-Za-z0-9._-]*", tag_name
+                        ):
+                            errors.append(
+                                f"{node_id}: source_tags has invalid tag name {tag_name!r}"
+                            )
+                            continue
+                        if not isinstance(tag_state, dict) or set(tag_state) != {
+                            "object",
+                            "peeled",
+                        }:
+                            errors.append(
+                                f"{node_id}: source_tags.{tag_name} must contain exactly "
+                                "object and peeled"
+                            )
+                            continue
+                        tag_object = tag_state.get("object")
+                        tag_peeled = tag_state.get("peeled")
+                        if not isinstance(tag_object, str) or not re.fullmatch(
+                            r"[0-9a-f]{40}", tag_object
+                        ):
+                            errors.append(
+                                f"{node_id}: source_tags.{tag_name}.object must be a "
+                                "full lowercase SHA"
+                            )
+                        if not isinstance(tag_peeled, str) or not re.fullmatch(
+                            r"[0-9a-f]{40}", tag_peeled
+                        ):
+                            errors.append(
+                                f"{node_id}: source_tags.{tag_name}.peeled must be a "
+                                "full lowercase SHA"
+                            )
+                        if tag_object == tag_peeled:
+                            errors.append(
+                                f"{node_id}: source tag {tag_name} must be annotated"
+                            )
+                    if isinstance(release, str) and release not in source_tags:
+                        errors.append(
+                            f"{node_id}: current release {release} is missing from source_tags"
+                        )
+                    template_name = node.get("template")
+                    if isinstance(template_name, str) and template_name not in source_tags:
+                        errors.append(
+                            f"{node_id}: current template {template_name} is missing "
+                            "from source_tags"
+                        )
             backlink_required = node.get("main_backlink", True)
             if not isinstance(backlink_required, bool):
                 errors.append(f"{node_id}: main_backlink must be a boolean")
@@ -1956,6 +2036,7 @@ def _check_remote_project(owner: str, project: dict[str, Any]) -> list[str]:
     repo = project["repo"]
     release = project["release"]
     learning = project["learning"]
+    source_tags = project.get("source_tags")
     label = f"{owner}/{repo}"
     errors: list[str] = []
     view = _run(
@@ -1992,6 +2073,11 @@ def _check_remote_project(owner: str, project: dict[str, Any]) -> list[str]:
     template = project.get("template")
     if template:
         patterns.extend((f"refs/tags/{template}", f"refs/tags/{template}^{{}}"))
+    if isinstance(source_tags, dict):
+        for source_tag in source_tags:
+            patterns.extend(
+                (f"refs/tags/{source_tag}", f"refs/tags/{source_tag}^{{}}")
+            )
     command = ["git", "ls-remote", url, *patterns]
     remote = _run(command, timeout=30)
     if remote.returncode != 0:
@@ -2030,10 +2116,33 @@ def _check_remote_project(owner: str, project: dict[str, Any]) -> list[str]:
             for ref in refs
             if ref.startswith("refs/tags/") and not ref.endswith("^{}")
         }
-        if actual_tags != {release}:
+        expected_tags = set(source_tags) if isinstance(source_tags, dict) else {release}
+        if actual_tags != expected_tags:
             errors.append(
-                f"{label}: tags must be exactly {[release]}, found {sorted(actual_tags)}"
+                f"{label}: tags must be exactly {sorted(expected_tags)}, "
+                f"found {sorted(actual_tags)}"
             )
+
+    if isinstance(source_tags, dict):
+        for source_tag, expected in source_tags.items():
+            if not isinstance(expected, dict):
+                continue
+            actual_object = refs.get(f"refs/tags/{source_tag}")
+            actual_peeled = refs.get(f"refs/tags/{source_tag}^{{}}")
+            expected_object = expected.get("object")
+            expected_peeled = expected.get("peeled")
+            if actual_object != expected_object:
+                errors.append(
+                    f"{label}: source tag {source_tag} object drifted from "
+                    f"{expected_object} to {actual_object}"
+                )
+            if not actual_peeled or actual_peeled == actual_object:
+                errors.append(f"{label}: source tag {source_tag} is not annotated")
+            if actual_peeled != expected_peeled:
+                errors.append(
+                    f"{label}: source tag {source_tag} peeled target drifted from "
+                    f"{expected_peeled} to {actual_peeled}"
+                )
 
     expected_learning_ref = f"refs/heads/{learning}"
     supplemental = sorted(
@@ -2100,6 +2209,47 @@ def _check_remote_project(owner: str, project: dict[str, Any]) -> list[str]:
                 errors.append(
                     f"{label}: deployable main must be one publication commit after "
                     f"{template}"
+                )
+
+    if isinstance(source_tags, dict):
+        for publication_tag, publication_state in source_tags.items():
+            if not publication_tag.startswith("portfolio-") or not isinstance(
+                publication_state, dict
+            ):
+                continue
+            version = publication_tag.removeprefix("portfolio-")
+            template_tag_name = f"template-{version}"
+            template_state = source_tags.get(template_tag_name)
+            if not isinstance(template_state, dict):
+                errors.append(
+                    f"{label}: {publication_tag} has no matching {template_tag_name}"
+                )
+                continue
+            publication_sha = publication_state.get("peeled")
+            template_sha = template_state.get("peeled")
+            if not isinstance(publication_sha, str) or not isinstance(
+                template_sha, str
+            ):
+                continue
+            publication_result = _run(
+                ["gh", "api", f"repos/{owner}/{repo}/commits/{publication_sha}"],
+                timeout=30,
+            )
+            publication = _json_payload(publication_result)
+            parents = (
+                publication.get("parents")
+                if isinstance(publication, dict)
+                else None
+            )
+            parent_shas = (
+                [parent.get("sha") for parent in parents if isinstance(parent, dict)]
+                if isinstance(parents, list)
+                else []
+            )
+            if parent_shas != [template_sha]:
+                errors.append(
+                    f"{label}: {publication_tag} must be one publication commit after "
+                    f"{template_tag_name}"
                 )
 
     if peeled_sha and learning_sha:

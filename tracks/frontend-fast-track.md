@@ -63,7 +63,7 @@ canonical_resume: frontend-delivery-training
 
    - Foundations `foundations-v1.0.1`, `learning/current`
    - Reliability `reliability-v1.0.1`, `learning/current`
-   - Portfolio `template-v3.0.1`, `portfolio-v3.0.1`, `learning/portfolio-v3.0.1`
+   - Portfolio `template-v3.0.1`, `portfolio-v3.0.1`, `learning/current`
 
 3. `learning/*`는 읽기 전용으로 두고 개인 구현은 문제에서 지정한 시작 커밋의 `study/*` branch에
    작성한다. 시작 커밋이 없으면 [기술 안내](TECHNICAL_GUIDE.md#시작-커밋을-찾는-방법)를 따른다.

@@ -1288,6 +1288,114 @@ remote-navigation에서 Reliability project, Frontend application overlay, ref s
 모두 PASS했습니다. 같은 전체 검사에 남은 `portfolio-site`와 `sportsbook-shared-protocol`의 네 오류는
 아직 완료되지 않은 다른 저장소 publication 문제이며 Reliability completion과 분리합니다.
 
+### `portfolio-site` source product-token allowlist
+
+`portfolio-site`의 final source에는 작업 provenance가 아니라 UI와 pagination 제품 동작을 뜻하는 소문자
+`cursor`만 남습니다. 허용 범위는 아래 exact path, blob과 occurrence로 한정합니다.
+
+| exact path | exact blob | occurrence | 제품상 이유 |
+| --- | --- | ---: | --- |
+| `src/designs/editorial/editorial-route.module.css` | `4ef379393957dc098f035f43811e075ec5c290d9` | 1 | pointer cursor styling |
+| `src/designs/brutalist/brutalist.module.css` | `604157ca27d5dec9c0cf335c73187dc8f1dda704` | 1 | pointer cursor styling |
+| `src/designs/cinematic/cinematic.module.css` | `6074765b87493850d4808f2c15012e6372fcc182` | 1 | pointer cursor styling |
+| `src/components/portfolio/design-switcher.module.css` | `9f048004d5c38b20718241ea0ddd7758c1e56770` | 2 | clickable selector cursor styling |
+| `src/content/projects.json` | `a641c187f89bb9d6527b65c2c8df22e7021a715d` | 3 | pagination cursor 설계 설명 |
+| `src/components/portfolio/site-shell.tsx` | `e9bc83a9c2d0f5273a987b54e3b6e02594ff4c3b` | 1 | navigation pagination cursor 설명 |
+
+Source union 전체에서 6개 blob의 9 occurrence입니다. 다른 path·blob의 `cursor`, 대소문자 변형,
+ref·tag 이름, commit·tag metadata·trailer와 tool-control artifact에는 이 allowlist를 적용하지 않습니다.
+Final source의 ref, path, commit metadata·본문·trailer와 blob을 전수 검사했을 때 위 제품 token 외 금지
+provenance는 0건입니다.
+
+### `portfolio-site` 실행 원장
+
+2026-07-20 KST에 private `woopinbell/portfolio-site`를 사용자 승인과 모든 ref의 exact lease를 사용한
+단일 atomic push로 전환했습니다. Expected-old `main`은
+`ff4e1854fabe7d061278044033c41383dc5cb2cd`이고 replacement `main`은
+`38f61b1a405d1e1e72342f290cf36cdf6b1ef111`(tree
+`5ef4beb998ac68bcb5b337cffe2e7ab020383afd`, parent
+`049496ffd7d50f0ec2ae745d1e613c04560a1e05`)입니다. Final current source는 42개 commit이고 historical
+release 세 개를 합친 source union은 45개 commit, resolution-free merge는 5개입니다. 38개 commit은
+three-section message를 사용하고 empty root, lockfile-only와 merge 5개 등 7개는 승인된 예외입니다.
+
+네 source release의 old/new annotated tag object와 peeled target은 다음과 같습니다.
+
+| ref | old object → peeled | final object → peeled |
+| --- | --- | --- |
+| `template-v1` | `ed6e74ad90d734266bb1550be6480d3f22d54e1a` → `fb0a4b9661de7f4544754b384a5c4a3ed9dda12e` | `bf531c9c628fd623cfc0b1ec87de13b54b31402d` → `847f10e27aeda6871d66e5a76ae16087cf569993` |
+| `portfolio-v1` | `6bd1265ba870bb4ccf3028a5b61249ef0a4c305f` → `8159dc3dd7cf6d0b304834806c0e2f834c12048b` | `59db3a6dcc219a7bb7cdd57318a004c9c5b9232d` → `63c4aecd756e29abf1570253451f79c949625725` |
+| `template-v2` | `f7afc175e28eac5aefb218338d3aba87e375e2f4` → `5f4301c976bb3d6659c4dd85a568df1ccd572530` | `210375d9f052bfb0af7a2d8916f30b691ac17f14` → `28e39ba95d7414f80b510fa1cac644f660ec801b` |
+| `portfolio-v2` | `d6937e28e0c81347cf09c9a2f0cbce0c25ef13d4` → `a69b0ad9d4decb3f60f806766f7ee4e4e2f27421` | `246a23166fb32769e31848d599449864b8b271e9` → `b0d4f7c5071e17a231890bb82a14728950e189f5` |
+| `template-v3` | `46edd4271db5eb1507e3e3ee7e6bfd9c16e293b6` → `82df0f245e55120d87e45b3fe648ea6eee240f0e` | `7f2e06bdab688523d518a767b4609d4c0212bf53` → `f5bd465b08f79db815605e87e4d67eae65719389` |
+| `portfolio-v3` | `cc4be3105fb15431cc3313c7176fbc68970d06f7` → `3f90d20cdc7a43b8af9e27414f3a58a2a70cf80e` | `6a0727c719601cba79475161ab5d6b5ccc291392` → `10076d214bd232ebf2a306a89f6fcba10b7a83a5` |
+| `template-v3.0.1` | `7c683a9e039ba7796b0aceb84d26153158ca3991` → `05e81cd168e9b0bbc1d7d1428ab0e0df1fe5cf14` | `ece83dc0d55fd2ff346af6e9400ed35b8eb69faa` → `049496ffd7d50f0ec2ae745d1e613c04560a1e05` |
+| `portfolio-v3.0.1` | `7914062a57542cbfdcdff67536a418da79ae9f2f` → `ff4e1854fabe7d061278044033c41383dc5cb2cd` | `66bef79b6020d68af3da014489b226bc2e09ee36` → `38f61b1a405d1e1e72342f290cf36cdf6b1ef111` |
+
+각 final `portfolio-*` peeled commit의 단일 parent는 같은 버전 `template-*` peeled commit입니다. Source
+README와 `docs/DESIGN.md`에서 learner navigation을 제거하고 reset·license·hydration·release 계약만
+유지했습니다. Content publication 네 개의 diff는 `src/content/**`, `public/content/**`에만 있으며,
+`public/content/site/og.png`의 legacy blob `48a24ec75635212a2e0a496abdfc76e1afc809f8`에서 C2PA tool
+metadata만 제거한 clean blob `f120316ea012c651d2bcc6da144b9e4486355547`을 사용합니다. ImageMagick
+pixel 비교는 `0`이므로 decoded visual은 동일합니다.
+
+45개 old/new source disposition은
+[`data/migrations/portfolio-site-source-crosswalk.tsv`](data/migrations/portfolio-site-source-crosswalk.tsv)에
+고정합니다. 파일은 header 포함 46줄이며 SHA-256은
+`1b3e153aa388d04b8d2a82eb754c47f68fa5b4a4609344839cfbb8457a07966c`입니다. 원래 topology와 patch
+순서를 보존하면서 승인된 `2025-10-06`–`2025-11-28` KST window에 배치했고 source identity,
+author/committer timestamp 일치, tagger timestamp, message, trailer와 provenance gate를 모두
+통과했습니다.
+
+원격 전환 전 source-only rollback bundle은 다음 값으로 검증했습니다.
+
+- 경로: `/Users/woopinbell/Documents/Codex/2026-07-19/1/work/bundles/portfolio-site-source-ff4e1854.bundle`
+- SHA-256: `2df31089f019b1b7ba674317e4e16f299776ecca27d8cf3cede907d54f7ed137`
+- 범위: old source branch 2개와 source tag 8개, learning ref 0개
+- 복원 검증: bundle verify, source ref 10개 exact 대조와 restore clone strict fsck 통과
+
+Learning ref를 포함했던 all-refs bundle은 publication 전에 폐기했고 learning bundle, archive ref 또는
+보존 tag는 만들지 않았습니다. 위 source-only bundle과 restore clone은 project·governance publication,
+authenticated remote-navigation과 closure 검사가 모두 green이 될 때까지만 일시 보존합니다.
+
+Learning 후보의 path/blob/tree matrix는 다음과 같습니다.
+
+| old ref | tip | tree | learning corpus paths |
+| --- | --- | --- | ---: |
+| `learning/portfolio-v1` | `d40b2d51b50209524b103a69890e7bc20eca9365` | `f9e85943784e5e1dce037c56ac2e245b96241aed` | 51 |
+| `learning/portfolio-v2` | `5c289930a40e235b681ebab015349cea45dba608` | `e290497b2b0fbc11730c7161846692a39d6afb54` | 59 |
+| `learning/portfolio-v3` | `7cfaae14b960cf5b89138660a2ebe8bf094db4af` | `7a3c92bda97867c983de2af1c629fffbfc9b6195` | 64 |
+| `learning/portfolio-v3.0.1` | `21bb76a7bb19e0cd01afe350d329900c39ce5f0c` | `7c5e9548fac355eda6a634dcfd34c2997249eb01` | 68 |
+
+네 tip은 ancestor 관계로 우열을 정할 수 없습니다. v3.0.1은 v3 canonical corpus 64개 blob을 전부 그대로
+포함하고 v3.0.1 answer 두 개와 versioned wrapper 두 개만 추가하므로 canonical donor로 선택했습니다.
+v1→v2와 v2→v3의 canonical 충돌은 ledger README뿐이고 동일 blob은 재독하지 않았습니다. Reserved
+historical content ID `026`, `032`, `036`은 active corpus에서 제거하고 정화된 source tag가 release
+evidence를 보존합니다.
+
+네 ref의 learning corpus 242개 path disposition은
+[`data/migrations/portfolio-site-learning-disposition.tsv`](data/migrations/portfolio-site-learning-disposition.tsv)에
+고정합니다. 파일은 header 포함 243줄이며 SHA-256은
+`fe6eadda56c605a18af1d8257aeee03f3b40247a6f8dd8d73334d08996e78a69`입니다. Disposition은
+`corrected 228 / replaced 8 / discarded 6`, review mode는 `metadata-only 196 / direct-content 46`이고
+`PENDING`은 0입니다. 원장의 `reviewed_at` `2026-07-20T21:56:02+09:00`은 과거 집필 시각이 아니라
+repository owner가 old/final blob, source crosswalk와 publication basis를 최종 대조한 governance 검증
+시각입니다.
+
+Final `learning/current`는 final source 뒤 actual-time publication 두 commit으로만 구성됩니다.
+
+| phase | commit | tree | parent |
+| --- | --- | --- | --- |
+| answers | `6757af78f48ede995a801c21dd9d53c28c6c8aef` | `340d1ce545a94c4ca03f0ee481d1dc5c8dcb406c` | source `38f61b1a405d1e1e72342f290cf36cdf6b1ef111` |
+| practices / tip | `6d720c187bf8690b3b0cca499e61dd685bb867a1` | `7b9cc579713af18e3371316022dc77001659e751` | answers |
+
+Final 수량은 `42 reachable source commits = 35 answers + 7 exclusions`, `35 answers = 28 practices + 7
+omissions`, `44 final learning reachable = 42 source + 2 publication`입니다. Local과 별도 private fresh
+clone의 Node 22.22.0 clean install에서 content 16 projects/5 designs, content-only 61 paths, lint,
+typecheck, Vitest 38개, Turbopack·Webpack production build 26 pages, Playwright/visual 27 pass와 의도된
+desktop skip 1을 통과했습니다. Exact branches·tag object·peeled target, strict fsck, source provenance,
+learning path allowlist, corpus metadata·link·count와 clean status도 확인했습니다. Remote는 branch
+`main`, `learning/current`와 위 annotated source tag 8개만 advertise합니다.
+
 ### 승인된 source window
 
 날짜는 모두 Asia/Seoul `+09:00` 기준이며 양 끝 날짜를 포함합니다. `extensionEnd`가 있는 신규 프로젝트는
