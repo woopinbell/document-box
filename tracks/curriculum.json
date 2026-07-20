@@ -93,6 +93,7 @@
       "anchor": "stage-thread-dining",
       "practice": "docs/practice/README.md",
       "answer": "docs/commits/README.md",
+      "interview": "docs/interview/README.md",
       "prev": "signal-message-bus",
       "next": "small-shell"
     },
