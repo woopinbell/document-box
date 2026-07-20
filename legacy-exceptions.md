@@ -1798,8 +1798,11 @@ source tag는 exact old object에서 삭제했습니다.
 - SHA-256: `509e6c3f6d5ce929a68f6de6f9f46ee80af4941a0a2f60f8d4dcd89073542ade`
 - 범위: old `main`, source tag 네 개와 `HEAD`; learning ref와 learning-only 보존 object 0개
 - 복원 검증: `git bundle verify`, complete history, restore clone exact refs와 `git fsck --strict` 통과
-- lifecycle: project source·learning fresh-clone gate, Document Box·Central Notes pointer와 authenticated
-  remote-navigation이 모두 통과할 때까지 보존하고, 완료 시 삭제 시각을 이 원장에 기록합니다.
+- lifecycle: project source·learning fresh-clone gate, Document Box
+  `96ddffeb7915cf9a0c9780ab4f7a1ec443fbb703`, Central Notes
+  `7be875aa2a42b33109841933f83607001f31eba4` pointer와 authenticated 30-project remote-navigation이 모두
+  통과한 뒤 `2026-07-21T05:50:14+09:00`에 삭제했습니다. 위 checksum과 복원 범위만 원장에 남으며
+  learning bundle이나 대체 offline rollback artifact는 없습니다.
 
 Learning 입력은 다음 세 ref였습니다. Ancestor 우열로 간주하지 않고 path·blob·tree matrix, source
 호환성, commit coverage, link·metadata와 고유 내용을 비교해 최종 corpus를 단일화했습니다.
