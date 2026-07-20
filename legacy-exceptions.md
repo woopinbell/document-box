@@ -1404,6 +1404,79 @@ overlay, ref snapshot과 Central links는 모두 PASS했습니다. 같은 전체
 Frontend closure와 분리합니다. Frontend 전용 authenticated preflight는 private repository 접근과 도구
 검사를 포함해 PASS했습니다.
 
+### `backend-foundations-training` source product-token allowlist
+
+Final source의 `cursor`는 작업 provenance가 아니라 pagination 제품 계약입니다. 허용 범위는 다음 exact
+path와 blob에 한정하며, 다른 ref·path·metadata·trailer·blob에는 적용하지 않습니다.
+
+| exact path | exact blob | 제품상 이유 |
+| --- | --- | --- |
+| `notes/reference-impl/spring-data-commons-pagination/README.md` | `5707799959a52ad67df4a2933c658d806e30c737` | cursor pagination 설명과 HTTP 예시 |
+| `notes/reference-impl/spring-data-commons-pagination/src/main/java/com/example/refsdcpag/ArticleController.java` | `1dfda2e8161993dd9b994f127a6a16bb7e8ac5cd` | cursor endpoint |
+| `notes/reference-impl/spring-data-commons-pagination/src/main/java/com/example/refsdcpag/ArticleRepository.java` | `8abf62c62c85086105bac19ba368e87b6917aa5f` | keyset query boundary |
+| `notes/reference-impl/spring-data-commons-pagination/src/main/java/com/example/refsdcpag/ArticleService.java` | `b657c9037c11c756149efb5eeccde0fa7efad7bd` | cursor state와 next cursor 계산 |
+| `notes/reference-impl/spring-data-commons-pagination/src/main/java/com/example/refsdcpag/Models.java` | `6dc8f6ee94b9c07972ad1e83986c1eac277f0395` | cursor response model |
+| `notes/reference-impl/spring-data-commons-pagination/src/test/java/com/example/refsdcpag/ArticlePaginationTest.java` | `5eb47aff8c77c8b2ab6093868659a7f4e633a890` | cursor 진행·연속성 검증 |
+
+위 여섯 blob 외 source ref·tag, commit/tag metadata·본문·trailer, path와 blob의 금지 provenance는 0건입니다.
+
+### `backend-foundations-training` 실행 원장
+
+2026-07-20 KST에 private `woopinbell/backend-foundations-training`을 사용자 승인과 모든 ref의 exact
+lease를 사용한 단일 atomic push로 전환했습니다. Expected-old `main`
+`432b43bc42af8daeef62ad6ac8fbef13f52eb41f`은 replacement `main`
+`0fa98e5775ddf2862735ff5d23a56fe3a1f5cbf6`(tree
+`df83b42d659856cef67da408ecdae64df2d97052`)으로 이동했습니다. Final source는 104개 commit, first-parent
+34개와 merge 24개이며 승인된 `2024-11-01`–`2025-01-31` KST window, canonical identity,
+author/committer timestamp 일치, parent chronology, message·trailer gate를 통과했습니다.
+
+Current annotated release `foundations-v2.0.1`은 old object
+`742c2dd8113e6ecb661e3a934d44f054bb6afaa0`(peeled old main)에서 final object
+`6eb6ddc787b0d53e938b9aa073dcdc2368b6b506`(peeled final main)으로 교체했습니다. Legacy source tag
+`foundations-v1`, `foundations-v2`, `pre-foundations-v1`은 승인된 exact object에서 삭제했습니다.
+
+110개 old source commit의 disposition은
+[`data/migrations/backend-foundations-training-source-crosswalk.tsv`](data/migrations/backend-foundations-training-source-crosswalk.tsv)에
+고정합니다. Header 포함 111줄, SHA-256
+`f98fa4f36df0c5f19b69f89e04ff5a015deaabca6524a9b230b9b986e2fcb1df`이며 104개 retained와 6개
+excluded row가 old graph 전체를 닫습니다. Checker와 Spring JSON repair는 원래 책임에 흡수했고,
+learner-navigation-only tip은 source에서 제외했습니다. Final source/config/test diff는 정화 대상
+`README.md`와 `docs/DESIGN.md` 외 old current release와 동일합니다.
+
+원격 전환 전 source-only rollback bundle은 다음 값으로 검증했습니다.
+
+- 경로: `/Users/woopinbell/Documents/Codex/2026-07-19/1/work/backend-lane/backend-foundations-training/backend-foundations-training-432b43bc-source.bundle`
+- SHA-256: `29f74219352c140abc1358f0b42991bed5f4a732f7e11a7edf37739e6343da1f`
+- 범위: old `main`과 source tag 4개, learning ref 0개
+- 복원 검증: `git bundle verify`, restore clone `git fsck --full` 통과
+
+Learning branch 세 개는 ancestor 관계가 아니지만 corpus path/blob 포함관계는 v1 → v2 → v2.0.1입니다.
+동일 blob은 재독하지 않고 canonical v2.0.1의 고유·충돌 파일과 source basis가 바뀐 hunk만 직접
+검토했습니다.
+
+| old ref | tip | tree | disposition |
+| --- | --- | --- | --- |
+| `learning/foundations-v1` | `d7f50a1e08c08892c5af8704971fe6b15091acc5` | `7ddcbb50be57ee22641fbf3609da926125b484aa` | v2.0.1에 path/blob 포함; 삭제 |
+| `learning/foundations-v2` | `f3ff5588485497150dbd382eb709777cf84de8f1` | `9a9afb4820071ef7a9fecbcc6fcfca9a133c2187` | v2.0.1에 path/blob 포함; 삭제 |
+| `learning/foundations-v2.0.1` | `b39f0a55bee761e3a88fbd2e6f82252f0a977689` | `d09b54405c4683d3a7488164895cb31a04c0fb14` | canonical donor; 단일화 뒤 삭제 |
+
+Learning bundle, archive ref와 보존 tag는 만들지 않았습니다. Final `learning/current`는 source 뒤의
+actual-time publication 세 commit으로만 구성됩니다.
+
+| phase | commit | tree | parent |
+| --- | --- | --- | --- |
+| notes | `189769c8a12b372dcacdc1cc895d1cce8cc7d1c3` | `b2ee4bdae102d8e2b1c6107c46fcbba8f15e1b47` | source `0fa98e5775ddf2862735ff5d23a56fe3a1f5cbf6` |
+| answers | `772e968286805fcd48d7d3a14b977c9da87b054e` | `775cc727e02ba1f74121cf6e6b10669d66f5df4a` | notes |
+| practices / tip | `00870f05029fe106e79300e24b1d08b03786c226` | `46e5198ddab23f3afb49dcacac6241a00e6767e2` | answers |
+
+Final 수량은 `104 source = 78 answers + 26 exclusions`, `78 answers = 47 practices + 31 omissions`입니다.
+Reserved ID `095`, `097`, `100`, `107`은 active path에서 제거하고 index에 근거를 남겼습니다. 별도 private
+fresh clone에서 branches가 `main`, `learning/current`뿐이고 annotated tag는 `foundations-v2.0.1` 하나임을
+확인했습니다. Source strict fsck·provenance, Spring 52 tasks, Go packages, 21 exercise document contracts,
+17 standalone reference implementations, Compose static configuration과 learning metadata·link·count·path
+gate가 모두 통과했습니다. Source-only bundle은 governance pointer와 authenticated navigation이 green일
+때까지 보존합니다.
+
 ### 승인된 source window
 
 날짜는 모두 Asia/Seoul `+09:00` 기준이며 양 끝 날짜를 포함합니다. `extensionEnd`가 있는 신규 프로젝트는
