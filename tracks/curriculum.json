@@ -207,6 +207,7 @@
       "anchor": "stage-web-boundary-inspector",
       "practice": "docs/practice/README.md",
       "answer": "docs/commits/README.md",
+      "interview": "docs/interview/README.md",
       "prev": [
         "stack-sort",
         "irc-relay-server",
