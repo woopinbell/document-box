@@ -190,6 +190,7 @@
       "anchor": "stage-container-stack",
       "practice": "docs/practice/README.md",
       "answer": "docs/commits/README.md",
+      "interview": "docs/interview/README.md",
       "main_backlink": false,
       "prev": "linux-foundation",
       "next": "web-boundary-inspector"
