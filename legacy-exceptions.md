@@ -1530,9 +1530,10 @@ publication-only 2개 commit은 source에서 제외했습니다.
 - SHA-256: `b5bd86f7c70d46e968aafb2abc5488c6806eaf9b57eca8e976cca772f4256d8a`
 - 범위: old `main`과 source tag `delivery-v1`, `delivery-v1.0.1`, `pre-delivery-v1`; learning ref 0개
 - 복원 검증: `git bundle verify`, restore clone `git fsck --full --strict`와 네 ref exact 대조 통과
-- lifecycle: project fresh-clone gate는 통과했지만 governance pointer와 authenticated Backend Delivery
-  navigation closure가 남아 있어 현재 보존 중이며, 두 closure가 통과한 뒤 삭제하고 별도 lifecycle
-  commit에 기록
+- lifecycle: project fresh-clone gate, Document Box `c39bf1de1836fc609891840dc1eb099f2e52424a`,
+  Central Notes `41905ff1e62eedf7348dd52fc8222c7727f09333` pointer와 authenticated Backend Delivery
+  remote-navigation이 모두 통과한 뒤 `2026-07-21T01:22:33+09:00`에 삭제했습니다. 위 checksum과
+  복원 범위만 원장에 남으며 migration 전 source를 보장하는 offline rollback artifact는 더 이상 없습니다.
 
 Learning 후보는 서로 ancestor가 아닌 다음 두 ref였습니다.
 
