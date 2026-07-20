@@ -334,6 +334,7 @@ MIGRATED_BACKEND_PROJECTS = frozenset(
         "backend-reliability-training",
         "sportsbook-shared-protocol",
         "sportsbook-wallet-service",
+        "sportsbook-risk-service",
     }
 )
 STRICT_TOPOLOGY_PROJECTS = (
@@ -395,7 +396,7 @@ PROJECT_SETUP = {
     "backend-reliability-training": "make check",
     "sportsbook-shared-protocol": "./mvnw verify",
     "sportsbook-wallet-service": "./mvnw verify",
-    "sportsbook-risk-service": "./mvnw verify (correctness only; the 1,000 RPS qualification remains RED)",
+    "sportsbook-risk-service": "./mvnw verify (99-test functional gate is green; the 1,000 RPS qualification remains RED)",
     "sportsbook-odds-feed-service": "./mvnw verify",
     "sportsbook-betting-service": "./mvnw verify",
     "sportsbook-settlement-service": "./mvnw verify",
@@ -1135,9 +1136,9 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
             if node_id == "sportsbook-risk-service":
                 expected_risk = {
                     "release": "risk-v1.0.2",
-                    "learning": "learning/risk-v1.0.2",
-                    "practice": "docs/practice-risk-v1.0.2/README.md",
-                    "answer": "docs/commits-risk-v1.0.2/README.md",
+                    "learning": "learning/current",
+                    "practice": "docs/practice/README.md",
+                    "answer": "docs/commits/README.md",
                 }
                 for field, expected in expected_risk.items():
                     if node.get(field) != expected:
@@ -1181,6 +1182,23 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
                         f"{node_id}: current stage card is missing canonical "
                         "practice scope handoff"
                     )
+                if node_id == "sportsbook-risk-service":
+                    risk_markers = (
+                        "annotated",
+                        "99 tests",
+                        "Spotless 61",
+                        "Checkstyle 0",
+                        "58,971 requests",
+                        "p99 268.450 ms",
+                        "drops 1,030",
+                        "RED",
+                    )
+                    for marker in risk_markers:
+                        if marker not in section:
+                            errors.append(
+                                "sportsbook-risk-service: current stage card is "
+                                f"missing publication evidence marker {marker}"
+                            )
                 if node_id == "sportsbook-odds-feed-service":
                     if "Spring/Kafka 관련 index" in section:
                         errors.append(

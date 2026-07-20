@@ -1838,6 +1838,87 @@ Spotless 52 files, Checkstyle 0 violations와 package를 통과했습니다. Rem
 tip·tree·28-commit graph·source provenance 0·62-test build와 learning tip·tree·세 publication 역할·50개
 문서·수량식·link·metadata·source drift 0을 독립적으로 다시 통과했습니다.
 
+### `sportsbook-risk-service` 실행 원장
+
+2026-07-21 KST에 private `woopinbell/sportsbook-risk-service`의 source와 learning ref를 모든 ref의
+exact lease를 사용한 단일 GitHub atomic push로 전환했습니다. Expected-old `main`
+`be7b9c43f435323b0c638d68fd9c649557fc1bc0`은 replacement `main`
+`de3ddc4c54ec5f992ef893ae96e4a1673024e163`(tree
+`7760c735992ddbc92466ca73de8f20959b734e10`)으로 이동했습니다. Final source는 29개 linear commit,
+merge 0이며 승인된 `2026-03-02`–`2026-04-05` KST window, canonical identity,
+author/committer timestamp 일치, parent chronology, three-section message와 trailer gate를 통과했습니다.
+Old provenance-only 책임과 learner-navigation-only tip은 source graph에서 제외했고, 정확한 release 상태와
+Document Box backlink는 final source guide에 통합했습니다. Old `main`과 final source의 content diff는
+`.gitignore`, `README.md`, `load-test/README.md`, `load-test/results/BEST.md`,
+`load-test/scenarios/consumer_throughput.sh`, `pom.xml` 여섯 path의 20 insertions·28 deletions뿐이며 source
+provenance와 source-side learning publication 언어만 제거하고 제품 동작과 RED 성능 자격은 바꾸지 않았습니다.
+
+Old `main`과 일곱 annotated source tag에서 도달 가능한 70개 old source commit의 disposition은
+[`data/migrations/sportsbook-risk-service-source-crosswalk.tsv`](data/migrations/sportsbook-risk-service-source-crosswalk.tsv)에
+고정합니다. Header 포함 71줄, SHA-256
+`f5e0dddf47482f99364648c3b024c34853e340ecad56ec13a729b4c3b2eccfda`이며 old/new commit, parent,
+tree, stable patch-id, timestamp, subject, reaching ref와 disposition을 닫습니다. Final source ref·annotated
+tag·commit metadata·trailer·historical path·reachable blob의 금지 provenance는 0건이며 제품 기능상
+허용할 token도 0건입니다.
+
+Current annotated release `risk-v1.0.2`는 old object
+`ce3ddc0c9bfd403152d5b07793a6101ad7518819`에서 final object
+`6f4917e7660f92c3b807873bd6894edeb32fe459`로 교체했으며 final `main`으로 peel됩니다. 다음 legacy source
+tag는 exact old object에서 삭제했습니다.
+
+| ref | old tag object | old peeled target |
+| --- | --- | --- |
+| `diagnostic-atomic-snapshot-v1-red` | `88da276f887292619500228c91e7f2fc8049c10b` | `49c6ec9e023ad0c831de563869b0c22ae46ffeee` |
+| `diagnostic-codex-5.6-red` | `51707bec5cf5c6a7bb7ea750f95688f2247f1e2e` | `eca275e3de27222ee774b61c55d07c955a11694d` |
+| `pre-history-clean-risk-v1.0.2` | `23c62e081c42da9276e5e0a0623afde07996ee7c` | `6f17d0c7d8361c2db2e26555a5854d01612305fb` |
+| `pre-risk-v1` | `d58b9206635a9267fb18547788eb288145d23019` | `db45a5611a2ac4554a78adbed759500af30d85c7` |
+| `risk-v1` | `12ae029455dacf1b73f10c64622d977d1b691544` | `76c822b69bc816bad333479dfee79dcf3d19212b` |
+| `risk-v1.0.1` | `ee047c2bd2a79d97af7b89e79aa9c28df857864a` | `6f17d0c7d8361c2db2e26555a5854d01612305fb` |
+
+원격 전환 전 source-only rollback bundle은 다음 값으로 검증했으며 learning ref를 담지 않았습니다.
+
+- 경로: `/Users/woopinbell/Documents/Codex/2026-07-19/1/work/backend-lane/sportsbook-risk-service/source-audit/sportsbook-risk-service-be7b9c43-source.bundle`
+- SHA-256: `c8a9542323793430f5b4ecf884c1734e4c8f16cfadf2ce7458cd3a620c0d0235`
+- 범위: old `main`, source tag 일곱 개와 `HEAD`; learning ref와 learning-only 보존 object 0개
+- 복원 검증: `git bundle verify`, complete history, restore clone exact refs와 `git fsck --strict` 통과
+- lifecycle: project source·learning fresh-clone gate는 통과했습니다. Document Box·Central Notes pointer,
+  authenticated 30-project remote-navigation과 closure gate가 끝날 때까지 보존하며, 그 뒤 영구 삭제합니다.
+  Learning bundle이나 대체 offline rollback artifact는 만들지 않습니다.
+
+Learning 입력은 다음 세 ref였습니다. Ancestor 우열로 간주하지 않고 path·blob·tree matrix, source
+호환성, commit coverage, link·metadata와 고유 내용을 비교해 최종 corpus를 단일화했습니다.
+
+| old ref | tip | tree | disposition |
+| --- | --- | --- | --- |
+| `learning/risk-v1` | `d262f52ccc845cef5f0912326cd90f69ce04697e` | `1e6761a53f13c41f4cf32428dfc04ceee607f52e` | 유효 blob 대조 뒤 삭제 |
+| `learning/risk-v1.0.1` | `8049ab52f725b9b1e94a1ef37a7c302d2928b5d4` | `90d7289b0de96908ea1669a411196bb35564746a` | 고유·충돌 blob 대조 뒤 삭제 |
+| `learning/risk-v1.0.2` | `6166b83969b86f639cdc2874fed0bf5c08597819` | `a14dba442df10246cfbf08cb2f9d4b52e5937902` | source-compatible superset donor; 단일화 뒤 삭제 |
+
+174개 union path 판정은
+[`data/migrations/sportsbook-risk-service-learning-disposition.tsv`](data/migrations/sportsbook-risk-service-learning-disposition.tsv)에
+고정합니다. Header 포함 175줄, SHA-256
+`08b8d3407fc7480483a8337c36bf2381480a56c9da19530df1cb9e90dffea3c5`입니다. Review mode는
+`oid-identical` 99, `direct-content` 75입니다. 동일 OID는 재독하지 않고 고유·충돌·source 영향 본문만
+2026-07-21 07:24:17 KST에 한 번 검토했습니다. 최종 51개 문서의 정규화 digest는
+`2d7f6c01de662abd0ac8b422ecf597d11f2db1c4b93fd82f321c6b816f250772`이며 learning bundle,
+archive ref와 보존 tag는 만들지 않았습니다.
+
+Final `learning/current`는 source freeze 뒤 actual-time publication 세 commit으로만 구성됩니다.
+
+| phase | commit | tree | parent | actual KST time |
+| --- | --- | --- | --- | --- |
+| notes | `31db4a406371aa1507383fe9059ddf8e8cd25621` | `331f1e9104631a6f684ca8d20e8fa9d2dd097892` | source `de3ddc4c54ec5f992ef893ae96e4a1673024e163` | `2026-07-21T07:29:41+09:00` |
+| answers | `33e423c0f3604a7c5967e620543b554292b78f75` | `969f31f34a62c41f8a16e87f6e17ea43ce1581e8` | notes | `2026-07-21T07:29:55+09:00` |
+| practices / tip | `a4cb1c0b1a251ba643c963625d6a6c16c9d80b20` | `6fa5c06a68393eae195632f8390806ea9143e85b` | answers | `2026-07-21T07:33:39+09:00` |
+
+Final 수량은 `29 source = 29 answers + 0 exclusions`, `29 answers = 17 practices + 12 omissions`입니다.
+Answer 전체 barrier와 검토 뒤 practice를 파일별 수작업으로 파생했으며 final source와 learning 사이
+source/config/test diff는 0입니다. Host clean verify와 별도 HTTPS fresh clone에서 99 tests, failure·error·skip
+0, Spotless 61 Java paths, Checkstyle 0 violations, executable package를 통과했습니다. 원격은 branch
+`main`, `learning/current`와 annotated `risk-v1.0.2`만 advertise합니다. 1,000 RPS evidence는 58,971
+requests, p99 268.450 ms, drops 1,030으로 계속 RED이며 이 migration은 성능 자격을 통과시켰다고
+기록하지 않습니다.
+
 ### 승인된 source window
 
 날짜는 모두 Asia/Seoul `+09:00` 기준이며 양 끝 날짜를 포함합니다. `extensionEnd`가 있는 신규 프로젝트는

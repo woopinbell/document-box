@@ -2,7 +2,7 @@
 
 공고의 요구사항을 42·Backend release에서 재현 가능한 근거로 연결합니다. Foundations V2,
 Reliability V2, Risk correctness와 Orchestration은 고정된 release ref를 사용합니다. 공개 URL을
-영구 증거처럼 적지 않습니다. 공식 28개 프로젝트의 private 상태를 전수 확인했으며, 필요할 때만
+영구 증거처럼 적지 않습니다. 공식 30개 프로젝트의 private 상태를 전수 확인했으며, 필요할 때만
 release tag가 고정된 저장소를 선택적으로 초대하고 learning branch보다 `main`의 source·test·운영
 문서를 먼저 보여 줍니다.
 
@@ -14,7 +14,7 @@ release tag가 고정된 저장소를 선택적으로 초대하고 learning bran
 | `backend-delivery-training` / `delivery-v1` | executable artifact, runtime config, migration, health/readiness, structured log, CI·runbook | Kubernetes나 production on-call 경험으로 확대하지 않습니다. |
 | `backend-reliability-training` / `reliability-v2` (`b0aad3c`, learning `634f9c2`) | idempotency, lock/race, cursor, token bucket, cache, outbox, retry, tracing, saga와 failure injection | 특정 회사의 장애 대응 실적으로 쓰지 않습니다. |
 | Shared·Wallet·Odds·Betting·Settlement·Gateway·Admin release | Money/odds schema, double-entry wallet, odds, bet, settlement, gateway와 admin 경계 | 실제 베팅 사용자·금액·규제 시스템이 아닙니다. |
-| `sportsbook-risk-service` / `risk-v1` (`76c822b`, learning `d262f52`) | 99 correctness tests, atomic snapshot, fail-closed decision과 정적/package gate | 1,000 RPS qualification은 RED입니다. `p99 < 30 ms`, drops 0 또는 production SLO를 주장하지 않습니다. |
+| `sportsbook-risk-service` / annotated `risk-v1.0.2` (`de3ddc4`, learning `a4cb1c0`) | 99 correctness tests, atomic snapshot, fail-closed decision, Spotless 61 paths, Checkstyle 0과 executable package | 1,000 RPS 근거는 58,971 requests, p99 268.450 ms, drops 1,030으로 RED입니다. `p99 < 30 ms`, drops 0 또는 production SLO를 주장하지 않습니다. |
 | `sportsbook-orchestration` / `orchestration-v1` (`564a83a`, learning `9d5fa54`) | 9개 release 고정 manifest, JWT 401, Risk fail-closed, WON 1/LOST 2, payout/forfeit, `locked=0`, replay exact-state와 cold E2E 144/0 | Risk의 독립 1,000 RPS qualification이나 production traffic 근거로 확대하지 않습니다. |
 | Central `backend-distributed-incident` | evidence·falsifier·rollback·reconciliation을 답지 없이 작성하는 독립 평가 | 평가 starter를 제품 구현이나 정답 corpus로 소개하지 않습니다. |
 

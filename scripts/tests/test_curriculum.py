@@ -137,9 +137,9 @@ class RegistryFixture:
                     answer = curriculum.CURRENT_42_ANSWER
                 if node_id == "sportsbook-risk-service":
                     release = "risk-v1.0.2"
-                    learning = "learning/risk-v1.0.2"
-                    practice = "docs/practice-risk-v1.0.2/README.md"
-                    answer = "docs/commits-risk-v1.0.2/README.md"
+                    learning = "learning/current"
+                    practice = "docs/practice/README.md"
+                    answer = "docs/commits/README.md"
                 if node_id == "frontend-foundations-training":
                     release = "foundations-v1.0.1"
                     learning = "learning/current"
@@ -192,6 +192,13 @@ class RegistryFixture:
                     if node_id == "sportsbook-odds-feed-service"
                     else ""
                 )
+                risk_evidence = (
+                    "annotated release; 99 tests; Spotless 61; Checkstyle 0; "
+                    "1,000 RPS RED: 58,971 requests, p99 268.450 ms, "
+                    "drops 1,030.\n"
+                    if node_id == "sportsbook-risk-service"
+                    else ""
+                )
                 documents[track].append(
                     f'<a id="{anchor}"></a>\n## {node_id}\n'
                     f'[repo](https://github.com/woopinbell/{node_id})\n'
@@ -210,6 +217,7 @@ class RegistryFixture:
                     '- **현재 완성본 확인:** 별도 작업 공간에서 검사한다.\n'
                     '- **완료 조건:** 두 코드 시점을 구분해 설명한다.\n'
                     '- **다음 과제:** 표시된 링크로 이동한다.\n'
+                    f'{risk_evidence}'
                     f'{odds_handoffs}'
                     f'{join_marker}{prior_links}{next_links}'
                 )
@@ -950,15 +958,36 @@ class CurriculumValidationTest(unittest.TestCase):
     def test_current_42_and_risk_refs_are_pinned(self):
         by_id = {project["id"]: project for project in self.fixture.data["projects"]}
         by_id["format-printer"]["release"] = "codex-5.6.1"
-        by_id["sportsbook-risk-service"]["learning"] = "learning/risk-v1.0.1"
+        by_id["sportsbook-risk-service"]["learning"] = "learning/risk-v1.0.2"
         errors = curriculum.validate_registry(self.fixture.data, self.root)
         self.assertTrue(any("current 42 release must be v1.0.0" in error for error in errors))
         self.assertTrue(
             any(
-                "sportsbook-risk-service: current learning must be learning/risk-v1.0.2"
+                "sportsbook-risk-service: current learning must be learning/current"
                 in error
                 for error in errors
             )
+        )
+
+    def test_risk_card_requires_publication_evidence_markers(self):
+        path = self.root / "tracks/backend.md"
+        text = path.read_text(encoding="utf-8")
+        for marker in (
+            "annotated",
+            "99 tests",
+            "Spotless 61",
+            "Checkstyle 0",
+            "58,971 requests",
+            "p99 268.450 ms",
+            "drops 1,030",
+            "RED",
+        ):
+            text = text.replace(marker, "omitted")
+        path.write_text(text, encoding="utf-8")
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        self.assertEqual(
+            sum("missing publication evidence marker" in error for error in errors),
+            8,
         )
 
     def test_linux_foundation_rejects_retired_remote_link(self):
@@ -1371,6 +1400,37 @@ class RemoteContractTest(unittest.TestCase):
             "answer": "docs/commits/README.md",
             "doc": "tracks/42.md",
             "anchor": "stage-format-printer",
+        }
+        with patch.object(
+            curriculum, "_run", side_effect=self._project_dispatcher(project)
+        ):
+            self.assertEqual(
+                curriculum._check_remote_project("woopinbell", project), []
+            )
+
+        cases = (
+            ({"extra_branch": True}, "branches must be exactly"),
+            ({"extra_tag": True}, "tags must be exactly"),
+        )
+        for options, marker in cases:
+            with self.subTest(marker=marker), patch.object(
+                curriculum,
+                "_run",
+                side_effect=self._project_dispatcher(project, **options),
+            ):
+                errors = curriculum._check_remote_project("woopinbell", project)
+            self.assertTrue(any(marker in error for error in errors), errors)
+
+    def test_migrated_risk_release_learning_and_exact_topology_pass(self):
+        project = {
+            "id": "sportsbook-risk-service",
+            "repo": "sportsbook-risk-service",
+            "release": "risk-v1.0.2",
+            "learning": "learning/current",
+            "practice": "docs/practice/README.md",
+            "answer": "docs/commits/README.md",
+            "doc": "tracks/backend.md",
+            "anchor": "stage-sportsbook-risk-service",
         }
         with patch.object(
             curriculum, "_run", side_effect=self._project_dispatcher(project)
