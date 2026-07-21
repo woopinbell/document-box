@@ -84,10 +84,10 @@
 
 - **시작 조건:** [B6. Risk](#stage-sportsbook-risk-service)의 정확성 검사와 성능 미통과 상태를 구분해 기록한다.
 - **먼저 읽을 것:** [Odds 읽는 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-sportsbook-odds-feed-service), [Spring Kafka](https://github.com/woopinbell/sportsbook-orchestration/blob/learning/orchestration-v1/notes/spring-kafka.md), [Avro](https://github.com/woopinbell/sportsbook-orchestration/blob/learning/orchestration-v1/notes/avro.md)를 읽는다. Kafka·Avro의 정본은 Sportsbook 원본 notes다.
-- **저장소와 학습 자료:** [`sportsbook-odds-feed-service`](https://github.com/woopinbell/sportsbook-odds-feed-service), 완성본 `odds-v1.0.1`, 읽기 전용 자료 `learning/odds-v1.0.1`; [학습 자료 목차](https://github.com/woopinbell/sportsbook-odds-feed-service/blob/learning/odds-v1.0.1/docs/README.md), [연습문제 목록](https://github.com/woopinbell/sportsbook-odds-feed-service/blob/learning/odds-v1.0.1/docs/practice-odds-v1.0.1/README.md), [해설 목록](https://github.com/woopinbell/sportsbook-odds-feed-service/blob/learning/odds-v1.0.1/docs/commits-odds-v1.0.1/README.md).
+- **저장소와 학습 자료:** [`sportsbook-odds-feed-service`](https://github.com/woopinbell/sportsbook-odds-feed-service), annotated 완성본 `odds-v1.0.1`, 유일한 읽기 전용 자료 `learning/current`; [학습 자료 목차](https://github.com/woopinbell/sportsbook-odds-feed-service/blob/learning/current/docs/README.md), [연습문제 목록](https://github.com/woopinbell/sportsbook-odds-feed-service/blob/learning/current/docs/practice/README.md), [해설 목록](https://github.com/woopinbell/sportsbook-odds-feed-service/blob/learning/current/docs/commits/README.md).
 - **직접 해볼 것:** [필수 학습 범위](README.md#공식-수행-범위)에 따라 문제 한 개를 고른다. 지정된 시작 커밋에 `study/odds-<ID>`를 만들고 feed 정규화, 순서, publish와 replay 실패를 input·event 증거로 남긴다. 해설과 비교한 뒤 다시 구현한다.
-- **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 Java·Maven과 필요한 broker로 `./mvnw verify`를 실행한다.
-- **완료 조건:** 외부 feed가 정규화되고 순서를 유지하며 event로 재전송되는 경계를 설명한다.
+- **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 Java 17·Maven으로 `./mvnw -B clean verify`를 실행해 72 tests, Spotless 55 paths, Checkstyle 0 violations와 executable package를 확인한다. [`controlled-local` HTTP evidence](https://github.com/woopinbell/sportsbook-odds-feed-service/blob/learning/current/load-test/results/BEST.md)는 endpoint별 5/5 runs, events p99 최대 9.503 ms, odds p99 최대 17.883 ms, errors 0과 drops 0을 기록한다.
+- **완료 조건:** 외부 feed가 정규화되고 순서를 유지하며 event로 재전송되는 경계를 설명한다. 위 evidence는 OTel sampling off인 단일 ARM macOS local gate이므로 production capacity나 observability-on 성능으로 확대하지 않는다.
 - **다음 과제:** [B8. sportsbook-betting-service](#stage-sportsbook-betting-service).
 
 <a id="stage-sportsbook-betting-service"></a>

@@ -1,5 +1,6 @@
 import json
 import base64
+import hashlib
 import io
 import re
 import subprocess
@@ -140,6 +141,11 @@ class RegistryFixture:
                     learning = "learning/current"
                     practice = "docs/practice/README.md"
                     answer = "docs/commits/README.md"
+                if node_id == "sportsbook-odds-feed-service":
+                    release = "odds-v1.0.1"
+                    learning = "learning/current"
+                    practice = "docs/practice/README.md"
+                    answer = "docs/commits/README.md"
                 if node_id == "frontend-foundations-training":
                     release = "foundations-v1.0.1"
                     learning = "learning/current"
@@ -199,6 +205,13 @@ class RegistryFixture:
                     if node_id == "sportsbook-risk-service"
                     else ""
                 )
+                odds_evidence = (
+                    "annotated release; 72 tests; Spotless 55; Checkstyle 0; "
+                    "controlled-local 5/5: events p99 max 9.503 ms, odds p99 "
+                    "max 17.883 ms, errors 0, drops 0; not production capacity.\n"
+                    if node_id == "sportsbook-odds-feed-service"
+                    else ""
+                )
                 documents[track].append(
                     f'<a id="{anchor}"></a>\n## {node_id}\n'
                     f'[repo](https://github.com/woopinbell/{node_id})\n'
@@ -218,6 +231,7 @@ class RegistryFixture:
                     '- **완료 조건:** 두 코드 시점을 구분해 설명한다.\n'
                     '- **다음 과제:** 표시된 링크로 이동한다.\n'
                     f'{risk_evidence}'
+                    f'{odds_evidence}'
                     f'{odds_handoffs}'
                     f'{join_marker}{prior_links}{next_links}'
                 )
@@ -606,6 +620,41 @@ class CurriculumValidationTest(unittest.TestCase):
         )
         self.assertEqual(curriculum.validate_registry(data, repository_root), [])
 
+    def test_odds_current_governance_rejects_retired_learning_paths(self):
+        repository_root = SCRIPT_DIR.parent
+        backend = (repository_root / "tracks/backend.md").read_text(encoding="utf-8")
+        registry = (repository_root / "tracks/curriculum.json").read_text(
+            encoding="utf-8"
+        )
+        active = backend + registry
+        for retired in (
+            "learning/odds-v1",
+            "learning/odds-v1.0.1",
+            "docs/practice-odds-v1.0.1/README.md",
+            "docs/commits-odds-v1.0.1/README.md",
+        ):
+            self.assertNotIn(retired, active)
+
+        evidence = (repository_root / "data/jobs/backend/EVIDENCE.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertNotIn("Shared·Wallet·Odds", evidence)
+        self.assertIn(
+            "| `sportsbook-odds-feed-service` / annotated `odds-v1.0.1`",
+            evidence,
+        )
+        for marker in (
+            "72 tests",
+            "Spotless 55",
+            "Checkstyle 0",
+            "9.503 ms",
+            "17.883 ms",
+            "errors 0",
+            "drops 0",
+            "Production capacity",
+        ):
+            self.assertIn(marker, evidence)
+
     def test_registry_source_windows_match_the_approved_ledger(self):
         repository_root = SCRIPT_DIR.parent
         data = json.loads(
@@ -644,6 +693,40 @@ class CurriculumValidationTest(unittest.TestCase):
         self.assertEqual(len(rows), 30)
         self.assertEqual(len(expected), 30)
         self.assertEqual(actual, expected)
+
+    def test_odds_migration_artifacts_are_exact_and_pinned(self):
+        repository_root = SCRIPT_DIR.parent
+        expected = {
+            "sportsbook-odds-feed-service-source-crosswalk.tsv": (
+                60,
+                "4665f3915170a023a9ed3b5ea3ef17e888f729bf8c592b36ae537a6131748428",
+            ),
+            "sportsbook-odds-feed-service-learning-disposition.tsv": (
+                147,
+                "7985ce857a4f2689a8a4af796b09e1a2e1e3b5ded1963ea174ec5f0c94b99da9",
+            ),
+        }
+        ledger = (repository_root / "legacy-exceptions.md").read_text(
+            encoding="utf-8"
+        )
+        for filename, (line_count, digest) in expected.items():
+            with self.subTest(filename=filename):
+                path = repository_root / "data" / "migrations" / filename
+                payload = path.read_bytes()
+                self.assertEqual(len(payload.splitlines()), line_count)
+                self.assertEqual(hashlib.sha256(payload).hexdigest(), digest)
+                self.assertIn(filename, ledger)
+                self.assertIn(digest, ledger)
+        odds_start = ledger.index("### `sportsbook-odds-feed-service` 실행 원장")
+        odds_end = ledger.index("### 승인된 source window", odds_start)
+        odds_ledger = ledger[odds_start:odds_end]
+        for marker in (
+            "PHASE-RED_SPOTLESS_ONLY",
+            "ordinals 13–15",
+            "first full green",
+            "learning/current",
+        ):
+            self.assertIn(marker, odds_ledger)
 
     def test_source_window_shape_order_and_extension_scope_are_enforced(self):
         project = self.fixture.data["projects"][0]
@@ -955,16 +1038,34 @@ class CurriculumValidationTest(unittest.TestCase):
         )
         self.assertTrue(any("entry node does not exist" in error for error in errors))
 
-    def test_current_42_and_risk_refs_are_pinned(self):
+    def test_current_42_risk_and_odds_refs_are_pinned(self):
         by_id = {project["id"]: project for project in self.fixture.data["projects"]}
         by_id["format-printer"]["release"] = "codex-5.6.1"
         by_id["sportsbook-risk-service"]["learning"] = "learning/risk-v1.0.2"
+        by_id["sportsbook-odds-feed-service"]["learning"] = "learning/odds-v1.0.1"
+        by_id["sportsbook-odds-feed-service"]["practice"] = (
+            "docs/practice-odds-v1.0.1/README.md"
+        )
         errors = curriculum.validate_registry(self.fixture.data, self.root)
         self.assertTrue(any("current 42 release must be v1.0.0" in error for error in errors))
         self.assertTrue(
             any(
                 "sportsbook-risk-service: current learning must be learning/current"
                 in error
+                for error in errors
+            )
+        )
+        self.assertTrue(
+            any(
+                "sportsbook-odds-feed-service: current learning must be learning/current"
+                in error
+                for error in errors
+            )
+        )
+        self.assertTrue(
+            any(
+                "sportsbook-odds-feed-service: current practice must be "
+                "docs/practice/README.md" in error
                 for error in errors
             )
         )
@@ -985,10 +1086,41 @@ class CurriculumValidationTest(unittest.TestCase):
             text = text.replace(marker, "omitted")
         path.write_text(text, encoding="utf-8")
         errors = curriculum.validate_registry(self.fixture.data, self.root)
-        self.assertEqual(
-            sum("missing publication evidence marker" in error for error in errors),
-            8,
+        risk_errors = [
+            error
+            for error in errors
+            if error.startswith("sportsbook-risk-service:")
+            and "missing publication evidence marker" in error
+        ]
+        self.assertEqual(len(risk_errors), 8)
+
+    def test_odds_card_requires_publication_evidence_markers(self):
+        path = self.root / "tracks/backend.md"
+        text = path.read_text(encoding="utf-8")
+        markers = (
+            "annotated",
+            "72 tests",
+            "Spotless 55",
+            "Checkstyle 0",
+            "controlled-local",
+            "5/5",
+            "9.503 ms",
+            "17.883 ms",
+            "errors 0",
+            "drops 0",
+            "production capacity",
         )
+        for marker in markers:
+            text = text.replace(marker, "omitted")
+        path.write_text(text, encoding="utf-8")
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        odds_errors = [
+            error
+            for error in errors
+            if error.startswith("sportsbook-odds-feed-service:")
+            and "missing publication evidence marker" in error
+        ]
+        self.assertEqual(len(odds_errors), len(markers))
 
     def test_linux_foundation_rejects_retired_remote_link(self):
         path = self.root / "tracks/42.md"
@@ -1431,6 +1563,37 @@ class RemoteContractTest(unittest.TestCase):
             "answer": "docs/commits/README.md",
             "doc": "tracks/backend.md",
             "anchor": "stage-sportsbook-risk-service",
+        }
+        with patch.object(
+            curriculum, "_run", side_effect=self._project_dispatcher(project)
+        ):
+            self.assertEqual(
+                curriculum._check_remote_project("woopinbell", project), []
+            )
+
+        cases = (
+            ({"extra_branch": True}, "branches must be exactly"),
+            ({"extra_tag": True}, "tags must be exactly"),
+        )
+        for options, marker in cases:
+            with self.subTest(marker=marker), patch.object(
+                curriculum,
+                "_run",
+                side_effect=self._project_dispatcher(project, **options),
+            ):
+                errors = curriculum._check_remote_project("woopinbell", project)
+            self.assertTrue(any(marker in error for error in errors), errors)
+
+    def test_migrated_odds_release_learning_and_exact_topology_pass(self):
+        project = {
+            "id": "sportsbook-odds-feed-service",
+            "repo": "sportsbook-odds-feed-service",
+            "release": "odds-v1.0.1",
+            "learning": "learning/current",
+            "practice": "docs/practice/README.md",
+            "answer": "docs/commits/README.md",
+            "doc": "tracks/backend.md",
+            "anchor": "stage-sportsbook-odds-feed-service",
         }
         with patch.object(
             curriculum, "_run", side_effect=self._project_dispatcher(project)

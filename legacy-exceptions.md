@@ -1922,6 +1922,95 @@ source/config/test diff는 0입니다. Host clean verify와 별도 HTTPS fresh c
 requests, p99 268.450 ms, drops 1,030으로 계속 RED이며 이 migration은 성능 자격을 통과시켰다고
 기록하지 않습니다.
 
+### `sportsbook-odds-feed-service` 실행 원장
+
+2026-07-21 KST에 private `woopinbell/sportsbook-odds-feed-service`의 source와 learning ref를 모든
+변경 ref의 exact lease를 사용한 단일 GitHub atomic push로 전환했습니다. Expected-old `main`
+`5a97082ec9c2f4b295960f8791bdbf5fcb71f6f2`는 replacement `main`
+`f6f358d914f429749dec83ef7a266ae7d50778b5`(tree
+`5fc7107b3f5fbb4d0d890e1602d17b9073748e72`)로 이동했습니다. Final source는 18개 linear commit,
+merge 0이며 승인된 `2026-03-23`–`2026-04-12` KST window, canonical identity,
+author/committer timestamp 일치, parent chronology, three-section message와 trailer gate를 통과했습니다.
+Learner-navigation-only old tip 한 개는 source graph에서 제외했고, legacy source tag에서만 도달하던
+40개 commit은 current advertised source surface에서 제거했습니다.
+
+Old source ref union의 59개 commit disposition은
+[`data/migrations/sportsbook-odds-feed-service-source-crosswalk.tsv`](data/migrations/sportsbook-odds-feed-service-source-crosswalk.tsv)에
+고정합니다. Header 포함 60줄, SHA-256
+`4665f3915170a023a9ed3b5ea3ef17e888f729bf8c592b36ae537a6131748428`이며 old/new commit, parent,
+tree, stable patch-id, timestamp, reaching source ref와 disposition을 닫습니다. 그중 18개는 ordered
+`main` replay로 retained, 1개는 learner-navigation-only exclusion, 40개는 deleted-tag-only
+disposition입니다. Old `main`과 final source tree의 정화 diff는 `.gitignore`, `README.md`, `pom.xml`,
+cache key·cache config, publisher config·문서와 `application.yml` 여덟 path의 12 insertions·15 deletions뿐입니다.
+
+Final source ref·annotated tag·commit metadata·trailer·historical path와 reachable blob의 금지 provenance는
+등록되지 않은 일치 0건입니다. 제품 pagination 계약에 필요한 `cursor`만 exact path/blob allowlist
+8행, 35 matching lines, 49 raw occurrences로 허용했으며 ref/tag/metadata나 작업 도구 설정에는 이
+allowlist를 적용하지 않았습니다.
+
+Current annotated release `odds-v1.0.1`은 old object
+`fa376456eb3dd7766b37a6c46150dfd11e016b2e`에서 final object
+`b0d1f674a4877ab2bfc43f0e61919cb483f34aab`로 교체했으며 final `main`으로 peel됩니다. 다음 legacy
+source tag는 exact old object에서 삭제했습니다.
+
+| ref | old tag object | old peeled target |
+| --- | --- | --- |
+| `diagnostic-codex-5.6-red` | `8a541f7fa667610e4700e8368f47693bd1e219a4` | `155f91de0c97d986561f89017e1e6d04ae6f57d8` |
+| `odds-v1` | `763408693cf5277a3975dc56edeebb554237dfea` | `72316d951cc7e289ba2da04ef441ae94474c5009` |
+| `pre-odds-v1` | `307f93e5ffad31949b9dae550119a11d9b31739a` | `c0f46ab38335218ea441cc01c13ab1c5b2493caa` |
+| `v0.1.0` | `3160af580da8a8c5426176c211e2565e33823361` | `8e97109c7ad7864d4a8b7c13f619a80ee3a0dfa9` |
+
+원격 전환 전 source-only rollback bundle은 다음 값으로 검증했으며 learning ref를 담지 않았습니다.
+
+- 경로: `/Users/woopinbell/Documents/Codex/2026-07-19/1/work/backend-lane/sportsbook-odds-feed-service/source-audit/sportsbook-odds-feed-service-5a97082e-source.bundle`
+- SHA-256: `bdd8f34ec1e1613d90e09006f451839f733e5a13606b01455fb9031c16f2013d`
+- 범위: old `main`, source tag 다섯 개와 `HEAD`; learning ref와 learning-only object 0개
+- 복원 검증: `git bundle verify`, complete history, restore clone exact refs와 `git fsck --strict` 통과
+- lifecycle: project source·learning publication과 독립 HTTPS fresh-clone gate는 통과했습니다. Document
+  Box·Central pointer publication, authenticated 30-project navigation과 후속 fresh-clone gate가 끝날 때까지
+  이 source-only bundle을 유지하며, 그 gate 뒤 영구 삭제 시각을 이 원장에 별도 기록합니다.
+
+Learning 입력은 다음 두 ref였습니다. 두 tip은 서로 ancestor가 아니며 path·blob·tree matrix, final
+source 호환성, commit coverage, link·metadata와 고유 내용을 비교해 `learning/odds-v1`을 donor로
+선택한 뒤 최종 corpus를 단일화했습니다.
+
+| old ref | tip | tree | disposition |
+| --- | --- | --- | --- |
+| `learning/odds-v1` | `be22dd966b7105023df38ff111c734dbd74b73d9` | `4ac901a0ebe86ba2034308496de7445b4b0deb46` | source-split donor; canonical path 보정 뒤 삭제 |
+| `learning/odds-v1.0.1` | `3325701eb47fe25c459c270ef02020dbff3d12f2` | `221c43eaa01c304364c22a8d27e42825974d558c` | learner-navigation answer와 versioned duplicate 폐기 뒤 삭제 |
+
+146개 union path 판정은
+[`data/migrations/sportsbook-odds-feed-service-learning-disposition.tsv`](data/migrations/sportsbook-odds-feed-service-learning-disposition.tsv)에
+고정합니다. Header 포함 147줄, SHA-256
+`7985ce857a4f2689a8a4af796b09e1a2e1e3b5ded1963ea174ec5f0c94b99da9`입니다. OID-identical 134개는
+재독하지 않았고 branch-unique 10개와 conflicting blob 2개만 직접 판정했습니다. Final source replay로
+metadata가 바뀐 answer·practice와 source cleanup 영향 ID만 전담 집필자가 다시 대조했습니다. Final
+43개 publication path의 `git ls-tree -r` manifest SHA-256은
+`492e7449deeb812f1b4690ee7274c3b7fa641e382336ba541cb282ff23ca2d10`이며 learning bundle, archive ref와
+보존 tag는 만들지 않았습니다.
+
+Final `learning/current`는 source freeze 뒤 actual-time publication 세 commit으로만 구성됩니다.
+
+| phase | commit | tree | parent | actual KST time |
+| --- | --- | --- | --- | --- |
+| notes/evidence | `79d482a8723fd4b333e2d18f127cd99ad1bca510` | `24673e46256ed55d2b1e3b873eb9bc11352fe327` | source `f6f358d914f429749dec83ef7a266ae7d50778b5` | `2026-07-21T09:29:06+09:00` |
+| answers | `c0b5901414de3d64e8d36481ddcd4a172a2b2ce6` | `99d080cea7842dccdf345a5670fd9ac007e82a47` | notes/evidence | `2026-07-21T09:29:16+09:00` |
+| practices / tip | `6b75f6cb5110e7b5023b3967e5747a4dc36247b9` | `a3b181874dfd21575f016e12b1d15b2be027b6de` | answers | `2026-07-21T09:29:24+09:00` |
+
+Final 수량은 `18 source = 18 answers + 0 exclusions`, `18 answers = 13 practices + 5 omissions`입니다.
+Answer barrier 전체를 통과한 뒤 practice를 파일별 수작업으로 파생했고 final source와 learning 사이
+source/config/test diff는 0입니다. Historical gate는 one-based ordinals 1–12 PASS, ordinals 13–15
+`PHASE-RED_SPOTLESS_ONLY`, ordinal 16 first full green, ordinals 17–18 PASS입니다. Phase-red 세 commit도
+72 tests와 executable JAR는 green이었고, `FeedOrchestrator.java`와 `FeedOrchestratorTest.java` 두 path의
+formatter debt만 ordinal 16의 원래 책임에서 해소했습니다.
+
+Host clean verify와 별도 HTTPS fresh clone에서 72 tests, failure·error·skip 0, Spotless 55 paths,
+Checkstyle 0 violations와 executable package를 통과했습니다. Learning의 controlled-local HTTP evidence는
+endpoint별 5/5 runs, events p99 최대 9.503 ms, point-odds p99 최대 17.883 ms, errors 0과 drops 0입니다.
+이 결과는 OTel sampling off인 단일 ARM macOS local gate이며 production capacity나 observability-on
+성능을 인증하지 않습니다. Remote는 branch `main`, `learning/current`와 annotated `odds-v1.0.1`만
+advertise합니다.
+
 ### 승인된 source window
 
 날짜는 모두 Asia/Seoul `+09:00` 기준이며 양 끝 날짜를 포함합니다. `extensionEnd`가 있는 신규 프로젝트는

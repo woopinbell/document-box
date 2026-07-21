@@ -335,6 +335,7 @@ MIGRATED_BACKEND_PROJECTS = frozenset(
         "sportsbook-shared-protocol",
         "sportsbook-wallet-service",
         "sportsbook-risk-service",
+        "sportsbook-odds-feed-service",
     }
 )
 STRICT_TOPOLOGY_PROJECTS = (
@@ -397,7 +398,7 @@ PROJECT_SETUP = {
     "sportsbook-shared-protocol": "./mvnw verify",
     "sportsbook-wallet-service": "./mvnw verify",
     "sportsbook-risk-service": "./mvnw verify (99-test functional gate is green; the 1,000 RPS qualification remains RED)",
-    "sportsbook-odds-feed-service": "./mvnw verify",
+    "sportsbook-odds-feed-service": "./mvnw -B clean verify (72 tests, Spotless 55 paths, Checkstyle 0, executable package; then read the controlled-local HTTP evidence without claiming production capacity)",
     "sportsbook-betting-service": "./mvnw verify",
     "sportsbook-settlement-service": "./mvnw verify",
     "sportsbook-gateway": "./mvnw verify",
@@ -1145,6 +1146,19 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
                         errors.append(
                             f"sportsbook-risk-service: current {field} must be {expected}"
                         )
+            if node_id == "sportsbook-odds-feed-service":
+                expected_odds = {
+                    "release": "odds-v1.0.1",
+                    "learning": "learning/current",
+                    "practice": "docs/practice/README.md",
+                    "answer": "docs/commits/README.md",
+                }
+                for field, expected in expected_odds.items():
+                    if node.get(field) != expected:
+                        errors.append(
+                            "sportsbook-odds-feed-service: current "
+                            f"{field} must be {expected}"
+                        )
             if isinstance(doc, str) and (root / doc).is_file() and isinstance(
                 node.get("anchor"), str
             ):
@@ -1200,6 +1214,25 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
                                 f"missing publication evidence marker {marker}"
                             )
                 if node_id == "sportsbook-odds-feed-service":
+                    odds_markers = (
+                        "annotated",
+                        "72 tests",
+                        "Spotless 55",
+                        "Checkstyle 0",
+                        "controlled-local",
+                        "5/5",
+                        "9.503 ms",
+                        "17.883 ms",
+                        "errors 0",
+                        "drops 0",
+                        "production capacity",
+                    )
+                    for marker in odds_markers:
+                        if marker not in section:
+                            errors.append(
+                                "sportsbook-odds-feed-service: current stage card is "
+                                f"missing publication evidence marker {marker}"
+                            )
                     if "Spring/Kafka 관련 index" in section:
                         errors.append(
                             "sportsbook-odds-feed-service: generic persistence index "
