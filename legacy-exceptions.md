@@ -2219,6 +2219,33 @@ branch가 `main` 하나뿐인 Document Box base `3f05a7911ff2333cd4564855619c2d5
 commit SHA, authenticated 30-project navigation과 governance fresh-clone 결과는 실제 publication 뒤
 rollback-closure entry에서 고정하며 이 1차 원장에서 미리 만들지 않습니다.
 
+#### Betting rollback closure
+
+`2026-07-21T14:09:31+09:00`에 project와 두 governance publication의 후속 검증이 모두 green임을
+확인하고 Betting의 임시 source-only rollback lifecycle을 닫았습니다. 삭제 직전
+`sportsbook-betting-service-0fd30c8e-source.bundle`의 SHA-256은
+`95fbd8d37634fa27f013c8e584e1667b97c14243de721e38860b6638f9964611`이었고, `git bundle verify`는
+complete history와 old source ref 5개를 확인했습니다. 등록된 `rollback-restore`의
+`git fsck --strict`도 PASS였습니다.
+
+Project remote의 exact-only topology는 branch `main`
+`6ceacca9fceab3638bd710e55a7f1131c180e0a7`, branch `learning/current`
+`9c8038887599368f57ac155978af75e575980307`, annotated tag object
+`d00851281e8c679937bbffa6da59d00460904500`뿐이며 tag는 `main`으로 peel됩니다. Project fresh gate가
+green이고, Betting governance는 Document Box
+`7e9131deb1c4b3e4690b22f3f8f0c429a77c7448`와 Central Notes
+`d6b7ffbb9a426b422abc02caea1eb1802d34f174`로 게시됐습니다. 두 governance fresh gate와 authenticated
+remote navigation 30개도 PASS했습니다.
+
+위 검증 뒤 다음 두 exact target을 영구 삭제(permanent deletion)했습니다.
+
+- `source-audit/sportsbook-betting-service-0fd30c8e-source.bundle`
+- `source-audit/rollback-restore`
+
+삭제 후 `2026-07-21T14:09:31+09:00` 검사에서
+`sportsbook-betting-service` 작업 디렉터리 아래 `*.bundle`은 0개였고 위 두 exact path는 모두
+존재하지 않았습니다. Learning bundle은 처음부터 생성하지 않았습니다.
+
 ### 승인된 source window
 
 날짜는 모두 Asia/Seoul `+09:00` 기준이며 양 끝 날짜를 포함합니다. `extensionEnd`가 있는 신규 프로젝트는
