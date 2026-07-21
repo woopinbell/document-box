@@ -728,6 +728,193 @@ class CurriculumValidationTest(unittest.TestCase):
         ):
             self.assertIn(marker, odds_ledger)
 
+    def test_odds_corrective_transition_is_exact_and_pinned(self):
+        repository_root = SCRIPT_DIR.parent
+        correction_path = (
+            repository_root
+            / "data"
+            / "migrations"
+            / "sportsbook-odds-feed-service-correction-crosswalk.tsv"
+        )
+        payload = correction_path.read_bytes()
+        self.assertEqual(len(payload.splitlines()), 17)
+        self.assertEqual(
+            hashlib.sha256(payload).hexdigest(),
+            "57107cff635e6e575772d2b21e4cfb77b4a8434592f38a43c86f8946d22dc134",
+        )
+
+        records = [line.split("\t") for line in payload.decode("utf-8").splitlines()]
+        self.assertEqual(
+            records[0],
+            [
+                "record_type",
+                "surface",
+                "ref_or_path",
+                "old_oid",
+                "new_oid",
+                "old_tree",
+                "new_tree",
+                "relation",
+                "verification",
+            ],
+        )
+        self.assertTrue(all(len(record) == len(records[0]) for record in records[1:]))
+
+        transitions = {
+            record[2]: (record[3], record[4])
+            for record in records[1:]
+            if record[0] == "transition"
+        }
+        self.assertEqual(
+            transitions,
+            {
+                "refs/heads/main": (
+                    "f6f358d914f429749dec83ef7a266ae7d50778b5",
+                    "54f89079fecc4690c0126398103accd31437e8d1",
+                ),
+                "refs/tags/odds-v1.0.1": (
+                    "b0d1f674a4877ab2bfc43f0e61919cb483f34aab",
+                    "f82124f469ddae728379135ee5de3df36edceee5",
+                ),
+                "learning/current:notes/evidence": (
+                    "79d482a8723fd4b333e2d18f127cd99ad1bca510",
+                    "f7df4eb2592e78307fe3d97c2c33947da4d107cf",
+                ),
+                "learning/current:answers": (
+                    "c0b5901414de3d64e8d36481ddcd4a172a2b2ce6",
+                    "25b02ad6a60cb642594a57f04ba708c53fb5baaf",
+                ),
+                "refs/heads/learning/current": (
+                    "6b75f6cb5110e7b5023b3967e5747a4dc36247b9",
+                    "df00e5cdefbe9d55fbe4cb828a9d2c0ee5b1b8af",
+                ),
+            },
+        )
+
+        corrected_blobs = {
+            record[2]: (record[3], record[4])
+            for record in records[1:]
+            if record[0] == "corrected_blob"
+        }
+        self.assertEqual(
+            corrected_blobs,
+            {
+                "docs/README.md": (
+                    "c7e2c1d7abd814f296f29c11f9abd27b99d0d49b",
+                    "88dc50ba3604be54f7765b94313c3c321d8905f5",
+                ),
+                "docs/commits/017.md": (
+                    "7ad2b82114340a230581e801f8fb14936a741cf1",
+                    "920694b03ff0a50a0364ee5e1f7d316511bb9d20",
+                ),
+                "docs/commits/README.md": (
+                    "cdddf4b7243c2384cde98681994e349844365a3b",
+                    "db12393ff40a6506cf55909de0589daf41d6c3ed",
+                ),
+                "docs/practice/README.md": (
+                    "5c3255a5692cede84d92faf7c0f99a229d4ad1df",
+                    "5613a041fcb661fe7c5cc384373672a8f44bf307",
+                ),
+            },
+        )
+
+        evidence_blobs = {
+            record[2]: (record[3], record[4])
+            for record in records[1:]
+            if record[0] == "evidence_blob"
+        }
+        expected_evidence = {
+            "load-test/results/2026-05-28/BASELINE.md": (
+                "d75623d1205f511e6fbcc363159be82221fbb012"
+            ),
+            "load-test/results/2026-07-13/HTTP_GATE.md": (
+                "4a9f580c083a7f01d840f24d70baa05948682c58"
+            ),
+            "load-test/results/2026-07-13/http-gate-baseline.tsv": (
+                "f7dd878d61bb493d6b3627855740942c6808d1ce"
+            ),
+            "load-test/results/2026-07-13/http-gate-controlled-green.tsv": (
+                "671ed14bf83da590b3fdd338668f911ed377db77"
+            ),
+            "load-test/results/2026-07-13/jfr-events.tsv": (
+                "8e6ced868371e8817c1815a81a9055b86193e9df"
+            ),
+            "load-test/results/2026-07-13/no-otel-events.tsv": (
+                "2e02bee65a5efa46ab2ff0365e00bf4a4743df91"
+            ),
+            "load-test/results/BEST.md": (
+                "f213f3d9b01e970d3736069eec37032ad33ea5f9"
+            ),
+        }
+        self.assertEqual(set(evidence_blobs), set(expected_evidence))
+        self.assertEqual(
+            set(expected_evidence),
+            set(
+                curriculum.LEARNING_NOTES_EXTRA_PATHS[
+                    "sportsbook-odds-feed-service"
+                ]
+            ),
+        )
+        for evidence_path, oid in expected_evidence.items():
+            with self.subTest(evidence_path=evidence_path):
+                self.assertEqual(evidence_blobs[evidence_path], (oid, oid))
+
+        frozen_publication = (
+            (
+                "f7df4eb2592e78307fe3d97c2c33947da4d107cf",
+                "docs(notes): publish odds learning entry and evidence",
+            ),
+            (
+                "25b02ad6a60cb642594a57f04ba708c53fb5baaf",
+                "docs(commits): publish odds source answer keys",
+            ),
+            (
+                "df00e5cdefbe9d55fbe4cb828a9d2c0ee5b1b8af",
+                "docs(practice): publish odds practice sheets",
+            ),
+        )
+        self.assertEqual(
+            curriculum.FROZEN_LEARNING_PUBLICATIONS[
+                "sportsbook-odds-feed-service"
+            ],
+            frozen_publication,
+        )
+
+        ledger = (repository_root / "legacy-exceptions.md").read_text(
+            encoding="utf-8"
+        )
+        correction_start = ledger.index("#### Odds backlink corrective transition")
+        correction_end = ledger.index("### 승인된 source window", correction_start)
+        correction = ledger[correction_start:correction_end]
+        for marker in (
+            "54f89079fecc4690c0126398103accd31437e8d1",
+            "5fe2d781ee4d08adfa8551706593449e076715b2",
+            "f82124f469ddae728379135ee5de3df36edceee5",
+            "df00e5cdefbe9d55fbe4cb828a9d2c0ee5b1b8af",
+            "One-based source ordinals 1–17",
+            "1 insertion·0 deletions",
+            "43개 changed path",
+            "39개가 OID-identical",
+            "18 source = 18 answers + 0 exclusions",
+            "18 answers = 13 practices + 5 omissions",
+            "bdd8f34ec1e1613d90e09006f451839f733e5a13606b01455fb9031c16f2013d",
+            "77fd71025ffae3fd2a9f1df88abb9b1a22a519e267a93f2e069bb7d8252d98a3",
+            "57107cff635e6e575772d2b21e4cfb77b4a8434592f38a43c86f8946d22dc134",
+        ):
+            self.assertIn(marker, correction)
+
+        evidence = (repository_root / "data/jobs/backend/EVIDENCE.md").read_text(
+            encoding="utf-8"
+        )
+        odds_row = next(
+            line
+            for line in evidence.splitlines()
+            if line.startswith("| `sportsbook-odds-feed-service` /")
+        )
+        self.assertIn("(`54f89079`, learning `df00e5c`)", odds_row)
+        self.assertNotIn("f6f358d", odds_row)
+        self.assertNotIn("6b75f6c", odds_row)
+
     def test_source_window_shape_order_and_extension_scope_are_enforced(self):
         project = self.fixture.data["projects"][0]
         project["sourceWindow"] = {"start": "2025-02-01", "end": "2025-01-01"}
@@ -1259,11 +1446,18 @@ class RemoteContractTest(unittest.TestCase):
             project["id"]
         )
         frozen_learning = curriculum.FROZEN_MONOLITHIC_LEARNING.get(project["id"])
+        frozen_publications = curriculum.FROZEN_LEARNING_PUBLICATIONS.get(
+            project["id"]
+        )
         release_basis = (
             navigation_freeze["main"] if navigation_freeze else "1" * 40
         )
         learning_tip = (
-            frozen_learning["learning"] if frozen_learning else "4" * 40
+            frozen_learning["learning"]
+            if frozen_learning
+            else frozen_publications[-1][0]
+            if frozen_publications
+            else "4" * 40
         )
         if main_drift:
             release_basis = "9" * 40
@@ -1283,6 +1477,23 @@ class RemoteContractTest(unittest.TestCase):
             learning_tip,
             exact_current_paths=(project["learning"] == "learning/current"),
         )
+        if frozen_publications and not learning_drift:
+            fixture_shas = [summary["sha"] for summary in compare["commits"]]
+            frozen_details = {}
+            parent = release_sha
+            for fixture_sha, (frozen_sha, frozen_subject) in zip(
+                fixture_shas, frozen_publications
+            ):
+                detail = details[fixture_sha]
+                detail["sha"] = frozen_sha
+                detail["parents"] = [{"sha": parent}]
+                detail["commit"]["message"] = f"{frozen_subject}\n"
+                frozen_details[frozen_sha] = detail
+                parent = frozen_sha
+            compare["commits"] = [
+                {"sha": frozen_sha} for frozen_sha, _ in frozen_publications
+            ]
+            details = frozen_details
         tag_sha = navigation_freeze["tag"] if navigation_freeze else "a" * 40
         if tag_drift:
             tag_sha = "7" * 40
@@ -2032,6 +2243,50 @@ class RemoteContractTest(unittest.TestCase):
         )
         self.assertTrue(any("subject must start with docs(commits)" in e for e in errors))
         self.assertTrue(any("forbidden path 'src/server.c'" in e for e in errors))
+
+    def test_odds_notes_evidence_allowlist_is_exact(self):
+        release, learning, roles, compare, details = self._learning_fixture(
+            exact_current_paths=True
+        )
+        notes_sha = compare["commits"][0]["sha"]
+        allowed = curriculum.LEARNING_NOTES_EXTRA_PATHS[
+            "sportsbook-odds-feed-service"
+        ]
+        details[notes_sha]["files"].extend(
+            {"filename": path} for path in sorted(allowed)
+        )
+        errors = curriculum._validate_learning_history(
+            "woopinbell/sportsbook-odds-feed-service",
+            release,
+            learning,
+            roles,
+            compare,
+            details,
+            exact_current_paths=True,
+            extra_notes_paths=allowed,
+        )
+        self.assertEqual(errors, [])
+
+        details[notes_sha]["files"].append(
+            {"filename": "load-test/results/unreviewed.txt"}
+        )
+        errors = curriculum._validate_learning_history(
+            "woopinbell/sportsbook-odds-feed-service",
+            release,
+            learning,
+            roles,
+            compare,
+            details,
+            exact_current_paths=True,
+            extra_notes_paths=allowed,
+        )
+        self.assertTrue(
+            any(
+                "notes publication changes forbidden path "
+                "'load-test/results/unreviewed.txt'" in error
+                for error in errors
+            )
+        )
 
     def test_frozen_learning_publication_subjects_are_exact(self):
         release, learning, roles, compare, details = self._learning_fixture()

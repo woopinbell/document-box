@@ -363,6 +363,33 @@ FROZEN_LEARNING_PUBLICATIONS = {
             "63c5639cec295d83e5bc47671e1d1d02641a8537",
             "docs(learning): publish derived practice corpus",
         ),
+    ),
+    "sportsbook-odds-feed-service": (
+        (
+            "f7df4eb2592e78307fe3d97c2c33947da4d107cf",
+            "docs(notes): publish odds learning entry and evidence",
+        ),
+        (
+            "25b02ad6a60cb642594a57f04ba708c53fb5baaf",
+            "docs(commits): publish odds source answer keys",
+        ),
+        (
+            "df00e5cdefbe9d55fbe4cb828a9d2c0ee5b1b8af",
+            "docs(practice): publish odds practice sheets",
+        ),
+    ),
+}
+LEARNING_NOTES_EXTRA_PATHS = {
+    "sportsbook-odds-feed-service": frozenset(
+        {
+            "load-test/results/2026-05-28/BASELINE.md",
+            "load-test/results/2026-07-13/HTTP_GATE.md",
+            "load-test/results/2026-07-13/http-gate-baseline.tsv",
+            "load-test/results/2026-07-13/http-gate-controlled-green.tsv",
+            "load-test/results/2026-07-13/jfr-events.tsv",
+            "load-test/results/2026-07-13/no-otel-events.tsv",
+            "load-test/results/BEST.md",
+        }
     )
 }
 CURRENT_42_RELEASE = "v1.0.0"
@@ -1929,6 +1956,7 @@ def _learning_path_allowed(
     *,
     allow_commits_index: bool = False,
     exact_current_paths: bool = False,
+    extra_notes_paths: frozenset[str] = frozenset(),
 ) -> bool:
     if role == "learning":
         return (
@@ -1944,6 +1972,7 @@ def _learning_path_allowed(
             or path.startswith("docs/reflection/")
             or path.startswith("notes/")
             or path.startswith("notes-")
+            or path in extra_notes_paths
         )
     if role == "commits":
         commits_path = (
@@ -1973,6 +2002,7 @@ def _validate_learning_history(
     *,
     exact_current_paths: bool = False,
     frozen_publications: tuple[tuple[str, str], ...] = (),
+    extra_notes_paths: frozenset[str] = frozenset(),
 ) -> list[str]:
     """Validate the immutable release-to-learning publication as a pure contract."""
 
@@ -2078,6 +2108,7 @@ def _validate_learning_history(
                         path,
                         allow_commits_index=(role == "commits" and "notes" not in roles),
                         exact_current_paths=exact_current_paths,
+                        extra_notes_paths=extra_notes_paths,
                     ):
                         errors.append(
                             f"{label}: {role} publication changes forbidden path {path!r}"
@@ -2369,6 +2400,9 @@ def _check_remote_project(owner: str, project: dict[str, Any]) -> list[str]:
                     exact_current_paths=(learning == "learning/current"),
                     frozen_publications=FROZEN_LEARNING_PUBLICATIONS.get(
                         project_id, ()
+                    ),
+                    extra_notes_paths=LEARNING_NOTES_EXTRA_PATHS.get(
+                        project_id, frozenset()
                     ),
                 )
             )

@@ -2011,6 +2011,64 @@ endpoint별 5/5 runs, events p99 최대 9.503 ms, point-odds p99 최대 17.883 m
 성능을 인증하지 않습니다. Remote는 branch `main`, `learning/current`와 annotated `odds-v1.0.1`만
 advertise합니다.
 
+#### Odds backlink corrective transition
+
+위 실행 원장은 `5a97082e` legacy source에서 첫 정화 publication으로 전환한 당시의 audit truth입니다.
+그 기록과 최초 60행 source crosswalk·147행 learning disposition은 수정하거나 소급 재해석하지 않습니다.
+첫 publication 뒤 source README에 공식 Document Box B7 backlink가 빠진 것을 발견해, 같은 2026-07-21
+KST에 별도의 corrective transition으로 source·release·learning basis를 다시 고정했습니다.
+
+첫 정화 `main` `f6f358d914f429749dec83ef7a266ae7d50778b5`(tree
+`5fc7107b3f5fbb4d0d890e1602d17b9073748e72`)는 corrected `main`
+`54f89079fecc4690c0126398103accd31437e8d1`(tree
+`5fe2d781ee4d08adfa8551706593449e076715b2`)로 교체했습니다. Frozen exact source diff는
+`README.md` 한 경로의 1 insertion·0 deletions뿐이며 source/config/test/build path deletion은 0입니다.
+One-based source ordinals 1–17의 commit OID, parent와 순서는 그대로이고 ordinal 18만 같은 parent,
+subject, author/committer identity·timestamp와 three-section message를 유지한 채 backlink 한 줄을 포함하는
+새 object가 됐습니다. 18개 answer, 13개 practice와 5개 명시적 omission의 수량식은 바뀌지 않습니다.
+
+Annotated `odds-v1.0.1` object는 `b0d1f674a4877ab2bfc43f0e61919cb483f34aab`에서
+`f82124f469ddae728379135ee5de3df36edceee5`로 교체했고 corrected `main`으로 peel됩니다. 첫 learning tip
+`6b75f6cb5110e7b5023b3967e5747a4dc36247b9`는 corrected source freeze 뒤 다음 actual-time publication
+세 commit으로 다시 고정했습니다.
+
+| phase | corrected commit | tree | parent | actual KST time |
+| --- | --- | --- | --- | --- |
+| notes/evidence | `f7df4eb2592e78307fe3d97c2c33947da4d107cf` | `6b6fa8a3eff3ab7a7724920708140c75016d0ef8` | source `54f89079fecc4690c0126398103accd31437e8d1` | `2026-07-21T10:40:23+09:00` |
+| answers | `25b02ad6a60cb642594a57f04ba708c53fb5baaf` | `d3c0b06f4ef6b031891bab4e6faa9c2eaef58123` | notes/evidence | `2026-07-21T10:40:45+09:00` |
+| practices / tip | `df00e5cdefbe9d55fbe4cb828a9d2c0ee5b1b8af` | `f9d8698c786a9863fbe620f358fe9e1a2e91a607` | answers | `2026-07-21T10:41:00+09:00` |
+
+Publication의 43개 changed path는 old/new path→blob matrix에서 39개가 OID-identical이고 4개만
+corrective review 대상입니다. `docs/README.md`는 source tip·tree를, `docs/commits/017.md`는 backlink
+책임과 exact source diff를, `docs/commits/README.md`와 `docs/practice/README.md`는 corrected basis·tag와
+수량 원장을 반영했습니다. Answers 전체를 다시 쓰거나 동일 blob을 재독하지 않았으며 변경된 answer
+017을 직접 대조한 뒤 해당 practice omission 설명만 다시 검토했습니다. Final 수량은 계속
+`18 source = 18 answers + 0 exclusions`, `18 answers = 13 practices + 5 omissions`입니다.
+
+Corrective object 관계와 notes publication에서 byte-identical로 보존한 load evidence 일곱 blob은
+[`data/migrations/sportsbook-odds-feed-service-correction-crosswalk.tsv`](data/migrations/sportsbook-odds-feed-service-correction-crosswalk.tsv)에
+분리해 고정합니다. Header 포함 17줄, SHA-256
+`57107cff635e6e575772d2b21e4cfb77b4a8434592f38a43c86f8946d22dc134`입니다. 다섯 transition row는
+source main, annotated tag, notes, answers와 practices tip의 old→new object·tree를 닫습니다. 네
+`corrected_blob` row는 위 4개 review 대상 path의 old/new blob OID와 review relation을 고정하고, 일곱
+`evidence_blob` row는 exact path와 old/new 동일 blob OID를 corrected notes commit
+`f7df4eb2592e78307fe3d97c2c33947da4d107cf`에 결박합니다.
+
+원격 정정은 old `main` `f6f358d914f429749dec83ef7a266ae7d50778b5`, old annotated tag object
+`b0d1f674a4877ab2bfc43f0e61919cb483f34aab`와 old `learning/current`
+`6b75f6cb5110e7b5023b3967e5747a4dc36247b9`의 exact lease를 건 단일 atomic push로 수행했습니다.
+후속 `ls-remote`는 branch `main`, `learning/current`와 annotated `odds-v1.0.1`만 확인했고, 별도 HTTPS
+fresh clone에서 72 tests, failure·error·skip 0, Spotless 55 paths, Checkstyle 0, executable package,
+source/corpus topology와 navigation gate가 green입니다.
+
+Correction 발견 시점에 첫 bundle의 삭제 lifecycle이 아직 닫히지 않았으므로 다음 source-only rollback
+bundle 두 개를 모두 유지합니다. 둘 다 learning ref와 learning-only object를 포함하지 않으며 corrective
+Document Box publication, authenticated 30-project remote navigation과 후속 fresh-clone gate가 끝난 뒤에만
+삭제합니다. 삭제는 후속 closure entry에 실제 시각과 함께 별도로 기록합니다.
+
+- pre-initial migration: `/Users/woopinbell/Documents/Codex/2026-07-19/1/work/backend-lane/sportsbook-odds-feed-service/source-audit/sportsbook-odds-feed-service-5a97082e-source.bundle`, SHA-256 `bdd8f34ec1e1613d90e09006f451839f733e5a13606b01455fb9031c16f2013d`
+- corrective transition: `/Users/woopinbell/Documents/Codex/2026-07-19/1/work/backend-lane/sportsbook-odds-feed-service/source-audit/sportsbook-odds-feed-service-f6f358d-correction-source.bundle`, SHA-256 `77fd71025ffae3fd2a9f1df88abb9b1a22a519e267a93f2e069bb7d8252d98a3`
+
 ### 승인된 source window
 
 날짜는 모두 Asia/Seoul `+09:00` 기준이며 양 끝 날짜를 포함합니다. `extensionEnd`가 있는 신규 프로젝트는
