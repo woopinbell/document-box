@@ -915,6 +915,47 @@ class CurriculumValidationTest(unittest.TestCase):
         self.assertNotIn("f6f358d", odds_row)
         self.assertNotIn("6b75f6c", odds_row)
 
+    def test_odds_rollback_closure_is_exact_and_pinned(self):
+        repository_root = SCRIPT_DIR.parent
+        ledger = (repository_root / "legacy-exceptions.md").read_text(
+            encoding="utf-8"
+        )
+        correction_start = ledger.index("#### Odds backlink corrective transition")
+        closure_start = ledger.index("##### Odds rollback closure", correction_start)
+        correction_end = ledger.index("### 승인된 source window", closure_start)
+        retained_audit = ledger[correction_start:closure_start]
+        closure = ledger[closure_start:correction_end]
+
+        self.assertIn("bundle 두 개를 모두 유지했습니다", retained_audit)
+        self.assertNotIn("bundle 두 개를 모두 유지합니다", retained_audit)
+        for marker in (
+            "2026-07-21T11:09:57+09:00",
+            "54f89079fecc4690c0126398103accd31437e8d1",
+            "df00e5cdefbe9d55fbe4cb828a9d2c0ee5b1b8af",
+            "f82124f469ddae728379135ee5de3df36edceee5",
+            "72 tests",
+            "failure·error·skip 0",
+            "08f49d658629a224bba33ab733d0fea81f260394",
+            "82/82 tests",
+            "local navigation 30개",
+            "authenticated remote navigation 30개",
+            "host Backend preflight",
+            "dea11a7258a399bcb2ff224b8fb87b4879b323f1",
+            "make check",
+            "make check-backend",
+            "영구 삭제(permanent deletion)",
+            "sportsbook-odds-feed-service-5a97082e-source.bundle",
+            "bdd8f34ec1e1613d90e09006f451839f733e5a13606b01455fb9031c16f2013d",
+            "sportsbook-odds-feed-service-f6f358d-correction-source.bundle",
+            "77fd71025ffae3fd2a9f1df88abb9b1a22a519e267a93f2e069bb7d8252d98a3",
+            "source-audit/correction-rollback-restore",
+            "Learning bundle은 처음부터 생성하지 않았습니다",
+            "-name '*.bundle'",
+            "결과는 0개",
+            "source-only rollback bundle이나 restore copy는 더 남아 있지 않습니다",
+        ):
+            self.assertIn(marker, closure)
+
     def test_source_window_shape_order_and_extension_scope_are_enforced(self):
         project = self.fixture.data["projects"][0]
         project["sourceWindow"] = {"start": "2025-02-01", "end": "2025-01-01"}

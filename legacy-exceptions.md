@@ -2062,12 +2062,38 @@ fresh clone에서 72 tests, failure·error·skip 0, Spotless 55 paths, Checkstyl
 source/corpus topology와 navigation gate가 green입니다.
 
 Correction 발견 시점에 첫 bundle의 삭제 lifecycle이 아직 닫히지 않았으므로 다음 source-only rollback
-bundle 두 개를 모두 유지합니다. 둘 다 learning ref와 learning-only object를 포함하지 않으며 corrective
-Document Box publication, authenticated 30-project remote navigation과 후속 fresh-clone gate가 끝난 뒤에만
-삭제합니다. 삭제는 후속 closure entry에 실제 시각과 함께 별도로 기록합니다.
+bundle 두 개를 모두 유지했습니다. 당시 둘 다 learning ref와 learning-only object를 포함하지 않았고,
+corrective Document Box publication, authenticated 30-project remote navigation과 후속 fresh-clone gate가
+끝날 때까지 삭제하지 않는 상태였습니다. 실제 삭제 여부는 후속 closure entry에 별도로 기록하기로
+했습니다.
 
 - pre-initial migration: `/Users/woopinbell/Documents/Codex/2026-07-19/1/work/backend-lane/sportsbook-odds-feed-service/source-audit/sportsbook-odds-feed-service-5a97082e-source.bundle`, SHA-256 `bdd8f34ec1e1613d90e09006f451839f733e5a13606b01455fb9031c16f2013d`
 - corrective transition: `/Users/woopinbell/Documents/Codex/2026-07-19/1/work/backend-lane/sportsbook-odds-feed-service/source-audit/sportsbook-odds-feed-service-f6f358d-correction-source.bundle`, SHA-256 `77fd71025ffae3fd2a9f1df88abb9b1a22a519e267a93f2e069bb7d8252d98a3`
+
+##### Odds rollback closure
+
+`2026-07-21T11:09:57+09:00`에 corrective publication과 후속 검증이 모두 green임을 확인하고 Odds의
+임시 source-only rollback lifecycle을 닫았습니다. Project remote의 exact-only topology는 branch
+`main` `54f89079fecc4690c0126398103accd31437e8d1`, branch `learning/current`
+`df00e5cdefbe9d55fbe4cb828a9d2c0ee5b1b8af`, annotated tag object
+`f82124f469ddae728379135ee5de3df36edceee5`뿐이며 tag는 corrected `main`으로 peel됩니다. Project
+HTTPS fresh clone은 72 tests, failure·error·skip 0, source/corpus gate와 navigation을 통과했습니다.
+
+Corrective governance는 Document Box `08f49d658629a224bba33ab733d0fea81f260394`로 게시됐습니다. 별도
+HTTPS fresh clone에서 remote branch가 `main` 하나뿐임을 확인했고 82/82 tests, local navigation 30개,
+authenticated remote navigation 30개와 host Backend preflight가 모두 green입니다. Central Notes는
+`dea11a7258a399bcb2ff224b8fb87b4879b323f1`에서 변경하지 않았고 `make check`와
+`make check-backend`가 green입니다.
+
+다음 두 등록 bundle과 correction restore copy는 검증 뒤 정확히 영구 삭제(permanent deletion)했습니다.
+
+- `/Users/woopinbell/Documents/Codex/2026-07-19/1/work/backend-lane/sportsbook-odds-feed-service/source-audit/sportsbook-odds-feed-service-5a97082e-source.bundle`, SHA-256 `bdd8f34ec1e1613d90e09006f451839f733e5a13606b01455fb9031c16f2013d`
+- `/Users/woopinbell/Documents/Codex/2026-07-19/1/work/backend-lane/sportsbook-odds-feed-service/source-audit/sportsbook-odds-feed-service-f6f358d-correction-source.bundle`, SHA-256 `77fd71025ffae3fd2a9f1df88abb9b1a22a519e267a93f2e069bb7d8252d98a3`
+- `/Users/woopinbell/Documents/Codex/2026-07-19/1/work/backend-lane/sportsbook-odds-feed-service/source-audit/correction-rollback-restore`
+
+Learning bundle은 처음부터 생성하지 않았습니다. Project 작업 디렉터리에서 실행한
+`find /Users/woopinbell/Documents/Codex/2026-07-19/1/work/backend-lane/sportsbook-odds-feed-service -name '*.bundle'`
+결과는 0개이며, 등록된 source-only rollback bundle이나 restore copy는 더 남아 있지 않습니다.
 
 ### 승인된 source window
 
