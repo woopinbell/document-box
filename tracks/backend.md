@@ -95,10 +95,10 @@
 
 - **시작 조건:** [B7. Odds](#stage-sportsbook-odds-feed-service)를 완료한다.
 - **먼저 읽을 것:** [Betting 읽는 순서](https://github.com/woopinbell/central-notes/blob/main/TRACK_SEQUENCE.md#stage-sportsbook-betting-service)의 transaction·outbox·reliability 범위를 읽는다.
-- **저장소와 학습 자료:** [`sportsbook-betting-service`](https://github.com/woopinbell/sportsbook-betting-service), 완성본 `betting-v1.0.1`, 읽기 전용 자료 `learning/betting-v1.0.1`; [학습 자료 목차](https://github.com/woopinbell/sportsbook-betting-service/blob/learning/betting-v1.0.1/docs/README.md), [연습문제 목록](https://github.com/woopinbell/sportsbook-betting-service/blob/learning/betting-v1.0.1/docs/practice-betting-v1.0.1/README.md), [해설 목록](https://github.com/woopinbell/sportsbook-betting-service/blob/learning/betting-v1.0.1/docs/commits-betting-v1.0.1/README.md).
+- **저장소와 학습 자료:** [`sportsbook-betting-service`](https://github.com/woopinbell/sportsbook-betting-service), annotated 완성본 `betting-v1.0.1`은 `main`으로 peel되며 독자의 유일한 읽기 전용 자료는 `learning/current`다; [학습 자료 목차](https://github.com/woopinbell/sportsbook-betting-service/blob/learning/current/docs/README.md), [연습문제 목록](https://github.com/woopinbell/sportsbook-betting-service/blob/learning/current/docs/practice/README.md), [해설 목록](https://github.com/woopinbell/sportsbook-betting-service/blob/learning/current/docs/commits/README.md).
 - **직접 해볼 것:** [필수 학습 범위](README.md#공식-수행-범위)에 따라 문제 한 개를 고른다. 지정된 시작 커밋에 `study/betting-<ID>`를 만들고 요청자, 중복 방지, Risk·Wallet 협력과 outbox 실패를 기록한다. 한 번만 수락·차감되는지 확인한 뒤 해설과 비교하고 다시 구현한다.
-- **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 Java·Maven과 downstream stub·infra로 `./mvnw verify`를 실행한다.
-- **완료 조건:** 베팅 요청의 권위와 Risk·Wallet·outbox 사이의 실패 경계를 설명하고 미검증 처리량을 성공으로 쓰지 않는다.
+- **현재 완성본 확인:** 별도의 깨끗한 작업 공간에서 Java 17·Maven과 downstream stub·infra로 `./mvnw -B clean verify`를 실행해 130 tests, failure·error·skip 0, Spotless 67 Java paths, Checkstyle 0 violations와 executable Spring Boot JAR를 확인한다.
+- **완료 조건:** 베팅 요청의 권위와 Risk·Wallet·outbox 사이의 실패 경계를 설명한다. [`controlled-local` placement evidence](https://github.com/woopinbell/sportsbook-betting-service/blob/learning/current/load-test/results/BEST.md)는 149.589 RPS, p95 120.6648 ms, p99 148.495 ms, errors 0이다. 이 controlled-local placement benchmark threshold `p95 < 50 ms`, `p99 < 100 ms`는 RED다. Production goal `p99 < 100 ms`·`10,000 concurrent bets`는 이 evidence에서 검증하지 않았다. 100개 same-key 동시 요청은 HTTP 201/409와 no 5xx만 증명하며, accepted row 하나와 Wallet debit 하나를 증명하지 않는다.
 - **다음 과제:** [B9. sportsbook-settlement-service](#stage-sportsbook-settlement-service).
 
 <a id="stage-sportsbook-settlement-service"></a>

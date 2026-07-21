@@ -336,6 +336,7 @@ MIGRATED_BACKEND_PROJECTS = frozenset(
         "sportsbook-wallet-service",
         "sportsbook-risk-service",
         "sportsbook-odds-feed-service",
+        "sportsbook-betting-service",
     }
 )
 STRICT_TOPOLOGY_PROJECTS = (
@@ -376,6 +377,20 @@ FROZEN_LEARNING_PUBLICATIONS = {
         (
             "df00e5cdefbe9d55fbe4cb828a9d2c0ee5b1b8af",
             "docs(practice): publish odds practice sheets",
+        ),
+    ),
+    "sportsbook-betting-service": (
+        (
+            "5f3530c4cdb1a3b91090626eb0ff3107630b0e51",
+            "docs(notes): publish betting learning entry",
+        ),
+        (
+            "4bcec3a048055d7307903f8ccdcf20bbf60600b9",
+            "docs(commits): publish betting answer corpus",
+        ),
+        (
+            "9c8038887599368f57ac155978af75e575980307",
+            "docs(practice): publish betting practice corpus",
         ),
     ),
 }
@@ -426,7 +441,7 @@ PROJECT_SETUP = {
     "sportsbook-wallet-service": "./mvnw verify",
     "sportsbook-risk-service": "./mvnw verify (99-test functional gate is green; the 1,000 RPS qualification remains RED)",
     "sportsbook-odds-feed-service": "./mvnw -B clean verify (72 tests, Spotless 55 paths, Checkstyle 0, executable package; then read the controlled-local HTTP evidence without claiming production capacity)",
-    "sportsbook-betting-service": "./mvnw verify",
+    "sportsbook-betting-service": "./mvnw -B clean verify (130 tests, failure/error/skip 0, Spotless 67 Java paths, Checkstyle 0, executable Spring Boot JAR; placement p95 120.6648 ms and p99 148.495 ms remain RED, and the 100-request same-key run proves only HTTP 201/409 with no 5xx)",
     "sportsbook-settlement-service": "./mvnw verify",
     "sportsbook-gateway": "./mvnw verify",
     "sportsbook-admin-api": "./mvnw verify",
@@ -1186,6 +1201,19 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
                             "sportsbook-odds-feed-service: current "
                             f"{field} must be {expected}"
                         )
+            if node_id == "sportsbook-betting-service":
+                expected_betting = {
+                    "release": "betting-v1.0.1",
+                    "learning": "learning/current",
+                    "practice": "docs/practice/README.md",
+                    "answer": "docs/commits/README.md",
+                }
+                for field, expected in expected_betting.items():
+                    if node.get(field) != expected:
+                        errors.append(
+                            "sportsbook-betting-service: current "
+                            f"{field} must be {expected}"
+                        )
             if isinstance(doc, str) and (root / doc).is_file() and isinstance(
                 node.get("anchor"), str
             ):
@@ -1288,6 +1316,42 @@ def validate_registry(data: dict[str, Any], root: Path) -> list[str]:
                         errors.append(
                             "sportsbook-odds-feed-service: current stage card must "
                             "identify the original Sportsbook notes as canonical"
+                        )
+                if node_id == "sportsbook-betting-service":
+                    betting_markers = (
+                        "annotated",
+                        "130 tests",
+                        "failure·error·skip 0",
+                        "Spotless 67",
+                        "Checkstyle 0",
+                        "executable Spring Boot JAR",
+                        "149.589 RPS",
+                        "p95 120.6648 ms",
+                        "p99 148.495 ms",
+                        "p95 < 50 ms",
+                        "p99 < 100 ms",
+                        "errors 0",
+                        "RED",
+                        "10,000 concurrent bets",
+                        "201/409",
+                        "no 5xx",
+                        "accepted row 하나",
+                        "Wallet debit 하나",
+                    )
+                    for marker in betting_markers:
+                        if marker not in section:
+                            errors.append(
+                                "sportsbook-betting-service: current stage card is "
+                                f"missing publication evidence marker {marker}"
+                            )
+                    betting_evidence = (
+                        "https://github.com/woopinbell/sportsbook-betting-service/"
+                        "blob/learning/current/load-test/results/BEST.md"
+                    )
+                    if f"]({betting_evidence})" not in section:
+                        errors.append(
+                            "sportsbook-betting-service: current stage card is "
+                            "missing the exact current BEST evidence link"
                         )
 
     errors.extend(_validate_overlays(data, root, node_by_id))

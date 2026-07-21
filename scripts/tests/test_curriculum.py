@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from collections import Counter
 from contextlib import redirect_stdout
 from pathlib import Path
 from unittest.mock import patch
@@ -146,6 +147,11 @@ class RegistryFixture:
                     learning = "learning/current"
                     practice = "docs/practice/README.md"
                     answer = "docs/commits/README.md"
+                if node_id == "sportsbook-betting-service":
+                    release = "betting-v1.0.1"
+                    learning = "learning/current"
+                    practice = "docs/practice/README.md"
+                    answer = "docs/commits/README.md"
                 if node_id == "frontend-foundations-training":
                     release = "foundations-v1.0.1"
                     learning = "learning/current"
@@ -212,6 +218,21 @@ class RegistryFixture:
                     if node_id == "sportsbook-odds-feed-service"
                     else ""
                 )
+                betting_evidence = (
+                    "annotated release; 130 tests; failure·error·skip 0; "
+                    "Spotless 67; Checkstyle 0; executable Spring Boot JAR. "
+                    "[controlled-local](https://github.com/woopinbell/"
+                    "sportsbook-betting-service/blob/learning/current/"
+                    "load-test/results/BEST.md): 149.589 RPS, p95 120.6648 ms, "
+                    "p99 148.495 ms, errors 0. The controlled-local placement "
+                    "benchmark threshold p95 < 50 ms and p99 < 100 ms is RED; "
+                    "production goal p99 < 100 ms at 10,000 concurrent bets "
+                    "is unverified. The 100-request same-key run proves HTTP "
+                    "201/409 and no 5xx only, not accepted row 하나 or Wallet "
+                    "debit 하나.\n"
+                    if node_id == "sportsbook-betting-service"
+                    else ""
+                )
                 documents[track].append(
                     f'<a id="{anchor}"></a>\n## {node_id}\n'
                     f'[repo](https://github.com/woopinbell/{node_id})\n'
@@ -232,6 +253,7 @@ class RegistryFixture:
                     '- **다음 과제:** 표시된 링크로 이동한다.\n'
                     f'{risk_evidence}'
                     f'{odds_evidence}'
+                    f'{betting_evidence}'
                     f'{odds_handoffs}'
                     f'{join_marker}{prior_links}{next_links}'
                 )
@@ -654,6 +676,268 @@ class CurriculumValidationTest(unittest.TestCase):
             "Production capacity",
         ):
             self.assertIn(marker, evidence)
+
+    def test_betting_current_governance_is_canonical_and_honest(self):
+        repository_root = SCRIPT_DIR.parent
+        backend = (repository_root / "tracks/backend.md").read_text(
+            encoding="utf-8"
+        )
+        registry_data = json.loads(
+            (repository_root / "tracks/curriculum.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        registry = json.dumps(registry_data, ensure_ascii=False)
+        active = backend + registry
+        for retired in (
+            "learning/betting-v1",
+            "learning/betting-v1.0.1",
+            "docs/commits-betting-v1.0.1/README.md",
+            "docs/practice-betting-v1.0.1/README.md",
+        ):
+            self.assertNotIn(retired, active)
+
+        betting = next(
+            project
+            for project in registry_data["projects"]
+            if project["id"] == "sportsbook-betting-service"
+        )
+        self.assertEqual(
+            {
+                key: betting[key]
+                for key in ("release", "learning", "practice", "answer")
+            },
+            {
+                "release": "betting-v1.0.1",
+                "learning": "learning/current",
+                "practice": "docs/practice/README.md",
+                "answer": "docs/commits/README.md",
+            },
+        )
+        card_start = backend.index('<a id="stage-sportsbook-betting-service"></a>')
+        card_end = backend.index('<a id="stage-sportsbook-settlement-service"></a>')
+        card = backend[card_start:card_end]
+        for marker in (
+            "annotated",
+            "`betting-v1.0.1`",
+            "`main`",
+            "`learning/current`",
+            "docs/README.md",
+            "docs/practice/README.md",
+            "docs/commits/README.md",
+            "130 tests",
+            "failure·error·skip 0",
+            "Spotless 67",
+            "Checkstyle 0",
+            "executable Spring Boot JAR",
+            "load-test/results/BEST.md",
+            "149.589 RPS",
+            "p95 120.6648 ms",
+            "p99 148.495 ms",
+            "p95 < 50 ms",
+            "p99 < 100 ms",
+            "errors 0",
+            "RED",
+            "10,000 concurrent bets",
+            "201/409",
+            "no 5xx",
+            "accepted row 하나",
+            "Wallet debit",
+        ):
+            self.assertIn(marker, card)
+
+        evidence = (repository_root / "data/jobs/backend/EVIDENCE.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertNotIn("Shared·Wallet·Betting·Settlement", evidence)
+        betting_row = next(
+            line
+            for line in evidence.splitlines()
+            if line.startswith("| `sportsbook-betting-service` /")
+        )
+        self.assertIn(
+            "annotated `betting-v1.0.1` (`6ceacca9`, learning `9c80388`)",
+            betting_row,
+        )
+        for marker in (
+            "130 tests",
+            "Spotless 67 Java paths",
+            "Checkstyle 0",
+            "executable Spring Boot JAR",
+            "149.589 RPS",
+            "p95 120.6648 ms",
+            "p99 148.495 ms",
+            "errors 0",
+            "RED",
+            "10,000 concurrent bets",
+            "HTTP 201/409",
+            "no 5xx",
+            "accepted row 하나",
+            "Wallet debit 하나",
+        ):
+            self.assertIn(marker, betting_row)
+
+    def test_betting_migration_artifacts_are_exact_and_pinned(self):
+        repository_root = SCRIPT_DIR.parent
+        expected = {
+            "sportsbook-betting-service-source-crosswalk.tsv": (
+                70,
+                "21a4dc2be126c626652d4fc0eadb0c8797cb0ff8eba5eb59a6d8baeeb76b9780",
+            ),
+            "sportsbook-betting-service-source-allowlist.tsv": (
+                16,
+                "088a5a9efed8bb55b905bd512ed786e9f910f363bd66608950db739a2376dfd1",
+            ),
+            "sportsbook-betting-service-learning-disposition.tsv": (
+                277,
+                "5b5a90005e9d1d547671470d77826c29580473a3e492a34ef6a7e7db4d17c7b2",
+            ),
+        }
+        payloads = {}
+        ledger = (repository_root / "legacy-exceptions.md").read_text(
+            encoding="utf-8"
+        )
+        for filename, (line_count, digest) in expected.items():
+            with self.subTest(filename=filename):
+                path = repository_root / "data" / "migrations" / filename
+                payload = path.read_bytes()
+                payloads[filename] = payload
+                self.assertEqual(len(payload.splitlines()), line_count)
+                self.assertEqual(hashlib.sha256(payload).hexdigest(), digest)
+                self.assertIn(filename, ledger)
+                self.assertIn(digest, ledger)
+
+        source_rows = [
+            line.split("\t")
+            for line in payloads[
+                "sportsbook-betting-service-source-crosswalk.tsv"
+            ].decode("utf-8").splitlines()
+        ]
+        self.assertEqual(
+            source_rows[0],
+            "row old_commit old_parent old_tree old_patch_id old_timestamp "
+            "old_subject reaching_source_refs final_responsibility_ordinal "
+            "new_commit new_parent new_tree new_patch_id new_timestamp "
+            "new_subject stable_relation disposition evidence".split(),
+        )
+        self.assertTrue(all(len(row) == 18 for row in source_rows[1:]))
+        self.assertEqual(len({row[1] for row in source_rows[1:]}), 69)
+        self.assertEqual(sum(row[9] != "-" for row in source_rows[1:]), 60)
+        self.assertEqual(sum(row[9] == "-" for row in source_rows[1:]), 9)
+        self.assertEqual(
+            Counter(row[15] for row in source_rows[1:]),
+            Counter({"patch-identical": 50, "curated": 10, "not-replayed": 9}),
+        )
+
+        allowlist_rows = [
+            line.split("\t")
+            for line in payloads[
+                "sportsbook-betting-service-source-allowlist.tsv"
+            ].decode("utf-8").splitlines()
+        ]
+        self.assertEqual(len({row[0] for row in allowlist_rows[1:]}), 8)
+        self.assertEqual({row[2] for row in allowlist_rows[1:]}, {"cursor"})
+        self.assertEqual(sum(int(row[3]) for row in allowlist_rows[1:]), 50)
+        self.assertEqual(sum(int(row[4]) for row in allowlist_rows[1:]), 68)
+        final_allowlist = [
+            row for row in allowlist_rows[1:] if row[5] == "historical-and-final"
+        ]
+        self.assertEqual(len(final_allowlist), 8)
+        self.assertEqual(sum(int(row[3]) for row in final_allowlist), 30)
+        self.assertEqual(sum(int(row[4]) for row in final_allowlist), 40)
+
+        learning_rows = [
+            line.split("\t")
+            for line in payloads[
+                "sportsbook-betting-service-learning-disposition.tsv"
+            ].decode("utf-8").splitlines()
+        ]
+        self.assertEqual(
+            learning_rows[0],
+            "stable_path_id corpus_stable_id old_path scope relation "
+            "v1_ref_tip_tree v1_mode_blob v1_0_1_ref_tip_tree "
+            "v1_0_1_mode_blob disposition review_mode final_basis_commit "
+            "final_basis_tree final_path final_mode_blob reason reviewer "
+            "reviewed_at_kst".split(),
+        )
+        self.assertTrue(all(len(row) == 18 for row in learning_rows[1:]))
+        self.assertEqual(
+            Counter(row[3] for row in learning_rows[1:]),
+            Counter({"final-source": 95, "final-learning": 62, "discarded": 119}),
+        )
+        self.assertLessEqual(
+            {row[10] for row in learning_rows[1:]},
+            {"oid-identical", "metadata-only", "direct-content"},
+        )
+        self.assertEqual(
+            {row[11] for row in learning_rows[1:]},
+            {"6ceacca9fceab3638bd710e55a7f1131c180e0a7"},
+        )
+        self.assertEqual(
+            {row[12] for row in learning_rows[1:]},
+            {"422a168b44b089d9d1d512126d3db01a01d17ada"},
+        )
+        self.assertEqual(
+            {row[16] for row in learning_rows[1:]},
+            {"seungwoo7050/repository-owner-review"},
+        )
+        self.assertEqual(
+            {row[17] for row in learning_rows[1:]},
+            {"2026-07-21T12:44:00+09:00"},
+        )
+
+        betting_start = ledger.index("### `sportsbook-betting-service` 실행 원장")
+        betting_end = ledger.index("### 승인된 source window", betting_start)
+        betting_ledger = ledger[betting_start:betting_end]
+        for marker in (
+            "6ceacca9fceab3638bd710e55a7f1131c180e0a7",
+            "422a168b44b089d9d1d512126d3db01a01d17ada",
+            "d00851281e8c679937bbffa6da59d00460904500",
+            "32 source commits = 31 answer-covered responsibilities + 1 source-document exclusion",
+            "30 answers = 27 practices + 3 omissions (000, 023, 027)",
+            "5f3530c4cdb1a3b91090626eb0ff3107630b0e51",
+            "4bcec3a048055d7307903f8ccdcf20bbf60600b9",
+            "9c8038887599368f57ac155978af75e575980307",
+            "source-only rollback bundle",
+            "유지합니다",
+            "95fbd8d37634fa27f013c8e584e1667b97c14243de721e38860b6638f9964611",
+            "130 tests",
+            "ec31f3cf646cfbe7bdb36d92a6a1f286a415ac1e912821402d844d50e4ee9fd1",
+            "982d0d6e87f6d2091a78918e21978d3871af1b848f3f16b8ee1dd2d30f596046",
+            "reproducible JAR",
+            "주장하지 않습니다",
+            "149.589 RPS",
+            "p95 120.6648 ms",
+            "p99 148.495 ms",
+            "p95 < 50 ms",
+            "p99 < 100 ms",
+            "10,000 concurrent bets",
+            "HTTP 201/409",
+            "Accepted DB row",
+            "Wallet debit",
+        ):
+            self.assertIn(marker, betting_ledger)
+        self.assertNotIn("32 reachable source commits = 30 answers + 2 exclusions", betting_ledger)
+
+        self.assertEqual(
+            curriculum.FROZEN_LEARNING_PUBLICATIONS[
+                "sportsbook-betting-service"
+            ],
+            (
+                (
+                    "5f3530c4cdb1a3b91090626eb0ff3107630b0e51",
+                    "docs(notes): publish betting learning entry",
+                ),
+                (
+                    "4bcec3a048055d7307903f8ccdcf20bbf60600b9",
+                    "docs(commits): publish betting answer corpus",
+                ),
+                (
+                    "9c8038887599368f57ac155978af75e575980307",
+                    "docs(practice): publish betting practice corpus",
+                ),
+            ),
+        )
 
     def test_registry_source_windows_match_the_approved_ledger(self):
         repository_root = SCRIPT_DIR.parent
@@ -1266,13 +1550,20 @@ class CurriculumValidationTest(unittest.TestCase):
         )
         self.assertTrue(any("entry node does not exist" in error for error in errors))
 
-    def test_current_42_risk_and_odds_refs_are_pinned(self):
+    def test_current_42_risk_odds_and_betting_refs_are_pinned(self):
         by_id = {project["id"]: project for project in self.fixture.data["projects"]}
         by_id["format-printer"]["release"] = "codex-5.6.1"
         by_id["sportsbook-risk-service"]["learning"] = "learning/risk-v1.0.2"
         by_id["sportsbook-odds-feed-service"]["learning"] = "learning/odds-v1.0.1"
         by_id["sportsbook-odds-feed-service"]["practice"] = (
             "docs/practice-odds-v1.0.1/README.md"
+        )
+        by_id["sportsbook-betting-service"]["release"] = "betting-v1"
+        by_id["sportsbook-betting-service"]["learning"] = (
+            "learning/betting-v1.0.1"
+        )
+        by_id["sportsbook-betting-service"]["answer"] = (
+            "docs/commits-betting-v1.0.1/README.md"
         )
         errors = curriculum.validate_registry(self.fixture.data, self.root)
         self.assertTrue(any("current 42 release must be v1.0.0" in error for error in errors))
@@ -1297,6 +1588,12 @@ class CurriculumValidationTest(unittest.TestCase):
                 for error in errors
             )
         )
+        for marker in (
+            "sportsbook-betting-service: current release must be betting-v1.0.1",
+            "sportsbook-betting-service: current learning must be learning/current",
+            "sportsbook-betting-service: current answer must be docs/commits/README.md",
+        ):
+            self.assertTrue(any(marker in error for error in errors), errors)
 
     def test_risk_card_requires_publication_evidence_markers(self):
         path = self.root / "tracks/backend.md"
@@ -1349,6 +1646,41 @@ class CurriculumValidationTest(unittest.TestCase):
             and "missing publication evidence marker" in error
         ]
         self.assertEqual(len(odds_errors), len(markers))
+
+    def test_betting_card_requires_publication_evidence_markers(self):
+        path = self.root / "tracks/backend.md"
+        text = path.read_text(encoding="utf-8")
+        markers = (
+            "annotated",
+            "130 tests",
+            "failure·error·skip 0",
+            "Spotless 67",
+            "Checkstyle 0",
+            "executable Spring Boot JAR",
+            "149.589 RPS",
+            "p95 120.6648 ms",
+            "p99 148.495 ms",
+            "p95 < 50 ms",
+            "p99 < 100 ms",
+            "errors 0",
+            "RED",
+            "10,000 concurrent bets",
+            "201/409",
+            "no 5xx",
+            "accepted row 하나",
+            "Wallet debit 하나",
+        )
+        for marker in markers:
+            text = text.replace(marker, "omitted")
+        path.write_text(text, encoding="utf-8")
+        errors = curriculum.validate_registry(self.fixture.data, self.root)
+        betting_errors = [
+            error
+            for error in errors
+            if error.startswith("sportsbook-betting-service:")
+            and "missing publication evidence marker" in error
+        ]
+        self.assertEqual(len(betting_errors), len(markers))
 
     def test_linux_foundation_rejects_retired_remote_link(self):
         path = self.root / "tracks/42.md"
@@ -1846,6 +2178,37 @@ class RemoteContractTest(unittest.TestCase):
             "answer": "docs/commits/README.md",
             "doc": "tracks/backend.md",
             "anchor": "stage-sportsbook-odds-feed-service",
+        }
+        with patch.object(
+            curriculum, "_run", side_effect=self._project_dispatcher(project)
+        ):
+            self.assertEqual(
+                curriculum._check_remote_project("woopinbell", project), []
+            )
+
+        cases = (
+            ({"extra_branch": True}, "branches must be exactly"),
+            ({"extra_tag": True}, "tags must be exactly"),
+        )
+        for options, marker in cases:
+            with self.subTest(marker=marker), patch.object(
+                curriculum,
+                "_run",
+                side_effect=self._project_dispatcher(project, **options),
+            ):
+                errors = curriculum._check_remote_project("woopinbell", project)
+            self.assertTrue(any(marker in error for error in errors), errors)
+
+    def test_migrated_betting_release_learning_and_exact_topology_pass(self):
+        project = {
+            "id": "sportsbook-betting-service",
+            "repo": "sportsbook-betting-service",
+            "release": "betting-v1.0.1",
+            "learning": "learning/current",
+            "practice": "docs/practice/README.md",
+            "answer": "docs/commits/README.md",
+            "doc": "tracks/backend.md",
+            "anchor": "stage-sportsbook-betting-service",
         }
         with patch.object(
             curriculum, "_run", side_effect=self._project_dispatcher(project)

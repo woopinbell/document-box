@@ -2095,6 +2095,130 @@ Learning bundle은 처음부터 생성하지 않았습니다. Project 작업 디
 `find /Users/woopinbell/Documents/Codex/2026-07-19/1/work/backend-lane/sportsbook-odds-feed-service -name '*.bundle'`
 결과는 0개이며, 등록된 source-only rollback bundle이나 restore copy는 더 남아 있지 않습니다.
 
+### `sportsbook-betting-service` source product-token allowlist
+
+`sportsbook-betting-service`의 source에서 대소문자를 구분하지 않은 `cursor`는 AI 도구 provenance가
+아니라 keyset pagination의 공개 query parameter, continuation field, repository boundary와 이를 검증하는
+테스트 이름입니다. 이 예외는
+[`data/migrations/sportsbook-betting-service-source-allowlist.tsv`](data/migrations/sportsbook-betting-service-source-allowlist.tsv)에
+기록한 exact path/blob 15쌍, 8개 path에만 적용합니다. Header 포함 16줄, SHA-256
+`088a5a9efed8bb55b905bd512ed786e9f910f363bd66608950db739a2376dfd1`입니다.
+
+15개 unique path/blob의 본문에는 matching line 50개와 raw case-insensitive occurrence 68개가 있고,
+32개 final source commit에서의 path/blob/commit association은 139개입니다. Final tree에는 그중 현재
+8개 blob, matching line 30개와 raw occurrence 40개가 남습니다. 각 행은 최초·마지막 source ordinal과
+commit, historical-only 또는 final reachability, source 책임과 직접 review 근거를 함께 고정합니다.
+이 allowlist는 ref/tag 이름, annotated tag message, commit identity·message·trailer, tool-control artifact,
+등록하지 않은 path/blob, 다른 token이나 learning/governance surface로 확장되지 않습니다.
+
+### `sportsbook-betting-service` 실행 원장
+
+이 실행은 old `main` `0fd30c8ee5727eaff01c11e243a0a6fcb8f479ea`(tree
+`e0d88040ecca9104c4ce9b4b2f5e12867f7f9574`)와 모든 advertised source tag를 고정한 뒤 수행했습니다.
+Final source는 `main` `6ceacca9fceab3638bd710e55a7f1131c180e0a7`, tree
+`422a168b44b089d9d1d512126d3db01a01d17ada`인 32개 linear commit이며 merge는 0개입니다. Source
+timestamp는 승인된 `2026-04-01`–`2026-04-26` KST window 안에 있고 patch 책임 순서를 보존합니다.
+Old main과 final source의 의도된 정화 diff는 `.gitignore`, `README.md`,
+`load-test/scenarios/placement_load.js`, `src/main/java/com/sportsbook/betting/infrastructure/id/UuidV7.java`
+네 path, 7 insertions·21 deletions입니다.
+
+Annotated `betting-v1.0.1` object는
+`d00851281e8c679937bbffa6da59d00460904500`이고 final `main`으로 peel됩니다. Tagger time은
+`2026-04-26T18:16:07+09:00`입니다. 다음 old source tag는 exact object/target을 확인한 뒤 remote에서
+삭제하거나 교체했습니다.
+
+| old source tag | old object | peeled target | final disposition |
+| --- | --- | --- | --- |
+| annotated `betting-v1` | `978da92ea9cafa5297fb3fdfa0eb7ee88f9680b0` | `a4009f118b77f6739b591a3c2f87dcfd98c03c21` | 삭제 |
+| annotated `betting-v1.0.1` | `d0ddd80e51857c6579b50c9fd410912d0be09157` | `0fd30c8ee5727eaff01c11e243a0a6fcb8f479ea` | final annotated object로 교체 |
+| annotated `pre-betting-v1` | `88b963a80610805a1679a5d9bc623ca6ac616ebc` | `c592167e0a29439724fd1d4a1e11eb7bf66c4ec9` | 삭제 |
+| lightweight `v0.1.0` | `ab72c3675f5d158d15c352923da493ac06538b16` | 같은 commit | 삭제 |
+
+Old source ref union은 merge 없는 69개 unique commit입니다.
+[`data/migrations/sportsbook-betting-service-source-crosswalk.tsv`](data/migrations/sportsbook-betting-service-source-crosswalk.tsv)은
+그 전부의 old/new parent·tree·stable patch ID·timestamp·subject·reaching source ref·final 책임과 disposition을
+고정합니다. Header 포함 70줄, SHA-256
+`21a4dc2be126c626652d4fc0eadb0c8797cb0ff8eba5eb59a6d8baeeb76b9780`입니다. 60개 old object는 final
+책임으로 map되고 9개는 learning publication으로 명시적 제외됩니다. Mapped
+관계는 patch-identical 50개와 provenance·placeholder·navigation 정화를 포함한 curated 10개입니다.
+Final ref/tag 이름, annotated tag message, 32개 commit metadata·message·trailer와 allowlist 밖 path/blob의
+금지 provenance 감사 결과는 0건입니다. Historical `source-freeze.txt`의
+`prepared-not-executed`는 원격 전환 전 preflight 기록일 뿐 현재 remote 상태가 아닙니다.
+
+Migration 전 source-only rollback bundle은
+`/Users/woopinbell/Documents/Codex/2026-07-19/1/work/backend-lane/sportsbook-betting-service/source-audit/sportsbook-betting-service-0fd30c8e-source.bundle`,
+SHA-256 `95fbd8d37634fa27f013c8e584e1667b97c14243de721e38860b6638f9964611`입니다. Old `main`과 위 네
+source tag, 모두 5개 ref만 포함하며 learning ref는 0개입니다. `git bundle verify`, snapshot strict fsck와
+별도 restore strict fsck가 PASS입니다. Learning bundle, archive ref와 보존 tag는 만들지 않았습니다.
+Document Box와 Central Notes publication, 인증 remote navigation과 governance fresh-clone gate가 끝날
+때까지 이 bundle과 등록된 restore copy를 유지합니다. 실제 영구 삭제 시각과 삭제 뒤 0-bundle 검사는
+후속 rollback-closure entry에서만 기록합니다.
+
+Learning 입력 두 개는 서로 ancestor가 아니었습니다. 276개 union path는 identical 271개, divergent
+2개와 `learning/betting-v1.0.1`-only 3개였습니다. 동일 blob은 재독하지 않고 source compatibility,
+responsibility coverage, link·metadata와 유효한 고유 내용으로 donor와 폐기 대상을 판정했습니다.
+
+| deleted old learning ref | tip | tree | disposition |
+| --- | --- | --- | --- |
+| `learning/betting-v1` | `4384d307461be43d3ae4761a8de60615a2594336` | `bebd3140dd4b21cb452724b51502b3413c13434e` | source-split corpus donor; canonical path와 frozen metadata로 보정 뒤 삭제 |
+| `learning/betting-v1.0.1` | `167b3b512313ce4ced13b466d7c6e50dc0096709` | `d1b0954d376f9ffd88573b548579c4e9a383caac` | navigation-only wrapper와 versioned duplicate를 폐기한 뒤 삭제 |
+
+Per-path 최종 판정은
+[`data/migrations/sportsbook-betting-service-learning-disposition.tsv`](data/migrations/sportsbook-betting-service-learning-disposition.tsv)에
+고정합니다. Header 포함 277줄, SHA-256
+`5b5a90005e9d1d547671470d77826c29580473a3e492a34ef6a7e7db4d17c7b2`입니다. 각 행은 두 old
+ref/tip/tree와 mode/blob, stable ID, relation, disposition, review mode, frozen source basis, final path/blob,
+reason, reviewer와 actual review time을 포함합니다. Scope는 final-source 95개, final-learning 62개,
+discarded 119개입니다. Final owner review barrier는
+`seungwoo7050/repository-owner-review`, `2026-07-21T12:44:00+09:00`이며 62개 publication path를 전부
+직접 읽고 5개 finding을 수정해 remaining finding 0으로 닫았습니다.
+
+전담 집필자는 frozen source `6ceacca9fceab3638bd710e55a7f1131c180e0a7`와 tree
+`422a168b44b089d9d1d512126d3db01a01d17ada`만을 basis로 사용했습니다. 30개 answer와 answer index의
+31개 direct-read barrier는 `2026-07-21T12:26:15+09:00`에 끝났습니다. 그 뒤에만 27개 practice와
+practice index를 읽었고 28개 barrier는 `2026-07-21T12:39:01+09:00`에 끝났습니다. Entry와 두
+reflection의 별도 3개 direct read는 `2026-07-21T12:34:35+09:00`입니다. 실패 hunk만 다시 읽었으며
+전체 검토를 반복하지 않았습니다. 집필자는 source를 수정하거나 stage, commit, tag, push하지 않았습니다.
+
+Final `learning/current`는 source freeze 뒤 actual-time publication 세 commit으로만 구성됩니다.
+
+| phase | commit | tree | parent | actual KST time |
+| --- | --- | --- | --- | --- |
+| notes/entry | `5f3530c4cdb1a3b91090626eb0ff3107630b0e51` | `a711547e1b6b9bab000c207d720f3b922189ecce` | source `6ceacca9fceab3638bd710e55a7f1131c180e0a7` | `2026-07-21T12:45:27+09:00` |
+| answers | `4bcec3a048055d7307903f8ccdcf20bbf60600b9` | `47f4d1bea3131d4d732fad62bbf0a04e968f8404` | notes/entry | `2026-07-21T12:46:10+09:00` |
+| practices / tip | `9c8038887599368f57ac155978af75e575980307` | `06994f2ad51df10fc505b0c43f63c32e37a59900` | answers | `2026-07-21T12:46:37+09:00` |
+
+Final learning tree의 publication path는 62개이고 path/blob manifest SHA-256은
+`7e08fd19054b841dbaf9b53f46db368efa6a8ab394b4a46748f7a0bab59403de`입니다. 수량식은
+`32 source commits = 31 answer-covered responsibilities + 1 source-document exclusion`입니다. Answer
+022가 source ordinal 22와 23의 두 책임을 함께 다루므로 31개 covered responsibility는 30개 answer
+file에 대응합니다. 두 번째 수량식은 `30 answers = 27 practices + 3 omissions (000, 023, 027)`입니다.
+Final source와 learning의 `docs/**` 밖 diff는 0이고 relative link 104개와 publication validator 3,445
+checks는 실패 0입니다.
+
+Historical gate는 original main 34개 ordinal과 candidate 32개 ordinal의 clean test-compile을 모두
+PASS했습니다. Original responsibility gate가 있는 ordinals 1, 2, 3, 4, 5, 8, 10, 12, 16, 18, 20,
+22, 28, 30, 31도 PASS입니다. Host candidate와 별도 HTTPS fresh clone의 Java 17
+`./mvnw -B clean verify`는 모두 130 tests, failure·error·skip 0, Spotless 67 Java paths, Checkstyle 0과
+실행 가능한 Spring Boot JAR를 확인했습니다. 두 JAR는 크기 85,461,143 bytes로 같지만 host candidate
+SHA-256 `ec31f3cf646cfbe7bdb36d92a6a1f286a415ac1e912821402d844d50e4ee9fd1`와 fresh-clone SHA-256
+`982d0d6e87f6d2091a78918e21978d3871af1b848f3f16b8ee1dd2d30f596046`가 다르므로 reproducible JAR를
+주장하지 않습니다.
+
+Controlled-local placement evidence는 149.589 RPS, p95 120.6648 ms, p99 148.495 ms, errors 0입니다.
+이 controlled-local placement benchmark threshold `p95 < 50 ms`, `p99 < 100 ms`는 RED입니다. Production
+goal `p99 < 100 ms`·`10,000 concurrent bets`는 이 evidence에서 검증하지 않았습니다.
+100개 same-key 동시 요청은 HTTP 201/409와 no 5xx만 증명합니다. Accepted DB row 하나 또는 Wallet debit
+하나를 증명하지 않습니다.
+
+Project remote는 branch `main`, `learning/current`와 annotated tag `betting-v1.0.1`만 advertise하며
+private/default-`main` 상태입니다. Project HTTPS fresh clone에서 source tree, exact topology, clean build,
+learning tree, source/corpus diff와 navigation을 검증했습니다. 이 첫 governance publication은 remote
+branch가 `main` 하나뿐인 Document Box base `3f05a7911ff2333cd4564855619c2d5b124b1955`와 Central Notes base
+`dea11a7258a399bcb2ff224b8fb87b4879b323f1`의 fresh clone, drift 0에서 준비했습니다. 새 governance
+commit SHA, authenticated 30-project navigation과 governance fresh-clone 결과는 실제 publication 뒤
+rollback-closure entry에서 고정하며 이 1차 원장에서 미리 만들지 않습니다.
+
 ### 승인된 source window
 
 날짜는 모두 Asia/Seoul `+09:00` 기준이며 양 끝 날짜를 포함합니다. `extensionEnd`가 있는 신규 프로젝트는
